@@ -1,4 +1,4 @@
-import 'react-native-gesture-handler';
+// import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 import { Routes } from './src/routes/index'
@@ -8,10 +8,10 @@ import UserProvider from './src/apis/contexts/user';
 export default function App() {
   return (
     <NavigationContainer>
-      <UserProvider>
-        <StatusBar backgroundColor='white' barStyle='dark-content' />
-        <Routes />
-      </UserProvider>
+        <UserProvider>
+          <StatusBar backgroundColor='white' barStyle='dark-content' />
+          <Routes />
+        </UserProvider>
     </NavigationContainer>
   );
 }
