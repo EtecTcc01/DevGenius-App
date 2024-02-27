@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View} from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { TeoryList } from '../../components/TeoryList';
 
 export function TeoryNote() {
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Caderno teórico</Text>
+      <TeoryList />
     </View>
   );
 }
@@ -11,13 +12,5 @@ export function TeoryNote() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#06c244'
   },
 });

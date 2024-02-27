@@ -8,10 +8,10 @@ import UserProvider from './src/apis/contexts/user';
 export default function App() {
   return (
     <NavigationContainer>
-        <UserProvider>
-          <StatusBar backgroundColor='white' barStyle='dark-content' />
-          <Routes />
-        </UserProvider>
+      <UserProvider>
+        <StatusBar backgroundColor='white' barStyle='dark-content' />
+        <Routes />
+      </UserProvider>
     </NavigationContainer>
   );
 }

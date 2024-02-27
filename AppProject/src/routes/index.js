@@ -58,11 +58,11 @@ export function MyTabs() {
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size, color }) => (
-                    <MaterialIcons
-                        size={size}
-                        color={focused ? '#06c244' : color}
-                        name={'library-books'}
-                    />
+                        <MaterialIcons
+                            size={size}
+                            color={focused ? '#06c244' : color}
+                            name={'library-books'}
+                        />
                     ),
                 }}
             />
@@ -73,11 +73,11 @@ export function MyTabs() {
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size, color }) => (
-                    <MaterialIcons
-                        size={size}
-                        color={focused ? '#06c244' : color}
-                        name={'group'}
-                    />
+                        <MaterialIcons
+                            size={size}
+                            color={focused ? '#06c244' : color}
+                            name={'group'}
+                        />
                     ),
                 }}
             />
@@ -88,11 +88,11 @@ export function MyTabs() {
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size, color }) => (
-                    <MaterialIcons
-                        size={size}
-                        color={focused ? '#06c244' : color}
-                        name={'person'}
-                    />
+                        <MaterialIcons
+                            size={size}
+                            color={focused ? '#06c244' : color}
+                            name={'person'}
+                        />
                     ),
                 }}
             />
