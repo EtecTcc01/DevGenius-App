@@ -9,9 +9,9 @@ export function AdvancedTask(props) {
     const [answer, setAnswer] = React.useState([]);
     const [alt, setAlt] = React.useState([]);
     const [codeTxt, setCodeTxt] = React.useState([]);
-    // const [subCode, setSubCode] = React.useState([]);
+    const [subCode, setSubCode] = React.useState([]);
     const [visible, setVisible] = React.useState(false);
-    // const [count, setCount] = React.useState(0);
+    const [count, setCount] = React.useState(1);
 
     const getAnswer = async () => {
         try {
@@ -29,12 +29,15 @@ export function AdvancedTask(props) {
 
     const splitAnswer = async ({ answerTxt }) => {
         const splitTxt = answerTxt.split("\n");
+
         let splitFinal = []; let subFinal = [];
+        let controlTxt = [];
 
         for (let i = 0; i < splitTxt.length; i++) {
             let splitTemp = splitTxt[i].split(" ")
             let splitChar = splitTxt[i].split("")
-            let answerSub = []; let subTemp = [];
+            let subTxt = []; let subTemp = [];
+            let controlT = [];
 
             splitTemp.forEach(e => {
                 if (e.length > 0) {
@@ -46,51 +49,102 @@ export function AdvancedTask(props) {
 
             splitChar.forEach(e => {
                 if (e !== " ") {
-                    answerSub.push(e.replace(e, "_"));
+                    subTxt.push(e.replace(e, "_"));
                 } else {
-                    answerSub.push(e);
+                    subTxt.push(e);
                 }
             });
 
-            answerSub.forEach(e => {
-                if (subTemp < 1) {
+            subTxt.forEach(e => {
+                if (subTemp.length < 1) {
                     subTemp.push(e)
                 } else {
                     subTemp = [subTemp[0] + e];
                 }
             });
 
+            subTemp[0].split(" ").forEach(e => {
+                if (controlT.length < 1) {
+                    controlT = e + "‼‼‼";
+                } else {
+                    controlT += ` ${e}‼‼‼`
+                }
+            })
+
+            controlTxt.push(controlT.slice(0, subTemp.length - 3) + "\n")
             subFinal.push(subTemp + "\n")
         }
 
         setAlt(splitFinal)
+        setSubCode(controlTxt)
         setCodeTxt(subFinal)
         setVisible(true)
 
     };
 
-    // function altCompare(temp) {
-    //   const answerT = temp;
+    function altCompare({ temp }) {
+        let answerT = answer.answer_text.split("\n")
+        let tempAns = []; let ccount = 0;
 
-    //   if (answerT == answer.answer_text) {
-    //     alert("Acertou!!!");
-    //   } else {
-    //     alert("Errouuuuuu!");
-    //     setTaskT(dataT.task_text);
-    //   }
-    // }
+        if (count >= alt.length) {
+            temp.forEach(element => {
+                tempAns.push(element.slice(0, (element.length) - 1));
+            });
+
+            for (let i = 0; i < tempAns.length; i++) {
+                if (answerT[i] == tempAns[i]) {
+                    console.log("true")
+                    ccount++;
+                } else {
+                    console.log("false")
+                }
+            }
+
+            if (ccount == answerT.length) {
+                alert("Corretissimo")
+            } else {
+                alert("Erradissimo")
+            }
+        } else {
+            []
+        }
+    }
 
     async function replaceTxt(e) {
-        let subCode = codeTxt; let splitT = 0;
-        let subCount = false;
+        let subCount = 0;
+        let subCodeText = subCode;
+        let codeTxtTemp = codeTxt;
 
-        subCode.forEach(element => {
-            splitT = element.split(" ")
-            if (subCount == false) {
-                console.log(splitT)
-                subCount = true
-            }
-        });
+        for (let i = 0; i < subCodeText.length; i++) {
+            let splitSpaceT = subCodeText[i].split(" ")
+            let textTemp = ""; let subTextTemp = "";
+
+            splitSpaceT.forEach(element => {
+                if (element.includes("‼") == true && subCount == 0) {
+                    if ((textTemp.length < 1)) {
+                        textTemp = `${e}`
+                        subTextTemp = `${e}`
+                    } else {
+                        textTemp += ` ${e}`
+                        subTextTemp += ` ${e}`
+                    }
+                    subCount = 1;
+                } else {
+                    if ((textTemp.length < 1)) {
+                        textTemp = `${element.includes("‼") == true ? element.slice(0, element.length - 3) : element}`
+                        subTextTemp = `${element}`
+                    } else {
+                        textTemp += ` ${element.includes("‼") == true ? element.slice(0, element.length - 3) : element}`
+                        subTextTemp += ` ${element}`
+                    }
+                }
+                setCount((count + 1))
+            });
+            codeTxtTemp[i] = `${textTemp.slice(0, textTemp.length)}\n`
+            subCodeText[i] = `${subTextTemp}`
+        }
+        setCodeTxt([codeTxtTemp])
+        altCompare({ temp: codeTxtTemp })
     }
 
     if (visible == true) {
