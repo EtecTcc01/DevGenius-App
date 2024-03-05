@@ -4,17 +4,28 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import api from '../../../../api';
+import { UserContext } from '../../../apis/contexts/user'
 
 export function InfoForm(props) {
+    const { userData } = React.useContext(UserContext)
     const navigation = useNavigation();
+    console.log(props.data)
 
     const [userSex, setUserSex] = React.useState("");
     const [userDate, setUserDate] = React.useState();
 
     const dataUser = props.data;
     const userName = dataUser.userName;
+    const userEmail = dataUser.userEmail;
 
     async function handleRegister() {
+        if (!userSex) {
+            return alert("Por favor, insira seu sexo.");
+        }
+        if (!userDate) {
+            return alert("Por favor, insira uma data de nascimento.");
+        }
+
         try {
             await api.post('/user/register', dataUser)
 
@@ -28,18 +39,12 @@ export function InfoForm(props) {
     async function handleInfo() {
         const dataInfo = { userName, userDate, userSex };
 
-        if (!userSex) {
-            return alert("Por favor, insira seu sexo.");
-        }
-        if (!userDate) {
-            return alert("Por favor, insira uma data de nascimento.");
-        }
-
         try {
             await api.post('/info', dataInfo);
 
             alert("Usuário cadastrado com sucesso.")
 
+            userData(userEmail);
             navigation.navigate('Tabs');
         } catch (error) {
             alert(`Erro ao cadastrar informações do usuário. ${error}`);

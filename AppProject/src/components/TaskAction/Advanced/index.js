@@ -75,11 +75,40 @@ export function AdvancedTask(props) {
             subFinal.push(subTemp + "\n")
         }
 
-        setAlt(splitFinal)
         setSubCode(controlTxt)
         setCodeTxt(subFinal)
-        setVisible(true)
+        random({ alts: splitFinal })
+    };
 
+    const random = ({ alts }) => {
+        const splitT = [];
+        console.log(alts)
+
+        for (let i = alts.length - 1; i > -1; i--) {
+            let temp = alts[i];
+            try {
+                let tempI = temp.split(" ");
+
+                if (tempI.length > 1) {
+                    for (let i = tempI.length - 1; i > -1; i--) {
+                        splitT.push(tempI[i]);
+                    }
+                } else {
+                    splitT.push(temp);
+                }
+            } catch {
+                [];
+            }
+        }
+
+        for (let i = splitT.length - 1; i > 0; i--) {
+            const random = Math.floor(Math.random() * (i + 1));
+
+            [splitT[i], splitT[random]] = [splitT[random], splitT[i]];
+        }
+
+        setAlt(splitT)
+        setVisible(true);
     };
 
     function altCompare({ temp }) {
@@ -100,11 +129,15 @@ export function AdvancedTask(props) {
                 }
             }
 
-            if (ccount == answerT.length) {
-                alert("Corretissimo")
-            } else {
-                alert("Erradissimo")
-            }
+            setTimeout(() => {
+                if (ccount == answerT.length) {
+                    alert("Corretissimo")
+                } else {
+                    alert("Erradissimo")
+                    splitAnswer({ answerTxt: answer.answer_text })
+                    setCount(1)
+                }
+            }, 250)
         } else {
             []
         }

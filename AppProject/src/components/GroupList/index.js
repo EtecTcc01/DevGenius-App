@@ -16,7 +16,7 @@ export function GroupList() {
 
     const getAllGroupUser = async () => {
         try {
-            const res = await api.get(`/group/userGroups/${user.user_name}`)
+            const res = await api.get(`/group/userGroups/${userName}`)
             const group = (res.data.group)
             setGroups(res.data.group)
         } catch (error) {
