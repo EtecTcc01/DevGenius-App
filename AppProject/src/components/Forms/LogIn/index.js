@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import api from '../../../../api';
 import { UserContext } from '../../../apis/contexts/user'
+import { FontAwesome } from '@expo/vector-icons';
 
 export function LogInForm() {
     const { userData } = React.useContext(UserContext)
@@ -39,18 +40,20 @@ export function LogInForm() {
         <View style={styles.container}>
             <Text style={styles.login} variant="titleLarge">Login</Text>
             <TextInput
-                style={[styles.input, { color: '#06c244' }]}  // Alteração aqui
-                label="Email:"
+                style={[styles.input, { color: '#06c244' }]}
+                label="E-mail:"
                 value={userEmail}
                 onChangeText={userEmail => setUserEmail(userEmail)}
             />
+
             <TextInput
-                style={[styles.input, { color: '#06c244' }]}  // Alteração aqui
+                style={[styles.input, { color: '#06c244' }]}
                 label="Senha:"
                 value={userPassword}
                 onChangeText={userPassword => setUserPassword(userPassword)}
                 secureTextEntry
             />
+
             <Button
                 style={[styles.btn1, { backgroundColor: '#06c244', marginBottom: 10 }]}
                 mode="contained"
@@ -59,6 +62,7 @@ export function LogInForm() {
             >
                 Entrar
             </Button>
+
             <Button
                 style={[styles.btn2, { color: '#06c244', fontSize: 16, marginTop: 20 }]}
                 mode="text"
@@ -66,6 +70,7 @@ export function LogInForm() {
             >
                 Esqueceu a senha?
             </Button>
+
             <Button
                 style={[styles.btn3, { backgroundColor: '#06c244' }]}
                 mode="contained"

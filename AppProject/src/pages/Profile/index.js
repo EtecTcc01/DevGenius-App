@@ -32,7 +32,6 @@ export function Profile() {
 
   const handleSavePress = () => {
     setIsEditing(false);
-    // Adicione aqui a lógica para salvar as alterações no perfil
   };
 
   const pickImageFromGallery = async () => {

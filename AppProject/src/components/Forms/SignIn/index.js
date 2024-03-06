@@ -15,10 +15,10 @@ export function SignInForm() {
 
     async function handleRegister() {
         if (confirmPass != userPassword) {
-            return alert("As senhas estão erradas.");
+            return alert("Senha ou e-mail incorreto.");
         }
         if (!userEmail) {
-            return alert("Por Favor, insira um email.");
+            return alert("Por favor, insira um e-mail.");
         }
         if (!userName) {
             return alert("Por favor, insira um nome de usuário.");

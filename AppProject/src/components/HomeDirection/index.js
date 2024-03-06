@@ -7,7 +7,7 @@ export function HomeDirection() {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.title}>GRUPO PÚBLICO</Text>
+                <Text style={styles.title}>COMPONENTE PÚBLICO</Text>
             </View>
             <View style={styles.contentB}>
                 <Courses />
