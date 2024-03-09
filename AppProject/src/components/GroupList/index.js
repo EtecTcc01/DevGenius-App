@@ -4,38 +4,53 @@ import * as React from 'react';
 import api from '../../../api';
 import { ListItem } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../../apis/contexts/user'
 import { Button, TextInput } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function GroupList() {
-    const { user } = React.useContext(UserContext)
     const navigation = useNavigation()
+    const [user, setUser] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [idGroup, setIdGroup] = React.useState("");
-    const userName = user.user_name;
+    const [listGroup2, setListGroup2] = React.useState("teste")
 
-    const getAllGroupUser = async () => {
-        try {
-            const res = await api.get(`/group/userGroups/${userName}`)
-            const group = (res.data.group)
-            setGroups(res.data.group)
-        } catch (error) {
-            alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
-        }
-    }
+    const getDataUser = async () => {
+        console.log("::::::::::::::::")
+        await AsyncStorage.getItem('userLogin')
+            .then((jsonValue) => {
+                jsonValue != null ? setUser(JSON.parse(jsonValue)) : null;
+                getAllGroupUser({usr: JSON.parse(jsonValue)})
+            }).catch((error) => {
+                alert(`Erro ao coletar dados referente ao usuário. ${error}`)
+            })
+    };
 
     React.useEffect(() => {
-        getAllGroupUser()
-    }, [])
+        getDataUser();
+    }, []);
 
-    const handleGroupUser = async () => {
+    const getAllGroupUser = async ({usr}) => {
+        const userName = usr.user_name;
+        console.log(userName)
+
+        await api.get(`/group/userGroups/${userName}`)
+            .then((res) => {
+                console.log(res.data)
+                setGroups(res.data.group)
+            }).catch((error) => {
+                alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+            })
+    }
+
+    const handleGroupUser = async (userName) => {
         const dataGroupUser = { idGroup, userName };
+        console.log(user)
 
         if (!idGroup) {
             return alert("Por favor, insira o código do grupo.");
         }
 
-        if (!userName) {
+        if (!user.user_name) {
             return alert("Não há nome de usuário para efetuar o cadastro.");
         }
 
@@ -76,7 +91,7 @@ export function GroupList() {
                 <Button
                     style={{ backgroundColor: '#06c244', marginTop: 20 }}
                     mode="contained"
-                    onPress={() => handleGroupUser()}
+                    onPress={() => handleGroupUser(user.user_name)}
                 >
                     Adicionar
                 </Button>

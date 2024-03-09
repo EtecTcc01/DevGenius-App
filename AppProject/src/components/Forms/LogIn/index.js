@@ -1,14 +1,12 @@
+import * as React from 'react';
 import { View } from 'react-native';
 import { styles } from './style';
-import * as React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { Button, Text, TextInput } from 'react-native-paper';
 import api from '../../../../api';
-import { UserContext } from '../../../apis/contexts/user'
-import { FontAwesome } from '@expo/vector-icons';
+import { Button, Text, TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function LogInForm() {
-    const { userData } = React.useContext(UserContext)
     const navigation = useNavigation();
     const [userEmail, setUserEmail] = React.useState("");
     const [userPassword, setUserPassword] = React.useState("");
@@ -16,16 +14,35 @@ export function LogInForm() {
     async function handleLogin() {
         const dataLogin = { userEmail, userPassword };
 
-        try {
-            await api.post('/user/validation', dataLogin);
-
-            alert("Usuário logado com sucesso.");
-
-            userData(userEmail);
-        } catch (error) {
-            alert(`Erro ao logar na conta usuário. ${error}`);
-        }
+        await api.post('/user/validation', dataLogin)
+            .then(() => {
+                alert("Usuário logado com sucesso.");
+                getDataUser()
+            }).catch((error) => {
+                alert(`Erro ao logar na conta usuário. ${error}`);
+                return []
+            })
     }
+
+    const getDataUser = async () => {
+        await api.get(`/user/un/${userEmail}`)
+            .then((res) => {
+                storeDataUser({ user: res.data.user[0] })
+            }).catch((error) => {
+                alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+            })
+    };
+
+    const storeDataUser = async ({ user }) => {
+        try {
+            const jsonValue = JSON.stringify(user);
+            await AsyncStorage.setItem('userLogin', jsonValue);
+
+            navigation.navigate('Tabs')
+        } catch (error) {
+            console.log(`Erro ao salvar dados do usuário. ${error}`)
+        }
+    };
 
     // Função para navegar para a tela de cadastro (SignIn)
     function handleCadastro() {
