@@ -25,9 +25,10 @@ export function LogInForm() {
     }
 
     const getDataUser = async () => {
-        await api.get(`/user/un/${userEmail}`)
+        await api.get(`/user/infoUn/${userEmail}`)
             .then((res) => {
                 storeDataUser({ user: res.data.user[0] })
+                console.log(res.data.user[0])
             }).catch((error) => {
                 alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
             })

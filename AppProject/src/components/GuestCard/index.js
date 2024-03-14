@@ -20,6 +20,7 @@ export function GuestCard() {
     const getDataUser = async () => {
         await AsyncStorage.getItem('userLogin')
             .then((jsonValue) => {
+                console.log(JSON.parse(jsonValue))
                 return jsonValue != null ? setUser(JSON.parse(jsonValue)) : null;
             }).catch((error) => {
                 alert(`Erro ao coletar dados referente ao usuário. ${error}`)
