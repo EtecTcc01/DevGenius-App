@@ -4,10 +4,8 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import api from '../../../../api';
-import { UserContext } from '../../../apis/contexts/user'
 
 export function InfoForm(props) {
-    const { userData } = React.useContext(UserContext)
     const navigation = useNavigation();
     console.log(props.data)
 
@@ -44,7 +42,6 @@ export function InfoForm(props) {
 
             alert("Usuário cadastrado com sucesso.")
 
-            userData(userEmail);
             navigation.navigate('Tabs');
         } catch (error) {
             alert(`Erro ao cadastrar informações do usuário. ${error}`);

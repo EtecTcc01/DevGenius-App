@@ -17,14 +17,14 @@ export const styles = StyleSheet.create({
     },
     button: {
         flex: 2,
-        borderRadius: 100,
+        borderRadius: 45,
         borderColor: '#06c244',
         borderWidth: 3,
         alignItems: 'center',
         justifyContent: 'center',
         margin: "2%",
-        minHeight: 150,
-        minWidth: 150
+        minHeight: 100,
+        minWidth: '100%'
     },
     title: {
         fontSize: 24,

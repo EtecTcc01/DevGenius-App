@@ -2,7 +2,8 @@ import * as React from 'react';
 import { styles } from './style';
 import api from '../../../api';
 import { List } from 'react-native-paper';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export function Courses() {
@@ -24,7 +25,15 @@ export function Courses() {
 
   const listCourses = courses.map((course) =>
     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Difficulty', { language: course })}>
-      <Text style={styles.title}>{course._name}</Text>
+      <List.Item
+        title={course._name}
+        titleStyle={styles.title}
+        right={(size) => <Ionicons
+          size={size}
+          color='#06c244'
+          name={course.avatar}
+        />}
+      />
     </TouchableOpacity>
   )
 
