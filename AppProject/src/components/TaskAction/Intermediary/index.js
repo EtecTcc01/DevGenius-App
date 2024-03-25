@@ -7,7 +7,6 @@ import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 export function IntermediaryTask(props) {
     const dataT = props.data;
 
-    const [answerU, setAnswerU] = React.useState();
     const [count, setCount] = React.useState(0);
     const [taskT, setTaskT] = React.useState(dataT.task_text);
     const [answer, setAnswer] = React.useState([]);
@@ -72,12 +71,33 @@ export function IntermediaryTask(props) {
         random();
     }, [answer]);
 
-    function altCompare(temp) {
-        const answerT = temp;
+    function reloadT() {
         setCount(0);
+        setAlt(altBkp);
+        setTaskT(dataT.task_text);
+        setListAlt([])
+    }
 
-        if (answerT == answer.answer_text) {
-            alert("Acertou!!!");
+    function altCompare(answerC) {
+        setCount(0);; let ccount = 0;
+        let temp = taskT
+
+        for (let i = 0; i < answerC.length; i++) {
+            if (listAlt[i] == answerC[i]) {
+                ccount++;
+            } else {
+                break
+            }
+        }
+
+        if (ccount >= answerC.length) {
+            listAlt.forEach(e => {
+                temp = temp.replace("‼", e)
+            });
+            setTaskT(temp)
+            setTimeout(() => {
+                alert("Acertou!!!");
+            }, 500);
         } else {
             alert("Errouuuuuu!");
             setTaskT(dataT.task_text);
@@ -89,38 +109,23 @@ export function IntermediaryTask(props) {
     async function replaceTxt(e) {
         const altIndex = alt.findIndex((value, index, array) => { return value == e })
         const remove = alt.toSpliced(altIndex, 1)
-        const list = listAlt
-        setAlt(remove);
+        const list = listAlt; setAlt(remove);
 
         const answerC = answer.answer_text.split(" ");
-        const alternate = taskT.replace("‼", e);
-        let temp = `${e}`; list.push(e)
-        console.log(list)
+        list.push(e)
 
-        if (count == 0) {
-            setAnswerU(`${e}`);
-        } else {
-            temp = answerU + ` ${e}`;
-            setAnswerU(answerU + ` ${e}`);
-        }
-
-        setTaskT(`${alternate}`);
         setCount(count + 1);
         setListAlt(list)
 
         if (count >= answerC.length - 1) {
-            setTimeout(() => { altCompare(temp) }, 250);
+            setTimeout(() => {
+                altCompare(answerC)
+            }, 250);
         }
     }
 
-    function reloadT() {
-        setCount(0);
-        setAlt(altBkp);
-        setTaskT(dataT.task_text);
-        setListAlt([])
-    }
-
     if (visible == true) {
+
         const listAlts = () => alt.map((e) => {
             return (
                 <TouchableOpacity style={styles.button} onPress={() => replaceTxt(e)}>
