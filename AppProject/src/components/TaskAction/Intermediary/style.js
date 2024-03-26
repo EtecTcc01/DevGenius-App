@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
         flexWrap: 'wrap',
         alignItems: 'center',
         textAlign: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         borderColor: "#06c244",
         borderRadius: "10px",
         borderWidth: 5,
@@ -32,10 +32,10 @@ export const styles = StyleSheet.create({
         width: "100%",
     },
     contentB: {
-        flex: 1,
+        flex: 2,
         alignItems: 'center',
         textAlign: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         borderColor: "#06c244",
         borderRadius: "10px",
         borderWidth: 5,
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
         margin: "1%",
         padding: "3%",
     },
-    titleB: {
+    titleA: {
         fontSize: 16,
         fontWeight: "bold",
         color: "#06c244",

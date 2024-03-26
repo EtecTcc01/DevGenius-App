@@ -1,7 +1,7 @@
-import { Text, View, TouchableOpacity } from 'react-native';
 import * as React from 'react'
-import api from '../../../../api';
 import { styles } from './style';
+import api from '../../../../api';
+import { Text, View, TouchableOpacity } from 'react-native';
 
 export function BasicTask(props) {
   const dataT = props.data;
@@ -52,10 +52,10 @@ export function BasicTask(props) {
   if (visible == true) {
     return (
       <View style={styles.container}>
-        <View style={styles.contentB}>
+        <View style={styles.content}>
           <Text style={styles.title}>{dataT.task_text}</Text>
         </View>
-        <View style={styles.content}>
+        <View style={styles.contentA}>
           <TouchableOpacity style={styles.button} onPress={() => altCompare(alt[0])}>
             <Text style={styles.title}>{alt[0]}</Text>
           </TouchableOpacity>

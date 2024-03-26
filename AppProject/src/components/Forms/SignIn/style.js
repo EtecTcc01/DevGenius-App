@@ -14,13 +14,13 @@ export const styles = StyleSheet.create({
         width: '80%',
         backgroundColor: 'transparent',
     },
-    btn3: {
+    btn: {
         marginTop: 10,
         width: '50%',
         bottom: '-20px',
         color: '#06c2444'
     },
-    register: {
+    title: {
         color: '#06c244',
         fontSize: 24,
         marginBottom: 20,

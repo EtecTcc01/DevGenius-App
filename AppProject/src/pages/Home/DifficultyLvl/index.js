@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import * as React from 'react';
-import { DifficultyList } from '../../../components/Difficulty';
+import { DifficultyList } from '../../../components/DifficultyList';
 
 export function DifficultyLvl({ route }) {
     const lang = route.params.language;

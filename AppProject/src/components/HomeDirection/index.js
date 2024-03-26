@@ -9,7 +9,7 @@ export function HomeDirection() {
             <View style={styles.content}>
                 <Text style={styles.title}>COMPONENTE PÚBLICO</Text>
             </View>
-            <View style={styles.contentB}>
+            <View style={styles.contentA}>
                 <Courses />
             </View>
         </View>

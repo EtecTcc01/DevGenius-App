@@ -1,10 +1,10 @@
-import { Text, View } from 'react-native';
-import { styles } from './style';
 import * as React from 'react';
+import { styles } from './style';
 import api from '../../../api';
-import { ListItem } from '@rneui/themed';
+import { Text, View, TouchableOpacity } from 'react-native';
+// import { ListItem } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button, TextInput, List } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function GroupList() {
@@ -15,11 +15,10 @@ export function GroupList() {
     const [listGroup2, setListGroup2] = React.useState("teste")
 
     const getDataUser = async () => {
-        console.log("::::::::::::::::")
         await AsyncStorage.getItem('userLogin')
             .then((jsonValue) => {
                 jsonValue != null ? setUser(JSON.parse(jsonValue)) : null;
-                getAllGroupUser({usr: JSON.parse(jsonValue)})
+                getAllGroupUser({ usr: JSON.parse(jsonValue) })
             }).catch((error) => {
                 alert(`Erro ao coletar dados referente ao usuário. ${error}`)
             })
@@ -29,13 +28,13 @@ export function GroupList() {
         getDataUser();
     }, []);
 
-    const getAllGroupUser = async ({usr}) => {
+    const getAllGroupUser = async ({ usr }) => {
         const userName = usr.user_name;
         console.log(userName)
 
         await api.get(`/group/userGroups/${userName}`)
             .then((res) => {
-                console.log(res.data)
+                console.log(res.data.group)
                 setGroups(res.data.group)
             }).catch((error) => {
                 alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
@@ -63,25 +62,24 @@ export function GroupList() {
         }
     }
 
-    const listGroups = groups.map((item) => {
-        return (
-            <ListItem containerStyle={styles.listItem} bottomDivider={true}>
-                <ListItem.Content>
-                    <ListItem.Title style={styles.listItemTitle}>{item._name}</ListItem.Title>
-                </ListItem.Content>
-            </ListItem>
-        )
-    })
+    const listGroups = groups.map((item) => 
+        <TouchableOpacity style={styles.listItem}>
+            <List.Item
+                title={item._name}
+                titleStyle={styles.listItemTitle}
+            />
+        </TouchableOpacity>
+    )
 
     return (
         <View style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.title}>SEUS GRUPOS</Text>
             </View>
-            <View style={styles.contentB}>
+            <View style={styles.contentA}>
                 {listGroups}
             </View>
-            <View style={styles.contentC}>
+            <View style={styles.contentB}>
                 <TextInput
                     style={styles.input}
                     label="Código do grupo:"

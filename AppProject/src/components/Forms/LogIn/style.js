@@ -14,23 +14,23 @@ export const styles = StyleSheet.create({
         width: '80%',
         backgroundColor: 'transparent',
     },
-    login: {
+    title: {
         color: '#06c244',
         fontSize: 24,
         marginBottom: 20,
         fontWeight: 'bold'
     },
-    btn1: {
+    btnLogin: {
         marginTop: 10,
         width: '50%',
         bottom: '-20px'
     },
-    btn2: {
+    btnForgot: {
         marginTop: 20,
         color: '#06c244',
         fontSize: 16,
     },
-    btn3: {
+    btnRegister: {
         backgroundColor: '#06c244',
         borderRadius: 30,
         width: '50%',

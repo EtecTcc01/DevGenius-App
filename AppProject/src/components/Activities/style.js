@@ -8,8 +8,9 @@ export const styles = StyleSheet.create({
     },
     button: {
         width: '96%',
-        padding: '4%',
+        padding: '5%',
         margin: '2%',
+        maxHeight: '15%',
         backgroundColor: '#06c244',
         alignItems: 'center',
         justifyContent: 'center',
@@ -18,7 +19,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         borderRadius: 24
     },
-    contentB: {
+    content: {
         textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'center',

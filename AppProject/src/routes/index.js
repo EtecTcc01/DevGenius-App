@@ -1,7 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
+
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+
 import { LogInBg } from "../pages/Begin/LogInBegin";
 import { SignInBg } from "../pages/Begin/SignInBegin";
 import { InfoBg } from "../pages/Begin/InfoBegin";
@@ -11,13 +13,13 @@ import { Home } from '../pages/Home';
 import { Profile } from '../pages/Profile';
 import { TeoryNote } from '../pages/TeoryNote';
 import { Welcome } from "../pages/Welcome";
-import { Button } from "@rneui/themed";
-import { useNavigation } from '@react-navigation/native';
 import { BasicAct } from "../pages/Action/BasicAct";
 import { IntermediaryAct } from "../pages/Action/IntermediaryAct";
 import { AdvancedAct } from '../pages/Action/AdvancedAct'
 import { TeoryBook } from "../pages/Action/teoryBook";
 import { Groups } from "../pages/Groups";
+
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -120,24 +122,12 @@ export function Routes() {
                 component={LogInBg}
                 options={{
                     headerShown: false,
-                    headerLeft: () => { return },
-                    headerRight: () => {
-                        return (
-                            <Button style={{ marginRight: 15 }} onPress={() => navigation.navigate('SignIn')} title='Cadastro' />
-                        )
-                    }
+                    headerLeft: () => { return }
                 }}
             />
             <Stack.Screen
                 name="SignIn"
                 component={SignInBg}
-                options={{
-                    headerShown: false
-                }}
-            />
-            <Stack.Screen
-                name="UserInfo"
-                component={InfoBg}
                 options={{
                     headerShown: true,
                     headerStyle: {
@@ -149,6 +139,13 @@ export function Routes() {
                         color: '#fff',
                         fontWeight: 'bold',
                     },
+                }}
+            />
+            <Stack.Screen
+                name="UserInfo"
+                component={InfoBg}
+                options={{
+                    headerShown: false
                 }}
             />
             <Stack.Screen

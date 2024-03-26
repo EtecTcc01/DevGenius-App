@@ -1,9 +1,9 @@
-import { View } from 'react-native';
-import { styles } from './style'
 import * as React from 'react';
+import { styles } from './style'
+import api from '../../../../api';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text, TextInput } from 'react-native-paper';
-import api from '../../../../api';
 
 export function InfoForm(props) {
     const navigation = useNavigation();

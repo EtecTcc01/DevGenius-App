@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
     },
-    contentB: {
+    contentA: {
         flex: 2,
         width: '95%',
         backgroundColor: '#000',

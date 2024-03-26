@@ -1,7 +1,7 @@
-import { Text, View, TouchableOpacity } from 'react-native';
-import { styles } from './style';
 import * as React from 'react'
+import { styles } from './style';
 import api from '../../../api';
+import { Text, View, TouchableOpacity } from 'react-native';
 
 export function TeoryList() {
 

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
         marginLeft: '7%',
         marginTop: '7%',
     },
-    contentB: {
+    contentA: {
         flex: 6,
         backgroundColor: '#000',
         alignItems: 'center',

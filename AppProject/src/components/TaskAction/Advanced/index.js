@@ -1,7 +1,7 @@
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
-import { styles } from "./style";
 import * as React from "react";
+import { styles } from "./style";
 import api from "../../../../api";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 
 export function AdvancedTask(props) {
     const dataT = props.data;
@@ -196,11 +196,11 @@ export function AdvancedTask(props) {
                     <Text style={styles.title}>{dataT.task_text}</Text>
                 </View>
                 <View style={styles.contentA}>
-                    <><Text style={styles.titleB}>{codeTxt}</Text></>
+                    <><Text style={styles.titleA}>{codeTxt}</Text></>
                 </View>
-                <ScrollView style={styles.contentB}>
-                    <Text style={styles.title}>{listAlts}</Text>
-                </ScrollView>
+                <View style={styles.contentB}>
+                <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
+                </View>
             </View>
         );
     } else {

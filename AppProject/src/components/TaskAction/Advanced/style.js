@@ -34,12 +34,14 @@ export const styles = StyleSheet.create({
         width: "100%",
     },
     contentB: {
-        flex: 2,
+        flex: 1,
+        alignItems: 'center',
+        textAlign: 'center',
+        justifyContent: 'space-evenly',
         borderColor: "#06c244",
-        borderWidth: 5,
         borderRadius: "10px",
-        elevation: 10,
-        padding: "3%",
+        borderWidth: 5,
+        marginTop: "6px",
         width: "100%",
     },
     title: {
@@ -47,6 +49,16 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#06c244",
         textAlign: "center",
+    },
+    contentScroll: {
+        flex: 1,
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        alignItems: 'center',
+        textAlign: 'center',
+        justifyContent: 'space-evenly',
+        minWidth: "100%",
     },
     button: {
         borderRadius: 100,
@@ -74,7 +86,7 @@ export const styles = StyleSheet.create({
         margin: "2%",
         padding: "3%",
     },
-    titleB: {
+    titleA: {
         fontSize: 16,
         fontWeight: "bold",
         color: "#06c244",

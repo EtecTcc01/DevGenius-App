@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: '3%'
     },
-    contentB: {
+    contentA: {
         flex: 4,
         borderColor: '#06c244',
         borderRadius: '10px',

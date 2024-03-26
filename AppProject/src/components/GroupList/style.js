@@ -16,14 +16,14 @@ export const styles = StyleSheet.create({
         marginLeft: '7%',
         marginTop: '7%',
     },
-    contentB: {
+    contentA: {
         flex: 2,
         padding: '4%',
         backgroundColor: '#000',
         width: '100%',
         minHeight: '60%'
     },
-    contentC: {
+    contentB: {
         flex: 1,
         padding: '4%',
         backgroundColor: '#000',
@@ -41,7 +41,8 @@ export const styles = StyleSheet.create({
     },
     listItem: {
         backgroundColor: '#fff',
-        margin: '2%'
+        margin: '2%',
+        borderRadius: 6
     },
     listItemTitle: {
         color: '#000',

@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
     },
-    content: {
+    contentA: {
         flex: 2,
         width: '100%',
         borderColor: '#06c244',
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: '8px'
     },
-    contentB: {
+    content: {
         flex: 1,
         borderColor: '#06c244',
         borderWidth: 5,

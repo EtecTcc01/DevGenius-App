@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native';
 import * as React from 'react';
-import { Activities } from '../Activities/index'
 import { styles } from './style'
+import { Text, View } from 'react-native';
+import { Activities } from '../Activities/index'
 
 export function PersonalTasks(props) {
     const data = props.data
@@ -13,7 +13,7 @@ export function PersonalTasks(props) {
             <View style={styles.content}>
                 <Text style={styles.title}>{difficulty._description}</Text>
             </View>
-            <View style={styles.contentB}>
+            <View style={styles.contentA}>
                 <Activities lang={language} diff={difficulty} />
             </View>
         </View>

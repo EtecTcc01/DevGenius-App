@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native';
-import { styles } from './style';
 import * as React from 'react'
+import { styles } from './style';
 import api from '../../../../api';
+import { Text, View } from 'react-native';
 
 export function TeoryBTask(props) {
     const dataTeoryB = props.data;
@@ -27,7 +27,7 @@ export function TeoryBTask(props) {
             <View style={styles.content}>
                 <Text style={styles.title}>Teoria: {teory._name}</Text>
             </View>
-            <View style={styles.contentB}>
+            <View style={styles.contentA}>
                 <Text style={styles.title}>{teory.teory_text}</Text>
             </View>
         </View>

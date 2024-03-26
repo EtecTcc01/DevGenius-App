@@ -1,9 +1,10 @@
-import { View } from 'react-native';
-import { styles } from './style';
 import * as React from 'react';
+import { styles } from './style';
 import api from '../../../api';
+import { View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ListItem } from '@rneui/themed';
+import { List } from 'react-native-paper';
+// import { ListItem } from '@rneui/themed';
 
 export function Activities(props) {
     const navigation = useNavigation();
@@ -25,11 +26,11 @@ export function Activities(props) {
 
     React.useEffect(() => {
         getTask()
-    }, [setActivities])
+    }, [])
 
 
     const listActivities = activities.map((act) =>
-        <ListItem containerStyle={styles.button} bottomDivider={true} onPress={async () => {
+        <TouchableOpacity style={styles.button} onPress={async () => {
             if (difficulty._name == "Básico") {
                 navigation.navigate('BasicAct', { act })
                 return
@@ -41,10 +42,11 @@ export function Activities(props) {
             navigation.navigate('AdvancedAct', { act })
         }
         }>
-            <ListItem.Content style={styles.contentB}>
-                <ListItem.Title style={styles.title}>{act._name}</ListItem.Title>
-            </ListItem.Content>
-        </ListItem>
+            <List.Item style={styles.content}
+                title={act._name}
+                titleStyle={styles.title}
+            />
+        </TouchableOpacity>
     )
 
     return (

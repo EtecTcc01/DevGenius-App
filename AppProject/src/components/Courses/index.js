@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { styles } from './style';
 import api from '../../../api';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { List } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export function Courses() {

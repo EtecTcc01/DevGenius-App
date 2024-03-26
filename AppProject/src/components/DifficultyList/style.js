@@ -17,24 +17,24 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
     },
     button: {
-        flex: 1,
         width: '96%',
-        padding: '4%',
+        padding: '5%',
         margin: '2%',
+        height: '15%',
         backgroundColor: '#06c244',
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
         borderRadius: 24,
     },
-    contentB: {
+    contentA: {
         flex: 2,
         backgroundColor: '#000',
         justifyContent: 'center',
         textAlign: 'center',
         width: '100%',
     },
-    contentC: {
+    contentB: {
         textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'center'
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000',
     },
-    titleB: {
+    titleA: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#06c244',

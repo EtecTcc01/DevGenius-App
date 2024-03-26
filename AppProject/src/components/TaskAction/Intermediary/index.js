@@ -1,6 +1,6 @@
 import * as React from "react";
-import api from "../../../../api";
 import { styles } from "./style";
+import api from "../../../../api";
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 
@@ -164,7 +164,7 @@ export function IntermediaryTask(props) {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.contentText}>
-                        <Text style={styles.titleB}>{taskT}</Text>
+                        <Text style={styles.titleA}>{taskT}</Text>
                     </View>
                 </View>
                 <View style={styles.contentA}>
