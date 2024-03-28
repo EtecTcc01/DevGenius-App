@@ -3,9 +3,15 @@ import { styles } from "./style";
 import api from "../../../../api";
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Modal, Portal, PaperProvider } from 'react-native-paper';
 
 export function IntermediaryTask(props) {
     const dataT = props.data;
+
+    const [visibleModal, setVisibleModal] = React.useState(false);
+
+    const showModal = () => setVisibleModal(true);
+    const hideModal = () => setVisibleModal(false);
 
     const [count, setCount] = React.useState(0);
     const [taskT, setTaskT] = React.useState(dataT.task_text);
@@ -145,35 +151,58 @@ export function IntermediaryTask(props) {
         })
 
         return (
-            <View style={styles.container}>
-                <View style={styles.content}>
-                    <View style={styles.contentBtn}>
-                        <TouchableOpacity style={styles.btn}>
-                            <AntDesign
-                                name="questioncircleo"
-                                size={24}
-                                color="#06c244"
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btn} onPress={() => reloadT()}>
-                            <Ionicons
-                                size={24}
-                                color="#06c244"
-                                name="reload"
-                            />
-                        </TouchableOpacity>
+            <PaperProvider>
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <View style={styles.contentBtn}>
+                            <Portal>
+                                <Modal
+                                    visible={visibleModal}
+                                    onDismiss={hideModal}
+                                    dismissable="true"
+                                    dismissableBackButton="true"
+                                    contentContainerStyle={{
+                                        position: 'absolute',
+                                        backgroundColor: 'white',
+                                        padding: 20,
+                                        width: '90%',
+                                        flex: 1,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center'
+                                    }}>
+                                    <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                                </Modal>
+                            </Portal>
+
+                            <TouchableOpacity style={styles.btn} onPress={showModal}>
+                                <AntDesign
+                                    name="questioncircleo"
+                                    size={24}
+                                    color="#06c244"
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.btn} onPress={() => reloadT()}>
+                                <Ionicons
+                                    size={24}
+                                    color="#06c244"
+                                    name="reload"
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.contentText}>
+                            <Text style={styles.titleA}>{taskT}</Text>
+                        </View>
                     </View>
-                    <View style={styles.contentText}>
-                        <Text style={styles.titleA}>{taskT}</Text>
+                    <View style={styles.contentA}>
+                        <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved()}</ScrollView>
+                    </View>
+                    <View style={styles.contentB}>
+                        <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts()}</ScrollView>
                     </View>
                 </View>
-                <View style={styles.contentA}>
-                    {altRemoved()}
-                </View>
-                <View style={styles.contentB}>
-                    <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts()}</ScrollView>
-                </View>
-            </View>
+            </PaperProvider>
         );
     } else {
         [];

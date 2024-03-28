@@ -8,10 +8,12 @@ export function AdvancedTask(props) {
 
     const [answer, setAnswer] = React.useState([]);
     const [alt, setAlt] = React.useState([]);
+    const [altBkp, setAltBkp] = React.useState([]);
     const [codeTxt, setCodeTxt] = React.useState([]);
     const [subCode, setSubCode] = React.useState([]);
     const [visible, setVisible] = React.useState(false);
     const [count, setCount] = React.useState(1);
+    const [listAlt, setListAlt] = React.useState([])
 
     const getAnswer = async () => {
         try {
@@ -108,6 +110,7 @@ export function AdvancedTask(props) {
         }
 
         setAlt(splitT)
+        setAltBkp(splitT);
         setVisible(true);
     };
 
@@ -115,7 +118,7 @@ export function AdvancedTask(props) {
         let answerT = answer.answer_text.split("\n")
         let tempAns = []; let ccount = 0;
 
-        if (count >= alt.length) {
+        if (count >= altBkp.length) {
             temp.forEach(element => {
                 tempAns.push(element.slice(0, (element.length) - 1));
             });
@@ -136,6 +139,8 @@ export function AdvancedTask(props) {
                     alert("Erradissimo")
                     splitAnswer({ answerTxt: answer.answer_text })
                     setCount(1)
+                    setAlt(altBkp);
+                    setListAlt([])
                 }
             }, 250)
         } else {
@@ -144,6 +149,14 @@ export function AdvancedTask(props) {
     }
 
     async function replaceTxt(e) {
+        setTimeout(() => {
+            const altIndex = alt.findIndex((value, index, array) => { return value == e })
+            const remove = alt.toSpliced(altIndex, 1)
+            const list = listAlt; setAlt(remove);
+
+            list.push(e); setListAlt(list)
+        }, 100)
+
         let subCount = 0;
         let subCodeText = subCode;
         let codeTxtTemp = codeTxt;
@@ -199,7 +212,7 @@ export function AdvancedTask(props) {
                     <><Text style={styles.titleA}>{codeTxt}</Text></>
                 </View>
                 <View style={styles.contentB}>
-                <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
+                    <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
                 </View>
             </View>
         );

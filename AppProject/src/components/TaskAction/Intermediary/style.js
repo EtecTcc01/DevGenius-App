@@ -33,6 +33,8 @@ export const styles = StyleSheet.create({
     },
     contentB: {
         flex: 2,
+        display: "flex",
+        flexDirection: 'row',
         alignItems: 'center',
         textAlign: 'center',
         justifyContent: 'space-evenly',
