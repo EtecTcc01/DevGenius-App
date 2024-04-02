@@ -1,10 +1,15 @@
-import * as React from 'react'
+import * as React from 'react';
 import { styles } from './style';
 import { View, Text, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { Icon, MD3Colors } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 
+import api from '../../../api';
+
 export function GuestCard() {
+    const navigation = useNavigation();
     const [user, setUser] = React.useState([]);
 
     const [isEditing, setIsEditing] = React.useState(false);
@@ -18,13 +23,16 @@ export function GuestCard() {
     });
 
     const getDataUser = async () => {
-        await AsyncStorage.getItem('userLogin')
-            .then((jsonValue) => {
-                console.log(JSON.parse(jsonValue))
-                return jsonValue != null ? setUser(JSON.parse(jsonValue)) : null;
-            }).catch((error) => {
-                alert(`Erro ao coletar dados referente ao usuário. ${error}`)
-            })
+        try {
+            const response = await api.get('/user');
+            if (response.status === 200) {
+                setUser(response.data.user);
+            } else {
+                Alert.alert('Erro', 'Erro ao obter dados do usuário.');
+            }
+        } catch (error) {
+            Alert.alert('Erro', `Erro ao obter dados do usuário: ${error}`);
+        }
     };
 
     React.useEffect(() => {
@@ -48,8 +56,18 @@ export function GuestCard() {
         setIsEditing(!isEditing);
     };
 
-    const handleSavePress = () => {
-        setIsEditing(false);
+    const handleSavePress = async () => {
+        try {
+            const response = await api.put('/info', info);
+            if (response.status === 200) {
+                Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
+                setIsEditing(false);
+            } else {
+                Alert.alert('Erro', 'Erro ao atualizar perfil. Tente novamente.');
+            }
+        } catch (error) {
+            Alert.alert('Erro', `Erro ao atualizar perfil: ${error}`);
+        }
     };
 
     const pickImageFromGallery = async () => {
@@ -81,9 +99,21 @@ export function GuestCard() {
                         {userInfo.profileImage ? (
                             <Image style={styles.profileImage} source={{ uri: userInfo.profileImage }} />
                         ) : (
-                            <View style={styles.placeholderImage}>
-                                <Text style={styles.editIcon}>✎</Text>
+                            <View style={styles.cameraIconContainer}>
+                                {userInfo.profileImage ? (
+                                    <Image style={styles.profileImage} source={{ uri: userInfo.profileImage }} />
+                                ) : (
+                                    <View style={[styles.placeholderImage, styles.cameraIconBackground]}>
+                                        <Icon
+                                            source="camera"
+                                            color={'white'}
+                                            border={'white'}
+                                            size={45}
+                                        />
+                                    </View>
+                                )}
                             </View>
+
                         )}
                     </TouchableOpacity>
                 </View>

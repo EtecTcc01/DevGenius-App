@@ -19,7 +19,7 @@ import { AdvancedAct } from '../pages/Action/AdvancedAct';
 import { TeoryBook } from "../pages/Action/teoryBook";
 import { Groups } from "../pages/Groups";
 import { TeoryList } from "../components/TeoryList";  
-import { TeoryDetail } from "../pages/TeoryNote/teoryDetail";  
+import { TeoryDetail } from "../pages/TeoryNote/teoryDetail"; 
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

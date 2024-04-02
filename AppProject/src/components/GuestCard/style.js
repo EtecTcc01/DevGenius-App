@@ -67,4 +67,15 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    cameraIconContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    cameraIconBackground: {
+        backgroundColor: 'gray', // Cor de fundo desejada
+        borderRadius: 45, // Metade do tamanho do ícone para torná-lo circular
+        borderWidth: 2, // Largura da borda
+        borderColor: 'white', // Cor da borda
+        padding: 5, // Espaçamento interno
+    },
 });
