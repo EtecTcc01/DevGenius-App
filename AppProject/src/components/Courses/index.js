@@ -12,19 +12,23 @@ export function Courses() {
 
   const getAllLangGroup = async () => {
     try {
-      const res = await api.get(`/language/group/1`)
-      setCourses(res.data.language)
+      const res = await api.get(`/language/group/1`);
+      setCourses(res.data.language);
     } catch (error) {
-      alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+      alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
     }
-  }
+  };
 
   React.useEffect(() => {
-    getAllLangGroup()
-  }, [])
+    getAllLangGroup();
+  }, []);
 
-  const listCourses = courses.map((course) =>
-    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Difficulty', { language: course })}>
+  const listCourses = courses.map((course) => (
+    <TouchableOpacity 
+      style={styles.button} 
+      key={course.id.toString()} // Adicionado o key prop aqui
+      onPress={() => navigation.navigate('Difficulty', { language: course })}
+    >
       <List.Item
         title={course._name}
         titleStyle={styles.title}
@@ -35,7 +39,7 @@ export function Courses() {
         />}
       />
     </TouchableOpacity>
-  )
+  ));
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

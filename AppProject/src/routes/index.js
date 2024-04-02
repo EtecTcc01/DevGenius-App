@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -15,15 +15,14 @@ import { TeoryNote } from '../pages/TeoryNote';
 import { Welcome } from "../pages/Welcome";
 import { BasicAct } from "../pages/Action/BasicAct";
 import { IntermediaryAct } from "../pages/Action/IntermediaryAct";
-import { AdvancedAct } from '../pages/Action/AdvancedAct'
+import { AdvancedAct } from '../pages/Action/AdvancedAct';
 import { TeoryBook } from "../pages/Action/teoryBook";
 import { Groups } from "../pages/Groups";
-
-import { useNavigation } from '@react-navigation/native';
+import { TeoryList } from "../components/TeoryList";  
+import { TeoryDetail } from "../pages/TeoryNote/teoryDetail";  
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
 
 export function MyTabs() {
     return (
@@ -103,11 +102,20 @@ export function MyTabs() {
 }
 
 export function Routes() {
-    const navigation = useNavigation();
     return (
         <Stack.Navigator
+            initialRouteName="Welcome"
             screenOptions={{
                 headerTintColor: '#06c244',
+                headerStyle: {
+                    backgroundColor: '#000',
+                    borderBottomWidth: 0,
+                    elevation: 0,
+                },
+                headerTitleStyle: {
+                    color: '#fff',
+                    fontWeight: 'bold',
+                },
             }}
         >
             <Stack.Screen
@@ -155,7 +163,6 @@ export function Routes() {
                     headerShown: true,
                     headerStyle: {
                         backgroundColor: '#000',
-                        color: '#000',
                         borderBottomWidth: 0,
                         elevation: 0,
                     },
@@ -232,6 +239,38 @@ export function Routes() {
             <Stack.Screen
                 name="TeoryBook"
                 component={TeoryBook}
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: '#000',
+                        borderBottomWidth: 0,
+                        elevation: 0,
+                    },
+                    headerTitleStyle: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="TeoryDetail"
+                component={TeoryDetail}
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: '#000',
+                        borderBottomWidth: 0,
+                        elevation: 0,
+                    },
+                    headerTitleStyle: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="TeoryList"
+                component={TeoryList}
                 options={{
                     headerShown: true,
                     headerStyle: {

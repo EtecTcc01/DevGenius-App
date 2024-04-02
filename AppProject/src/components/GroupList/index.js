@@ -2,17 +2,15 @@ import * as React from 'react';
 import { styles } from './style';
 import api from '../../../api';
 import { Text, View, TouchableOpacity } from 'react-native';
-// import { ListItem } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
 import { Button, TextInput, List } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 export function GroupList() {
     const navigation = useNavigation()
     const [user, setUser] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [idGroup, setIdGroup] = React.useState("");
-    const [listGroup2, setListGroup2] = React.useState("teste")
 
     const getDataUser = async () => {
         await AsyncStorage.getItem('userLogin')
@@ -30,11 +28,9 @@ export function GroupList() {
 
     const getAllGroupUser = async ({ usr }) => {
         const userName = usr.user_name;
-        console.log(userName)
 
         await api.get(`/group/userGroups/${userName}`)
             .then((res) => {
-                console.log(res.data.group)
                 setGroups(res.data.group)
             }).catch((error) => {
                 alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
@@ -43,7 +39,6 @@ export function GroupList() {
 
     const handleGroupUser = async (userName) => {
         const dataGroupUser = { idGroup, userName };
-        console.log(user)
 
         if (!idGroup) {
             return alert("Por favor, insira o código do grupo.");
@@ -55,15 +50,14 @@ export function GroupList() {
 
         try {
             await api.post('/group/groupUser', dataGroupUser);
-
             alert("Usuário adicionado ao grupo com sucesso.")
         } catch (error) {
             alert(`Erro ao adicionar usuário ao grupo. ${error}`);
         }
     }
 
-    const listGroups = groups.map((item) => 
-        <TouchableOpacity style={styles.listItem}>
+    const listGroups = groups.map((item, index) => 
+        <TouchableOpacity style={styles.listItem} key={index}>
             <List.Item
                 title={item._name}
                 titleStyle={styles.listItemTitle}

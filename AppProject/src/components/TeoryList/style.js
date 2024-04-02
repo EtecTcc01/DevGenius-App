@@ -1,33 +1,43 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: '24',
-    fontWeight: 'bold',
-    color: '#06c244',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  button: {
-    width: '80%',
-    height: 50,
-    backgroundColor: '#000',
-    borderWidth: 2,
-    borderColor: '#06c244',
-    borderRadius: 8,
-    marginVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+    container: {
+        backgroundColor: '#000',
+        padding: '5%',
+    },
+    content: {
+        backgroundColor: '#000',
+        paddingLeft: '3%',
+        paddingRight: '3%',
+        paddingTop: '1%',
+        paddingBottom: '1%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        marginTop: '7%',
+        marginLeft: '7%',
+    },
+    button: {
+        flex: 2,
+        borderRadius: 45,
+        borderColor: '#06c244',
+        borderWidth: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: "2%",
+        minHeight: 100,
+        minWidth: '100%'
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#06c244',
+        marginBottom: 10,
+    },
 });
