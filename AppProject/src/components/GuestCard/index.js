@@ -6,10 +6,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Icon, MD3Colors } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 
-import api from '../../../api';
+import api from '../../../api.js';
 
-export function GuestCard() {
+export function GuestCard(props) {
     const navigation = useNavigation();
+
+    const dataT = props.data;
     const [user, setUser] = React.useState([]);
 
     const [isEditing, setIsEditing] = React.useState(false);
@@ -24,16 +26,18 @@ export function GuestCard() {
 
     const getDataUser = async () => {
         try {
-            const response = await api.get('/user');
-            if (response.status === 200) {
-                setUser(response.data.user);
+            if (dataT && dataT.user_name) {
+                const res = await api.get(`/user/register/${dataT.user_name}`);
+                setUser(res.data.user);
             } else {
-                Alert.alert('Erro', 'Erro ao obter dados do usuário.');
+                alert('ID do usuário não encontrado.');
             }
         } catch (error) {
-            Alert.alert('Erro', `Erro ao obter dados do usuário: ${error}`);
+            alert(`Erro ao pegar os dados do usuário. ${error}`);
         }
     };
+    
+    
 
     React.useEffect(() => {
         getDataUser();
@@ -58,7 +62,7 @@ export function GuestCard() {
 
     const handleSavePress = async () => {
         try {
-            const response = await api.put('/info', info);
+            const response = await api.put(`/info/`, info);
             if (response.status === 200) {
                 Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
                 setIsEditing(false);
