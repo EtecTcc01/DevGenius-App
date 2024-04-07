@@ -8,11 +8,8 @@ import * as ImagePicker from 'expo-image-picker';
 
 import api from '../../../api.js';
 
-export function GuestCard(props) {
+export function GuestCard() {
     const navigation = useNavigation();
-
-    const dataT = props.data;
-    const [user, setUser] = React.useState([]);
 
     const [isEditing, setIsEditing] = React.useState(false);
     const [userInfo, setUserInfo] = React.useState({
@@ -22,21 +19,39 @@ export function GuestCard(props) {
         email: '',
         password: '',
         profileImage: '',
-    });
+    });      
+
 
     const getDataUser = async () => {
-        try {
-            if (dataT && dataT.user_name) {
-                const res = await api.get(`/user/register/${dataT.user_name}`);
-                setUser(res.data.user);
-            } else {
-                alert('ID do usuário não encontrado.');
-            }
-        } catch (error) {
-            alert(`Erro ao pegar os dados do usuário. ${error}`);
-        }
+        await api.get(`/user/`)
+            .then((res) => {
+                const userData = res.data.message[0];
+                setUserInfo({
+                    firstName: userData.user_name,
+                    lastName: userData.last_name,
+                    birthDate: userData.date_birth,
+                    email: userData.user_email,
+                    password: userData.user_password,
+                    profileImage: '',
+                });
+                console.log('Dados do usuário:', userData);
+            }).catch((error) => {
+                console.log(error);
+            });
     };
     
+    
+
+    // const storeDataUser = async ({ user }) => {
+    //     try {
+    //         const jsonValue = JSON.stringify(user);
+    //         await AsyncStorage.setItem('userLogin', jsonValue);
+
+    //         navigation.navigate('Tabs')
+    //     } catch (error) {
+    //         console.log(`Erro ao salvar dados do usuário. ${error}`)
+    //     }
+    // };
     
 
     React.useEffect(() => {
@@ -126,7 +141,7 @@ export function GuestCard(props) {
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.firstName}
+                    value={userInfo.firstName || ''}
                     editable={isEditing}
                     onChangeText={(text) => handleInputChange('firstName', text)}
                 />
@@ -135,7 +150,7 @@ export function GuestCard(props) {
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.lastName}
+                    value={userInfo.lastName || ''}
                     editable={isEditing}
                     onChangeText={(text) => handleInputChange('lastName', text)}
                 />
@@ -144,7 +159,7 @@ export function GuestCard(props) {
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.birthDate}
+                    value={userInfo.birthDate || ''}
                     editable={isEditing}
                     onChangeText={(text) => handleInputChange('birthDate', text)}
                 />
@@ -153,7 +168,7 @@ export function GuestCard(props) {
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.email}
+                    value={userInfo.email || ''}
                     editable={isEditing}
                     onChangeText={(text) => handleInputChange('email', text)}
                 />
@@ -162,7 +177,7 @@ export function GuestCard(props) {
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.password}
+                    value={userInfo.password || ''}
                     editable={isEditing}
                     onChangeText={(text) => handleInputChange('password', text)}
                 />
