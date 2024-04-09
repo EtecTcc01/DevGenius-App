@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import api from '../../../api';
 import { styles } from './style';
+import { Ionicons } from '@expo/vector-icons'; // Importando o Ionicons
 
 export function TeoryList() {
     const [courses, setCourses] = React.useState([]);
@@ -42,26 +43,36 @@ export function TeoryList() {
     const listCourses = courses.map((e, index) => (
         <TouchableOpacity
             key={index}
-            style={styles.button} // Aplicando o estilo ao TouchableOpacity
+            style={styles.button}
             onPress={() => handleCoursePress(e)}
         >
-            <Text style={styles.buttonText}>{e._name}</Text> {/* Aplicando o estilo ao Text */}
+            <Ionicons
+                size={24}
+                color='#06c244'
+                name={e.avatar} // supondo que 'avatar' é o nome do ícone
+            />
+            <Text style={styles.buttonText}>{e._name}</Text>
         </TouchableOpacity>
     ));
 
     const listTeories = teories.map((teory, index) => (
         <TouchableOpacity
             key={index}
-            style={styles.teoryButton} // Aplicando o estilo ao TouchableOpacity
+            style={styles.button}
             onPress={() => handleTeoryPress(teory)}
         >
-            <Text style={styles.teoryButtonText}>{teory._name}</Text> {/* Aplicando o estilo ao Text */}
+            <Ionicons
+                size={24}
+                color='#06c244'
+                name={teory.avatar} // supondo que 'avatar' é o nome do ícone
+            />
+            <Text style={styles.buttonText}>{teory._name}</Text>
         </TouchableOpacity>
     ));
 
     return (
-        <View style={styles.container}> {/* Aplicando o estilo ao View */}
-            <Text style={styles.title}>CADERNO TEÓRICO</Text> {/* Aplicando o estilo ao Text */}
+        <View style={styles.container}>
+            <Text style={styles.title}>CADERNO TEÓRICO</Text>
             {listCourses}
             {listTeories}
         </View>

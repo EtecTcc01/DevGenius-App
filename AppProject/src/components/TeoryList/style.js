@@ -2,8 +2,11 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: '#000',
-        padding: '5%%',
+        padding: '5%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     content: {
         backgroundColor: '#000',
@@ -14,11 +17,12 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems: 'center',
+        justifyContent: 'center',
         marginTop: '7%',
         marginLeft: '7%',
     },
     button: {
-        flex: 2,
+        flex: 1,
         borderRadius: 45,
         borderColor: '#06c244',
         borderWidth: 3,
@@ -26,18 +30,21 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: "2%",
         minHeight: 100,
-        minWidth: '100%'
+        minWidth: '40%',
+        flexDirection: 'row',
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+        marginLeft: '5%',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#06c244',
         marginBottom: 10,
+        textAlign: 'left',
     },
 });
