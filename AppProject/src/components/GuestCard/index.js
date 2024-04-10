@@ -22,36 +22,45 @@ export function GuestCard() {
     });      
 
 
+    // const getDataUser = async () => {
+    //     await api.get(`/user/`)
+    //         .then((res) => {
+    //             const userData = res.data.message[0];
+    //             setUserInfo({
+    //                 firstName: userData.user_name,
+    //                 lastName: userData.last_name,
+    //                 birthDate: userData.date_birth,
+    //                 email: userData.user_email,
+    //                 password: userData.user_password,
+    //                 profileImage: '',
+    //             });
+    //             console.log('Dados do usuário:', userData);
+    //         }).catch((error) => {
+    //             console.log(error);
+    //         });
+    // };
+    
+    
+
     const getDataUser = async () => {
-        await api.get(`/user/`)
-            .then((res) => {
-                const userData = res.data.message[0];
+        try {
+            const value = await AsyncStorage.getItem('userLogin')
+            if (value !== null) {
+                const userData = JSON.parse(value);
                 setUserInfo({
-                    firstName: userData.user_name,
+                    firstName: userData.first_name,
                     lastName: userData.last_name,
                     birthDate: userData.date_birth,
                     email: userData.user_email,
                     password: userData.user_password,
                     profileImage: '',
                 });
-                console.log('Dados do usuário:', userData);
-            }).catch((error) => {
-                console.log(error);
-            });
+                console.log(userData)
+            }
+        } catch (error) {
+            console.log(error)
+        }
     };
-    
-    
-
-    // const storeDataUser = async ({ user }) => {
-    //     try {
-    //         const jsonValue = JSON.stringify(user);
-    //         await AsyncStorage.setItem('userLogin', jsonValue);
-
-    //         navigation.navigate('Tabs')
-    //     } catch (error) {
-    //         console.log(`Erro ao salvar dados do usuário. ${error}`)
-    //     }
-    // };
     
 
     React.useEffect(() => {

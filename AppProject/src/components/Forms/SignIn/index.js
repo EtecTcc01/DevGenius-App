@@ -3,6 +3,7 @@ import { styles } from './style'
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import api from '../../../../api';
 
 export function SignInForm() {
     const navigation = useNavigation();
@@ -15,13 +16,22 @@ export function SignInForm() {
 
     async function handleRegister() {
         if (confirmPass != userPassword) {
-            return alert("Senha ou e-mail incorreto.");
+            return alert("Senha não compatíveis.");
+        }
+        if (!confirmPass || !userPassword) {
+            return alert("Por favor, inira uma senha.");
         }
         if (!userEmail) {
             return alert("Por favor, insira um e-mail.");
         }
         if (!userName) {
             return alert("Por favor, insira um nome de usuário.");
+        }
+
+        try {
+            const res = await api.get(`user/verify/${userEmail}`);
+        } catch (error) {
+            return alert(`Email já cadastrado.`);
         }
 
         const dataUser = { userName, userEmail, userPassword, typeUser: "comum" }

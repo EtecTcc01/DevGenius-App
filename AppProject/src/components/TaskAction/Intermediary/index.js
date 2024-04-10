@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styles } from "./style";
 import api from "../../../../api";
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { Modal, Portal, PaperProvider } from 'react-native-paper';
 
@@ -19,7 +19,10 @@ export function IntermediaryTask(props) {
     const [alt, setAlt] = React.useState();
     const [altBkp, setAltBkp] = React.useState();
     const [visible, setVisible] = React.useState(false);
-    const [listAlt, setListAlt] = React.useState([]);
+    const [choice, setChoice] = React.useState([]);
+
+    const [selectedId, setSelectedId] = React.useState([]);
+    const [idTip, setIdTip] = React.useState([]);
 
     const getAnswer = async () => {
         try {
@@ -81,7 +84,8 @@ export function IntermediaryTask(props) {
         setCount(0);
         setAlt(altBkp);
         setTaskT(dataT.task_text);
-        setListAlt([])
+        setChoice([])
+        setSelectedId([])
     }
 
     function altCompare(answerC) {
@@ -89,7 +93,7 @@ export function IntermediaryTask(props) {
         let temp = taskT
 
         for (let i = 0; i < answerC.length; i++) {
-            if (listAlt[i] == answerC[i]) {
+            if (choice[i] == answerC[i]) {
                 ccount++;
             } else {
                 break
@@ -97,7 +101,7 @@ export function IntermediaryTask(props) {
         }
 
         if (ccount >= answerC.length) {
-            listAlt.forEach(e => {
+            choice.forEach(e => {
                 temp = temp.replace("‼", e)
             });
             setTaskT(temp)
@@ -108,20 +112,23 @@ export function IntermediaryTask(props) {
             alert("Errouuuuuu!");
             setTaskT(dataT.task_text);
             setAlt(altBkp);
-            setListAlt([]);
+            setChoice([]);
+            setSelectedId([])
         }
     }
 
-    async function replaceTxt(e) {
-        const altIndex = alt.findIndex((value, index, array) => { return value == e })
-        const remove = alt.toSpliced(altIndex, 1)
-        const list = listAlt; setAlt(remove);
+    async function handlePress(e) {
+        // setSelectedId(index)
+        // const altIndex = alt.findIndex((value, index, array) => { return value == e })
+        // const remove = alt.toSpliced(altIndex, 1)
+        // setAlt(remove);
+
+        const list = choice;
+        list.push(e); setChoice(list)
 
         const answerC = answer.answer_text.split(" ");
-        list.push(e)
-
         setCount(count + 1);
-        setListAlt(list)
+
 
         if (count >= answerC.length - 1) {
             setTimeout(() => {
@@ -132,15 +139,27 @@ export function IntermediaryTask(props) {
 
     if (visible == true) {
 
-        const listAlts = () => alt.map((e) => {
+        const alts = () => alt.map((e, index) => {
             return (
-                <TouchableOpacity style={styles.button} onPress={() => replaceTxt(e)}>
+                <TouchableOpacity
+                    key={index}
+                    disabled={selectedId.includes(index) || idTip.includes(index) ? true : false}
+                    style={selectedId.includes(index) || idTip.includes(index) ? [styles.button, {borderColor: "#aaaaaa"}] : styles.button}
+                    onPress={() => {
+                        handlePress(e, index)
+                        setSelectedId(() => {
+                            let test = selectedId
+                            test.push(index)
+                            return test
+                        })
+                    }}>
                     <Text style={styles.title}>{e}</Text>
                 </TouchableOpacity>
             );
         });
 
-        const altRemoved = () => listAlt.map((e) => {
+
+        const altRemoved = () => choice.map((e) => {
             try {
                 return (
                     <TouchableOpacity style={styles.button} onPress={() => replaceTxt(e)}>
@@ -149,6 +168,43 @@ export function IntermediaryTask(props) {
                 );
             } catch { [] }
         })
+
+        const nRandom = () => {
+            let answerTip = answer.answer_text.split(" ")
+            let positions = []
+
+            answerTip.forEach(e => {
+                positions.push(alt.indexOf(e))
+            })
+
+            let primaryT = []; let secondT = []
+            let tipFinal = []; let ccount = 1
+
+            while (ccount <= 2) {
+                if (tipFinal.length < 1) {
+                    primaryT = Math.floor(Math.random() * alt.length)
+
+                    if (positions.includes(primaryT)) {
+                        primaryT = Math.floor(Math.random() * alt.length)
+                    } else {
+                        tipFinal.push(primaryT)
+                        ccount++;
+                    }
+                } else {
+                    secondT = Math.floor(Math.random() * alt.length)
+
+                    if (tipFinal.includes(secondT) || positions.includes(secondT)) {
+                        secondT = Math.floor(Math.random() * alt.length)
+                    } else {
+                        tipFinal.push(secondT)
+                        ccount++
+                    }
+                }
+                console.log(tipFinal)
+            }
+
+            setIdTip(tipFinal);
+        }
 
         return (
             <PaperProvider>
@@ -175,6 +231,16 @@ export function IntermediaryTask(props) {
                                 </Modal>
                             </Portal>
 
+                            <TouchableOpacity style={styles.btn}
+                                disabled={idTip.length > 0 ? true : false}
+                                onPress={nRandom}>
+                                <MaterialCommunityIcons
+                                    name="lightbulb-on-outline"
+                                    size={24}
+                                    color="#06c244"
+                                />
+                            </TouchableOpacity>
+
                             <TouchableOpacity style={styles.btn} onPress={showModal}>
                                 <AntDesign
                                     name="questioncircleo"
@@ -183,7 +249,7 @@ export function IntermediaryTask(props) {
                                 />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.btn} onPress={() => reloadT()}>
+                            <TouchableOpacity style={styles.btn} onPress={reloadT}>
                                 <Ionicons
                                     size={24}
                                     color="#06c244"
@@ -199,7 +265,7 @@ export function IntermediaryTask(props) {
                         <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved()}</ScrollView>
                     </View>
                     <View style={styles.contentB}>
-                        <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts()}</ScrollView>
+                        <ScrollView contentContainerStyle={styles.contentScroll}>{alts()}</ScrollView>
                     </View>
                 </View>
             </PaperProvider>

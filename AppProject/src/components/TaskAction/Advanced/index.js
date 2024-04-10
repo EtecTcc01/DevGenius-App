@@ -1,7 +1,9 @@
 import * as React from "react";
 import { styles } from "./style";
 import api from "../../../../api";
+import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Modal, Portal, PaperProvider } from 'react-native-paper';
 
 export function AdvancedTask(props) {
     const dataT = props.data;
@@ -11,9 +13,26 @@ export function AdvancedTask(props) {
     const [altBkp, setAltBkp] = React.useState([]);
     const [codeTxt, setCodeTxt] = React.useState([]);
     const [subCode, setSubCode] = React.useState([]);
+
     const [visible, setVisible] = React.useState(false);
-    const [count, setCount] = React.useState(1);
-    const [listAlt, setListAlt] = React.useState([])
+    const [first, setFirst] = React.useState(true);
+    const [count, setCount] = React.useState(0);
+    // const [listAlt, setListAlt] = React.useState([])
+
+    const [selectedId, setSelectedId] = React.useState([]);
+    const [selectedAlt, setSelectedAlt] = React.useState([]);
+
+    const [idCorrect, setIdCorrect] = React.useState([]);
+    // const [correctedAlts, setCorrectedAlts] = React.useState([]);
+
+    const [idTip, setIdTip] = React.useState([]);
+    const [remainingId, setRemainingId] = React.useState([]);
+    const [remainingAlt, setRemainingAlt] = React.useState([]);
+
+    const [visibleModal, setVisibleModal] = React.useState(false);
+
+    const showModal = () => setVisibleModal(true);
+    const hideModal = () => setVisibleModal(false);
 
     const getAnswer = async () => {
         try {
@@ -31,6 +50,7 @@ export function AdvancedTask(props) {
 
     const splitAnswer = async ({ answerTxt }) => {
         const splitTxt = answerTxt.split("\n");
+        console.log(splitTxt)
 
         let splitFinal = []; let subFinal = [];
         let controlTxt = [];
@@ -38,6 +58,7 @@ export function AdvancedTask(props) {
         for (let i = 0; i < splitTxt.length; i++) {
             let splitTemp = splitTxt[i].split(" ")
             let splitChar = splitTxt[i].split("")
+
             let subTxt = []; let subTemp = [];
             let controlT = [];
 
@@ -78,13 +99,19 @@ export function AdvancedTask(props) {
         }
 
         setSubCode(controlTxt)
-        setCodeTxt(subFinal)
+        setCodeTxt(() => {
+            const final = []
+            for (let i = 0; i < subFinal.length; i++) {
+                final.push(`${i}.   ${subFinal[i]}`)
+            }
+            return final
+        })
+
         random({ alts: splitFinal })
     };
 
     const random = ({ alts }) => {
         const splitT = [];
-        console.log(alts)
 
         for (let i = alts.length - 1; i > -1; i--) {
             let temp = alts[i];
@@ -114,107 +141,317 @@ export function AdvancedTask(props) {
         setVisible(true);
     };
 
-    function altCompare({ temp }) {
-        let answerT = answer.answer_text.split("\n")
-        let tempAns = []; let ccount = 0;
+    function altCompare(altList, answerT, idsCorrect) {
+        let answerText = []; let ccount = 0;
+        let correctlyIds = idCorrect
 
-        if (count >= altBkp.length) {
-            temp.forEach(element => {
-                tempAns.push(element.slice(0, (element.length) - 1));
-            });
+        idsCorrect.forEach(element => {
+            correctlyIds.push(element)
+        });
 
-            for (let i = 0; i < tempAns.length; i++) {
-                if (answerT[i] == tempAns[i]) {
-                    console.log("true")
-                    ccount++;
+        answerT.forEach((element) => {
+            let temp = element.split(" ")
+            for (let i = 0; i < temp.length; i++) {
+                answerText.push(temp[i])
+            }
+        })
+
+        if (first == true) {
+            for (let i = 0; i < answerText.length; i++) {
+                if (answerText[i] == altList[i]) {
+                    console.log(true)
+                    ccount++
                 } else {
-                    console.log("false")
+                    console.log(false)
                 }
             }
-
-            setTimeout(() => {
-                if (ccount == answerT.length) {
-                    alert("Corretissimo")
-                } else {
-                    alert("Erradissimo")
-                    splitAnswer({ answerTxt: answer.answer_text })
-                    setCount(1)
-                    setAlt(altBkp);
-                    setListAlt([])
-                }
-            }, 250)
         } else {
-            []
+            let altChoice = []; let altVerify = []
+
+            altList.forEach((element, index) => {
+                altChoice.push(element.slice(5, element.length - 1))
+
+                const altsV = altChoice[index].split(" ")
+                for (let i = 0; i < altsV.length; i++) {
+                    altVerify.push(altsV[i])
+                }
+            })
+
+            for (let i = 0; i < answerText.length; i++) {
+                if (answerText[i] == altVerify[i]) {
+                    console.log(true)
+                    ccount++
+                } else {
+                    console.log(false)
+                }
+            }
         }
+
+        setTimeout(() => {
+            if (ccount >= answerText.length) {
+                alert("Corretissimo")
+            } else {
+                alert("Erradissimo")
+                setCount(0)
+                setRemainingId([])
+                setRemainingAlt([])
+                setSelectedId(correctlyIds)
+            }
+        }, 250)
+        setFirst(false)
+
     }
 
-    async function replaceTxt(e) {
-        setTimeout(() => {
-            const altIndex = alt.findIndex((value, index, array) => { return value == e })
-            const remove = alt.toSpliced(altIndex, 1)
-            const list = listAlt; setAlt(remove);
+    function firstReplace(e, index) {
 
-            list.push(e); setListAlt(list)
-        }, 100)
+        let listId = selectedId
+        listId.push(index)
+        setSelectedId(listId)
 
-        let subCount = 0;
-        let subCodeText = subCode;
-        let codeTxtTemp = codeTxt;
+        let altList = selectedAlt
+        altList.push(e)
+        setSelectedAlt(altList)
 
-        for (let i = 0; i < subCodeText.length; i++) {
-            let splitSpaceT = subCodeText[i].split(" ")
-            let textTemp = ""; let subTextTemp = "";
+        if (listId.length >= altBkp.length) {
+            const answerT = answer.answer_text.split("\n")
 
-            splitSpaceT.forEach(element => {
-                if (element.includes("‼") == true && subCount == 0) {
-                    if ((textTemp.length < 1)) {
-                        textTemp = `${e}`
-                        subTextTemp = `${e}`
+            let subCount = 0; let subCodeText = subCode;
+            let codeTxtTemp = []; let idsCorrect = []
+
+            console.log({ subCodeText })
+
+            codeTxt.forEach((element, index) => {
+                codeTxtTemp.push(element.slice(5, element.length - 1))
+            })
+
+            answerT.forEach((element, index) => {
+                const eSplit = element.split(" ")
+                const subCodeT = subCodeText[index].split(" ")
+                let ccount = 0; let textTemp = "";
+                let subTextTemp = "";
+
+                while (ccount < eSplit.length) {
+                    if (altList[subCount] == eSplit[ccount] && subCodeT[ccount].includes("‼")) {
+                        if (textTemp.length < 1) {
+                            textTemp = `${altList[subCount]}`
+                            subTextTemp = `${altList[subCount]}`
+
+                            idsCorrect.push(listId[subCount])
+                            // altCorrects.push(altList[subCount])
+                        } else {
+                            textTemp += ` ${altList[subCount]}`
+                            subTextTemp += ` ${altList[subCount]}`
+
+                            idsCorrect.push(listId[subCount])
+                            // altCorrects.push(altList[subCount])
+                        }
                     } else {
-                        textTemp += ` ${e}`
-                        subTextTemp += ` ${e}`
+                        if (textTemp.length < 1) {
+                            textTemp = `${subCodeT[ccount].includes("‼") == true ? subCodeT[ccount].slice(0, subCodeT[ccount].length - 3) : subCodeT[ccount]}`
+                            subTextTemp = `${subCodeT[ccount]}`
+                        } else {
+                            textTemp += ` ${subCodeT[ccount].includes("‼") == true ? subCodeT[ccount].slice(0, subCodeT[ccount].length - 3) : subCodeT[ccount]}`
+                            subTextTemp += ` ${subCodeT[ccount]}`
+                        }
                     }
-                    subCount = 1;
-                } else {
-                    if ((textTemp.length < 1)) {
-                        textTemp = `${element.includes("‼") == true ? element.slice(0, element.length - 3) : element}`
-                        subTextTemp = `${element}`
+
+                    ccount++; subCount++;
+                }
+
+                codeTxtTemp[index] = `${index}.   ${textTemp.slice(0, textTemp.length)}\n`
+                subCodeText[index] = `${subTextTemp}`
+            })
+
+            setCodeTxt([codeTxtTemp]); setSubCode(subCodeText)
+
+            altCompare(altList, answerT, idsCorrect)
+        }
+
+        setCount(count + 1)
+    }
+
+    function replaceTxt(e, altIndex) {
+
+        let idsRemaining = remainingId
+        idsRemaining.push(altIndex)
+        setRemainingId(idsRemaining)
+
+        // let idList = selectedId
+        // idList.push(altIndex)
+        // setSelectedId(idList)
+
+        let altList = remainingAlt
+        altList.push(e)
+        setRemainingAlt(altList)
+
+        if ((idsRemaining.length + selectedId.length) >= altBkp.length) {
+            const answerT = answer.answer_text.split("\n")
+
+            let subCount = 0; let subTemp = subCode;
+            let codeTemp = []; let idsCorrectly = []
+
+            codeTxt.forEach((element, index) => {
+                codeTemp.push(element.slice(5, element.length - 1))
+            })
+
+            answerT.forEach((element, index) => {
+                const answerS = element.split(" ")
+                const subCodeTemp = subTemp[index].split(" ")
+                let textTemp = ""; let subC = ""
+
+                for (let i = 0; i < answerS.length; i++) {
+                    if (subCodeTemp[i].includes("‼")) {
+                        if (altList[subCount] == answerS[i]) {
+                            if (textTemp.length < 1) {
+                                textTemp = `${altList[subCount]}`
+                                subC = `${altList[subCount]}`
+
+                                idsCorrectly.push(idsRemaining[subCount])
+                                subCount++;
+                            } else {
+                                textTemp += ` ${altList[subCount]}`
+                                subC += ` ${altList[subCount]}`
+
+                                idsCorrectly.push(idsRemaining[subCount])
+                                subCount++;
+                            }
+                        } else {
+                            if (textTemp.length < 1) {
+                                textTemp = `${subCodeTemp[i].includes("‼") == true ? subCodeTemp[i].slice(0, subCodeTemp[i].length - 3) : subCodeTemp[i]}`
+                                subC = `${subCodeTemp[i]}`
+                                subCount++
+                            } else {
+                                textTemp += ` ${subCodeTemp[i].includes("‼") == true ? subCodeTemp[i].slice(0, subCodeTemp[i].length - 3) : subCodeTemp[i]}`
+                                subC += ` ${subCodeTemp[i]}`
+                                subCount++
+                            }
+                        }
                     } else {
-                        textTemp += ` ${element.includes("‼") == true ? element.slice(0, element.length - 3) : element}`
-                        subTextTemp += ` ${element}`
+                        if (textTemp.length < 1) {
+                            textTemp = `${subCodeTemp[i].includes("‼") == true ? subCodeTemp[i].slice(0, subCodeTemp[i].length - 3) : subCodeTemp[i]}`
+                            subC = `${subCodeTemp[i]}`
+                        } else {
+                            textTemp += ` ${subCodeTemp[i].includes("‼") == true ? subCodeTemp[i].slice(0, subCodeTemp[i].length - 3) : subCodeTemp[i]}`
+                            subC += ` ${subCodeTemp[i]}`
+                        }
                     }
                 }
-                setCount((count + 1))
-            });
-            codeTxtTemp[i] = `${textTemp.slice(0, textTemp.length)}\n`
-            subCodeText[i] = `${subTextTemp}`
+                codeTemp[index] = `${index}.   ${textTemp.slice(0, textTemp.length)}\n`
+                subTemp[index] = `${subC}`
+
+            })
+
+            setCodeTxt([codeTemp]); setSubCode(subTemp)
+            altCompare(codeTemp, answerT, idsCorrectly)
         }
-        setCodeTxt([codeTxtTemp])
-        altCompare({ temp: codeTxtTemp })
+        setCount((count + 1))
+    }
+
+    function reloadT() {
+        setCount(0)
+        setRemainingId([])
+        setRemainingAlt([])
+        setSelectedId(idCorrect)
+    }
+
+    function nRandom() {
+
     }
 
     if (visible == true) {
 
-        const listAlts = alt.map((e) => {
+        const listAlts = alt.map((e, index) => {
             return (
-                <TouchableOpacity style={styles.button} onPress={() => replaceTxt(e)}>
+                <TouchableOpacity
+                    style={selectedId.includes(index) || remainingId.includes(index) ? [styles.button, { borderColor: "#aaaaaa" }] : styles.button}
+                    id={index}
+                    name={index}
+                    key={index}
+                    disabled={selectedId.includes(index) || remainingId.includes(index) ? true : false}
+                    onPress={() => {
+                        first == true ? firstReplace(e, index) : replaceTxt(e, index)
+                    }}>
                     <Text style={styles.title}>{e}</Text>
                 </TouchableOpacity>
             )
         });
 
+        const text = codeTxt.map((e, index) => {
+            return (
+                <View id={index} name={index} key={index} style={{ margin: '5px' }}>
+                    <Text style={styles.titleA}>{e}</Text>
+                </View>
+            )
+        })
+
         return (
-            <View style={styles.container}>
-                <View style={styles.content}>
-                    <Text style={styles.title}>{dataT.task_text}</Text>
+            <PaperProvider>
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <View style={styles.contentBtn}>
+                            <Portal>
+                                <Modal visible={visibleModal}
+                                    onDismiss={hideModal}
+                                    dismissable="true"
+                                    dismissableBackButton="true"
+                                    contentContainerStyle={{
+                                        position: 'absolute',
+                                        backgroundColor: 'white',
+                                        padding: 20,
+                                        width: '90%',
+                                        flex: 1,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center'
+                                    }}>
+                                    <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                                </Modal>
+                            </Portal>
+
+                            <TouchableOpacity style={styles.btn}
+                                disabled={idTip.length > 0 ? true : false}
+                                onPress={nRandom}
+                            >
+                                <MaterialCommunityIcons
+                                    name="lightbulb-on-outline"
+                                    size={24}
+                                    color="#06c244"
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.btn} onPress={showModal}>
+                                <AntDesign
+                                    name="questioncircleo"
+                                    size={24}
+                                    color="#06c244"
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.btn}
+                                disabled={first == true ? true : false}
+                                onPress={reloadT}
+                            >
+                                <Ionicons
+                                    size={24}
+                                    color={first == true ? "#aaaaaa" : "#06c244"}
+                                    name="reload"
+                                />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.contentText}>
+                            {text}
+                        </View>
+
+                    </View>
+                    {/* <View style={styles.contentA}>
+                        <ScrollView contentContainerStyle={styles.contentScroll}><Text>aaaaaaaaa</Text></ScrollView>
+                    </View> */}
+                    <View style={styles.contentB}>
+                        <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
+                    </View>
                 </View>
-                <View style={styles.contentA}>
-                    <><Text style={styles.titleA}>{codeTxt}</Text></>
-                </View>
-                <View style={styles.contentB}>
-                    <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
-                </View>
-            </View>
+            </PaperProvider>
         );
     } else {
         [];
