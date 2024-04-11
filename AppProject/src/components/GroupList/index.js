@@ -11,6 +11,7 @@ export function GroupList() {
     const [user, setUser] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [idGroup, setIdGroup] = React.useState("");
+    const [group, setGroup] = React.useState(false);
 
     const getDataUser = async () => {
         await AsyncStorage.getItem('userLogin')
@@ -32,6 +33,9 @@ export function GroupList() {
         await api.get(`/group/userGroups/${userName}`)
             .then((res) => {
                 setGroups(res.data.group)
+                if (res.data.group !== undefined) {
+                    setGroup(true)
+                }
             }).catch((error) => {
                 alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
             })
@@ -56,14 +60,14 @@ export function GroupList() {
         }
     }
 
-    const listGroups = groups.map((item, index) => 
+    const listGroups = group == true ? groups.map((item, index) =>
         <TouchableOpacity style={styles.listItem} key={index}>
             <List.Item
                 title={item._name}
                 titleStyle={styles.listItemTitle}
             />
         </TouchableOpacity>
-    )
+    ) : <View />
 
     return (
         <View style={styles.container}>

@@ -44,7 +44,7 @@ export function TeoryList() {
         <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => handleCoursePress(e)}
+            // onPress={() => handleCoursePress(e)}
         >
             <Ionicons
                 size={24}
@@ -59,7 +59,7 @@ export function TeoryList() {
         <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => handleTeoryPress(teory)}
+            // onPress={() => handleTeoryPress(teory)}
         >
             <Ionicons
                 size={24}

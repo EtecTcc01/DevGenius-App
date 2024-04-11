@@ -41,11 +41,37 @@ export function SignInForm() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title} variant="titleLarge">Cadastro</Text>
-            <TextInput style={styles.input} label="Nome de Usuário:" value={userName} onChangeText={userName => setUserName(userName)} />
-            <TextInput style={styles.input} label="E-mail:" value={userEmail} onChangeText={userEmail => setUserEmail(userEmail)} />
-            <TextInput style={styles.input} label="Senha:" value={userPassword} onChangeText={userPassword => setUserPassword(userPassword)} />
-            <TextInput style={styles.input} label="Confirmar senha:" value={confirmPass} onChangeText={confirmPass => setConfirmPass(confirmPass)} />
+            <Text style={styles.title}
+            variant="titleLarge">Cadastro</Text>
+
+            <TextInput style={styles.input}
+            label="Nome de Usuário:"
+            textColor='white'
+            value={userName}
+            onChangeText={userName => 
+            setUserName(userName)} />
+
+            <TextInput style={styles.input}
+            label="E-mail:"
+            textColor='white'
+            value={userEmail}
+            onChangeText={userEmail =>
+            setUserEmail(userEmail)} />
+
+            <TextInput style={styles.input}
+            label="Senha:"
+            textColor='white'
+            value={userPassword}
+            onChangeText={userPassword =>
+            setUserPassword(userPassword)} />
+
+            <TextInput style={styles.input}
+            label="Confirmar senha:"
+            textColor='white'
+            value={confirmPass}
+            onChangeText={confirmPass =>
+            setConfirmPass(confirmPass)} />
+            
             <Button
                 style={[styles.btn, { backgroundColor: '#06c244' }]}
                 mode="contained"

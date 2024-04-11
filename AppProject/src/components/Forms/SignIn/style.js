@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
         marginTop: 10,
         width: '80%',
         backgroundColor: 'transparent',
+        color: 'white'
     },
     btn: {
         marginTop: 10,

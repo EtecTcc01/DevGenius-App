@@ -60,6 +60,7 @@ export function LogInForm() {
             <TextInput
                 style={[styles.input, { color: '#06c244' }]}
                 label="E-mail:"
+                textColor='white'
                 value={userEmail}
                 onChangeText={userEmail => setUserEmail(userEmail)}
             />
@@ -67,6 +68,7 @@ export function LogInForm() {
             <TextInput
                 style={[styles.input, { color: '#06c244' }]}
                 label="Senha:"
+                textColor='white'
                 value={userPassword}
                 onChangeText={userPassword => setUserPassword(userPassword)}
                 secureTextEntry
