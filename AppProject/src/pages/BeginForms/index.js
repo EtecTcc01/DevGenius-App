@@ -1,8 +1,9 @@
 import { StyleSheet} from 'react-native';
 
 //IMPORT DOS COMPONENTS A SEREM RENDERIZADOS
+// import { LogInForm } from '../../components/Forms/LogIn'; //ERRO SEM SENTIDO
 import { LogInForm } from '../../components/Forms/Login';
-import { SignInForm } from '../../components/Forms/Signin';
+import { SignInForm } from '../../components/Forms/Sign';
 import { InfoForm } from '../../components/Forms/Info';
 
 export function BeginForms({ route }) {
