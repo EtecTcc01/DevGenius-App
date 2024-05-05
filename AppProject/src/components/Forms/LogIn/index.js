@@ -1,57 +1,50 @@
 import * as React from 'react';
 import { styles } from './style';
-import api from '../../../../api';
 import { View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { Button, Text, TextInput } from 'react-native-paper'; //IMPORTAÇÃO DE COMPONENTS DO PAPER
+import { useNavigation } from '@react-navigation/native'; //IMPORTAÇÃO P/TRANSFERENCIA DE TELA
+
+//IMPORT'S DA FUNÇÕES P/ASYNC E USUÁRIO
+import { storeUserData } from '../../../functions/async.services';
+import { userLogin } from '../../../functions/user.services';
 
 export function LogInForm() {
-    const navigation = useNavigation();
-    const [userEmail, setUserEmail] = React.useState("");
-    const [userPassword, setUserPassword] = React.useState("");
+    const navigation = useNavigation(); //PASSANDO AS FUNÇÕES DO IMPORT
 
-    async function handleLogin() {
-        const dataLogin = { userEmail, userPassword };
+    //STATE P/ARMAZENAR DADOS DO USUÁRIO
+    const [user, setUser] = React.useState({
+        userEmail: '',
+        userPassword: ''
+    })
 
-        await api.post('/user/validation', dataLogin)
-            .then(() => {
-                alert("Usuário logado com sucesso.");
-                getDataUser()
-            }).catch((error) => {
-                alert(`Erro ao logar na conta usuário. ${error}`);
-                return []
-            })
+    //FUNÇÃO P/LOGAR NA CONTA DO USUÁRIO
+    async function handlerLogin() {
+
+        const skip = await userLogin({ user }).then((data) => {
+            if (!data) {
+                alert("Erro no login. Verifique o email e senha do usuário...")
+                return
+            }
+            // ARMAZENANDO DADOS DO USUÁRIO COM ASYNC
+            storeUserData({ user: data })
+                .then((res) => {
+                    if (!res) {
+                        alert("Erro ao armazenar os dados do usuário")
+                        return
+                    }
+                    navigation.navigate('Tabs') //USANDO DA TRANSFERENCIA DE TELA E NAVEGANDO P/A FUNÇÃO DE ROTA TabsRoutes
+                })
+        })
     }
 
-    const getDataUser = async () => {
-        await api.get(`/user/infoUn/${userEmail}`)
-            .then((res) => {
-                storeDataUser({ user: res.data.user[0] })
-                console.log(res.data.user[0])
-            }).catch((error) => {
-                alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
-            })
-    };
+    // function handleForgotPass() {
+    //     // Lógica para lidar com esqueceu a senha
+    // }
 
-    const storeDataUser = async ({ user }) => {
-        try {
-            const jsonValue = JSON.stringify(user);
-            await AsyncStorage.setItem('userLogin', jsonValue);
-
-            navigation.navigate('Tabs')
-        } catch (error) {
-            console.log(`Erro ao salvar dados do usuário. ${error}`)
-        }
-    };
-
-    // Função para navegar para a tela de cadastro (SignIn)
-    function handleRegister() {
-        navigation.navigate('SignIn');
-    }
-
-    function handleForgotPass() {
-        // Lógica para lidar com esqueceu a senha
+    //FUNÇÃO P/ALTERAR OU ADICIONAR UM NOVO "ELEMENTO" NO OBJETO
+    function handlerOnChangeUser({ _name, _value }) {
+        setUser({ ...user, [_name]: _value })
     }
 
     return (
@@ -60,17 +53,21 @@ export function LogInForm() {
             <TextInput
                 style={[styles.input, { color: '#06c244' }]}
                 label="E-mail:"
+                id='userEmail'
+                key='userEmail'
                 textColor='white'
-                value={userEmail}
-                onChangeText={userEmail => setUserEmail(userEmail)}
+                value={user.userEmail}
+                onChangeText={event => handlerOnChangeUser({ _name: "userEmail", _value: event })}
             />
 
             <TextInput
                 style={[styles.input, { color: '#06c244' }]}
                 label="Senha:"
+                id='userPassword'
+                key='userPassword'
                 textColor='white'
-                value={userPassword}
-                onChangeText={userPassword => setUserPassword(userPassword)}
+                value={user.userPassword}
+                onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
                 secureTextEntry
             />
 
@@ -78,7 +75,8 @@ export function LogInForm() {
                 style={[styles.btnLogin, { backgroundColor: '#06c244', marginBottom: 10 }]}
                 mode="contained"
                 labelStyle={{ color: '#000', fontWeight: 'bold', fontSize: 18 }}
-                onPress={() => handleLogin()}
+                key="handlerLogin"
+                onPress={() => handlerLogin()}
             >
                 Entrar
             </Button>
@@ -86,7 +84,8 @@ export function LogInForm() {
             <Button
                 style={[styles.btnForgot, { color: '#06c244', fontSize: 16, marginTop: 20 }]}
                 mode="text"
-                onPress={() => handleForgotPass()}
+                key="forgotPass"            
+                // onPress={() => handleForgotPass()}
             >
                 Esqueceu a senha?
             </Button>
@@ -94,8 +93,9 @@ export function LogInForm() {
             <Button
                 style={[styles.btnRegister, { backgroundColor: '#06c244' }]}
                 mode="contained"
+                key="handlerSignIn"
                 labelStyle={{ color: '#000', fontWeight: 'bold', fontSize: 18 }}
-                onPress={() => handleRegister()}
+                onPress={() => navigation.navigate("Begin-Form", { operation: "Register" })}
             >
                 Cadastre-se
             </Button>

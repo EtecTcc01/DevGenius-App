@@ -1,84 +1,68 @@
 import * as React from 'react';
 import { styles } from './style'
-import api from '../../../../api';
 import { View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Button, Text, TextInput } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export function InfoForm(props) {
-    const navigation = useNavigation();
-    const dataUser = props.data;
+import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA
+import { storeUserData } from '../../../functions/async.services'; //IMPORT DA FUNÇÃO DE ARMAZENAR DADOS NO ASYNC
+import { Button, Text, TextInput } from 'react-native-paper'; //IMPORT DOS COMPONENTS DO PAPER
+import { userRegisterInfo } from '../../../functions/user.services'; //IMPORT DA FUNÇÃO DE CADASTRO DE INFORMAÇÕES DO USUÁRIO
 
-    const [userName, setUserName] = React.useState(dataUser.userName);
-    const [userSex, setUserSex] = React.useState("");
-    const [userDate, setUserDate] = React.useState("");
-    const [firstName, setFirstName] = React.useState("");
-    const [lastName, setLastName] = React.useState("");
+export function InfoForm({ user }) {
+    const navigation = useNavigation(); //VAR -> RECEBENDO AS FUNÇÕES DO IMPORT
 
+    //STATE P/ARMAZENAR DADOS DO USUÁRIO
+    const [info, setInfo] = React.useState({
+        firstName: "",
+        lastName: "",
+        userDate: "",
+        userSex: "",
+        userId: user._id
+    })
 
-    async function handleRegister() {
-        if (!userSex) {
-            return alert("Por favor, insira seu sexo.");
+    //FUNÇÃO P/CADASTRAR O UUÁRIO
+    function handlerRegisterInfo() {
+        //FAZENDO AS VALIDAÇÕES DE NEGAÇÃO
+        if (!info.userSex) {
+            alert("Por favor, insira o sexo.");
+            return
         }
-        if (!firstName) {
-            return alert("Por favor, insira seu nome.");
+        if (!info.firstName) {
+            alert("Por favor, insira o nome.");
+            return
         }
-        if (!lastName) {
-            return alert("Por favor, insira seu sobrenome.");
+        if (!info.lastName) {
+            alert("Por favor, insira o sobrenome.");
+            return
         }
-        if (!userDate) {
-            return alert("Por favor, insira uma data de nascimento.");
+        if (!info.userDate) {
+            alert("Por favor, insira a data de nascimento.");
+            return
         }
 
-        try {
-            await api.post('/user/register', dataUser)
+        //REGISTRANDO INFORMAÇÕES DE USUÁRIO
+        userRegisterInfo({ info: info })
+            .then((data) => {
+                if (!data) {
+                    console.log("Erro ao cadastrar informações do usuário")
+                    return
+                }
 
-            handleInfo();
-        } catch (error) {
-            alert(`Erro ao cadastrar usuário. ${error}`);
-        }
+                // ARMAZENANDO INFORMAÇÕES NO ASYNC STORAGE
+                storeUserData({ user: data })
+                    .then((res) => {
+                        if (!res) {
+                            console.log("Erro ao armazenar informações do usuário")
+                            return
+                        }
+                        navigation.navigate("Tabs")
+                    })
+            })
     }
 
-
-    async function handleInfo() {
-        const dataInfo = { userName, firstName, lastName, userDate, userSex };
-
-        try {
-            await api.post('/info', dataInfo);
-
-            alert("Usuário cadastrado com sucesso.")
-
-            const user = {
-                date_birth: userDate,
-                first_name: firstName,
-                last_name: lastName,
-                total_exp: 0,
-                user_email: dataUser.userEmail,
-                user_inactive: 0,
-                user_level: 0,
-                user_name: userName,
-                user_password: dataUser.userPassword,
-                user_sex: userSex
-            }
-
-            storeDataUser({user: user})
-        } catch (error) {
-            alert(`Erro ao cadastrar informações do usuário. ${error}`);
-        }
+    //FUNÇÃO P/ALTERAR OU ADICIONAR UM NOVO "ELEMENTO" NO OBJETO
+    function handlerOnChangeUser({ _name, _value }) {
+        setInfo({ ...info, [_name]: _value })
     }
-
-    const storeDataUser = async ({ user }) => {
-        console.log(user)
-        try {
-            const jsonValue = JSON.stringify(user);
-            await AsyncStorage.setItem('userLogin', jsonValue);
-
-            navigation.navigate('Tabs')
-        } catch (error) {
-            console.log(`Erro ao salvar dados do usuário. ${error}`)
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -86,31 +70,43 @@ export function InfoForm(props) {
             <TextInput
                 style={[styles.input, { backgroundColor: 'transparent' }]}
                 label="Nome:"
-                value={firstName}
-                onChangeText={firstName => setFirstName(firstName)}
+                id='firstName'
+                key="firstName"
+                value={info.firstName || ''}
+                onChangeText={event => handlerOnChangeUser({ _name: "firstName", _value: event })}
             />
+
             <TextInput
                 style={[styles.input, { backgroundColor: 'transparent' }]}
                 label="Sobrenome:"
-                value={lastName}
-                onChangeText={lastName => setLastName(lastName)}
+                id='lastName'
+                key="lastName"
+                value={info.lastName || ''}
+                onChangeText={event => handlerOnChangeUser({ _name: "lastName", _value: event })}
             />
+
             <TextInput
                 style={[styles.input, { backgroundColor: 'transparent' }]}
                 label="Sexo:"
-                value={userSex}
-                onChangeText={userSex => setUserSex(userSex)}
+                id='userSex'
+                key="userSex"
+                value={info.userSex || ''}
+                onChangeText={event => handlerOnChangeUser({ _name: "userSex", _value: event })}
             />
+
             <TextInput
                 style={[styles.input, { backgroundColor: 'transparent' }]}
                 label="Data de nascimento:"
-                value={userDate}
-                onChangeText={userDate => setUserDate(userDate)}
+                id='userDate'
+                key="userDate"
+                value={info.userDate || ''}
+                onChangeText={event => handlerOnChangeUser({ _name: "userDate", _value: event })}
             />
+
             <Button
                 style={[styles.button, { backgroundColor: '#06c244', marginTop: 20 }]}
                 mode="contained"
-                onPress={() => handleRegister()}
+                onPress={() => handlerRegisterInfo()}
             >
                 Adicione
             </Button>

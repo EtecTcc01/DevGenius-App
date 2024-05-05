@@ -1,72 +1,49 @@
 import * as React from 'react';
 import { styles } from './style';
 import { View, Text, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import { Icon, MD3Colors } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
 
-import api from '../../../api.js';
+// import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA
+import { Icon, MD3Colors } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
+import * as ImagePicker from 'expo-image-picker'; //IMPORT DO IMAGE PICKER DO EXPO
+import { getDataUser } from '../../functions/async.services'; //IMPORT DA FUNÇÃO ASYNC P/BUSCAR DADOS DO USUÁRIO
 
 export function GuestCard() {
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
 
     const [isEditing, setIsEditing] = React.useState(false);
-    const [userInfo, setUserInfo] = React.useState({
-        firstName: '',
-        lastName: '',
-        birthDate: '',
-        email: '',
-        password: '',
-        profileImage: '',
-    });      
+    const [userInfo, setUserInfo] = React.useState({});
+    const [userData, setUserData] = React.useState({});
 
-
-    // const getDataUser = async () => {
-    //     await api.get(`/user/`)
-    //         .then((res) => {
-    //             const userData = res.data.message[0];
-    //             setUserInfo({
-    //                 firstName: userData.user_name,
-    //                 lastName: userData.last_name,
-    //                 birthDate: userData.date_birth,
-    //                 email: userData.user_email,
-    //                 password: userData.user_password,
-    //                 profileImage: '',
-    //             });
-    //             console.log('Dados do usuário:', userData);
-    //         }).catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
-    
-    
-
-    const getDataUser = async () => {
-        try {
-            const value = await AsyncStorage.getItem('userLogin')
-            if (value !== null) {
-                const userData = JSON.parse(value);
-                setUserInfo({
-                    firstName: userData.first_name,
-                    lastName: userData.last_name,
-                    birthDate: userData.date_birth,
-                    email: userData.user_email,
-                    password: userData.user_password,
-                    profileImage: '',
-                });
-                console.log(userData)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    };
-    
-
+    //ARMAZENANDO DADOS DO USUÁRIO APÓS RECEBE-LOS PELA ASYNC
     React.useEffect(() => {
-        getDataUser();
+        getDataUser()
+            .then((data) => {
+                if (!data) {
+                    console.log("Erro ao buscar dados do usuário")
+                    return
+                }
+
+                setUserInfo({
+                    firstName: data.first_name,
+                    lastName: data.last_name,
+                    userDate: data.date_birth,
+                    userSex: data._sex,
+                    // email: '',
+                    // password: '',
+                    profileImage: data.profile_image,
+                    userId: data.id_user,
+                })
+
+                setUserData({
+                    userName: data.user_name,
+                    userEmail: data._email,
+                    userPassword: data._password,
+                    userId: data.id_user,
+                })
+            })
     }, []);
 
+    // SOLICITANDO PERMISSÃO P/TER ACESSO À GALERIA DO USUÁRIO
     React.useEffect(() => {
         (async () => {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -80,24 +57,27 @@ export function GuestCard() {
         })();
     }, []);
 
+    //POSSIBILITANDO A EDIÇÃO DO USUÁRIO
     const handleEditPress = () => {
         setIsEditing(!isEditing);
     };
 
-    const handleSavePress = async () => {
-        try {
-            const response = await api.put(`/info/`, info);
-            if (response.status === 200) {
-                Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
-                setIsEditing(false);
-            } else {
-                Alert.alert('Erro', 'Erro ao atualizar perfil. Tente novamente.');
-            }
-        } catch (error) {
-            Alert.alert('Erro', `Erro ao atualizar perfil: ${error}`);
-        }
-    };
+    //SALVANDO AS INFORMAÇÕES DO USUÁRIO E MANDANDO PRO BANCO
+    // const handleSavePress = async () => {
+    //     try {
+    //         const response = await api.put(`/info/`, info);
+    //         if (response.status === 200) {
+    //             Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
+    //             setIsEditing(false);
+    //         } else {
+    //             Alert.alert('Erro', 'Erro ao atualizar perfil. Tente novamente.');
+    //         }
+    //     } catch (error) {
+    //         Alert.alert('Erro', `Erro ao atualizar perfil: ${error}`);
+    //     }
+    // };
 
+    //PEGANDO IMAGEM DA GALERIA
     const pickImageFromGallery = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -111,8 +91,13 @@ export function GuestCard() {
         }
     };
 
-    const handleInputChange = (key, value) => {
+    //ALTERANDO/ADICIONANDO ELEMENTOS NO OBJECT DOS STATES
+    const handleInputChangeInfo = (key, value) => {
         setUserInfo({ ...userInfo, [key]: value });
+    };
+
+    const handleInputChangeUser = (key, value) => {
+        setUserData({ ...userData, [key]: value });
     };
 
     return (
@@ -152,7 +137,7 @@ export function GuestCard() {
                     style={styles.input}
                     value={userInfo.firstName || ''}
                     editable={isEditing}
-                    onChangeText={(text) => handleInputChange('firstName', text)}
+                    onChangeText={(text) => handleInputChangeInfo('firstName', text)}
                 />
 
                 <Text style={styles.label}>Sobrenome:</Text>
@@ -161,34 +146,43 @@ export function GuestCard() {
                     style={styles.input}
                     value={userInfo.lastName || ''}
                     editable={isEditing}
-                    onChangeText={(text) => handleInputChange('lastName', text)}
+                    onChangeText={(text) => handleInputChangeInfo('lastName', text)}
+                />
+
+                <Text style={styles.label}>Sexualidade:</Text>
+                <TextInput
+                    placeholder=""
+                    style={styles.input}
+                    value={userInfo.userSex || ''}
+                    editable={isEditing}
+                    onChangeText={(text) => handleInputChangeInfo('userSex', text)}
                 />
 
                 <Text style={styles.label}>Data de nascimento:</Text>
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.birthDate || ''}
+                    value={userInfo.userDate || ''}
                     editable={isEditing}
-                    onChangeText={(text) => handleInputChange('birthDate', text)}
+                    onChangeText={(text) => handleInputChangeInfo('userDate', text)}
                 />
 
                 <Text style={styles.label}>E-mail:</Text>
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.email || ''}
+                    value={userData.userEmail || ''}
                     editable={isEditing}
-                    onChangeText={(text) => handleInputChange('email', text)}
+                    onChangeText={(text) => handleInputChangeUser('userEmail', text)}
                 />
 
                 <Text style={styles.label}>Senha:</Text>
                 <TextInput
                     placeholder=""
                     style={styles.input}
-                    value={userInfo.password || ''}
+                    value={userData.userPassword || ''}
                     editable={isEditing}
-                    onChangeText={(text) => handleInputChange('password', text)}
+                    onChangeText={(text) => handleInputChangeUser('userPassword', text)}
                 />
 
                 <TouchableOpacity style={styles.button} onPress={isEditing ? handleSavePress : handleEditPress}>
