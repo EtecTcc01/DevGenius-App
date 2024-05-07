@@ -1,7 +1,7 @@
 // CRIAR UMA FUNCTION COM DIVERSAS REQUISIÇÕES SEM RESTRIÇÃO DE TABELA OU CONTEXTO
 import api from "../../api";
 
-//FUNÇÃO P/BUSCAR TODOS OS ROUPS DO USUÁRIO
+//FUNÇÃO P/BUSCAR TODOS OS GRUPOS DO USUÁRIO
 const getAllUserGroups = async ({ userId }) => {
     let validation = false
     let groups = []
@@ -82,6 +82,7 @@ const getRegistrationForStages = async (userId, courseId) => {
     }
 }
 
+//FUNÇÃO P/BUSCAR ESTAGIOS POR CURSO
 const getStagesByCourse = async (courseId) => {
     let validation = true
     let stages = []

@@ -11,23 +11,36 @@ import { getAnswerByTask } from "../../../functions/task.services";
 
 export function IntermediaryTask({ task }) {
 
-    const [count, setCount] = React.useState(0);
-    const [taskT, setTaskT] = React.useState(task._text);
-    const [answer, setAnswer] = React.useState([]);
-    const [alt, setAlt] = React.useState([]);
-    const [altBkp, setAltBkp] = React.useState([]);
-    const [visible, setVisible] = React.useState(false);
-    const [choice, setChoice] = React.useState([]);
+    const [count, setCount] = React.useState(0); //STATE P/CONTADOR DE ALTERNATIVAS SELECIONADAS
+    const [taskT, setTaskT] = React.useState(""); //STATE P/ARMAZENAR O TEXTO DA TASK
+    const [answer, setAnswer] = React.useState([]); //STATE P/ARMAZENAR DADOS DA RESPOSTA
+    const [alt, setAlt] = React.useState([]); //STATE P/ARMAZENAR ALTERNATIVAS
+    const [altBkp, setAltBkp] = React.useState([]); //STATE P/ARMAZENAR BKP DAS ALTERNATIVAS
+    const [choice, setChoice] = React.useState([]); //STATE P/ARMAZENAR AS ALTERNATIVAS ESCOLHIDAS
 
-    const [selectedId, setSelectedId] = React.useState([]);
-    const [idTip, setIdTip] = React.useState([]);
+    const [selectedId, setSelectedId] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) SELECIONADAS
+    const [idTip, setIdTip] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) DA DICA
 
-    const [visibleModal, setVisibleModal] = React.useState(false);
+    const [visibleModal, setVisibleModal] = React.useState(false); //STATE P/VISIBILIDADE DO MODAL
 
+    //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL
     const modalSwitch = () => {
         setVisibleModal(!visibleModal)
     }
 
+    //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
+    React.useEffect(() => {
+        if (task != undefined || task != null) {
+            setVisibleModal(false)
+            setTaskT(task._text);
+            setCount(0);
+            setChoice([])
+            setSelectedId([])
+            setIdTip([])
+        }
+    }, [task])
+
+    //FUNÇÃO P/BUSCAR DADOS DA RESPOSTA DA TASK
     React.useEffect(() => {
         if (task != undefined || task != null) {
             getAnswerByTask("intermediaryAnswer", task._id)
@@ -43,6 +56,7 @@ export function IntermediaryTask({ task }) {
         }
     }, [task])
 
+    //FUNÇÃO P/RANDOMIZAR AS ALTERNATIVAS
     const randomizer = async (alts) => {
         try {
             const data = [
@@ -76,20 +90,12 @@ export function IntermediaryTask({ task }) {
             const randomic = await random(splitT)
             setAlt(randomic)
             setAltBkp(randomic);
-            setVisible(true);
         } catch (error) {
             console.log(error)
         }
     }
 
-    function reloadT() {
-        setCount(0);
-        setAlt(altBkp);
-        setTaskT(task._text);
-        setChoice([])
-        setSelectedId([])
-    }
-
+    //FUNÇÃO P/COMPARAR AS ALTERNATIVAS ESCOLHIDAS
     function altCompare(answerC) {
         setCount(0); let ccount = 0;
         let temp = taskT
@@ -119,6 +125,7 @@ export function IntermediaryTask({ task }) {
         }
     }
 
+    //FUNÇÃO P/SELEÇÃO DE UMA ALTERNATIVA
     async function handlePress(e) {
         const list = choice;
         list.push(e); setChoice(list)
@@ -133,6 +140,16 @@ export function IntermediaryTask({ task }) {
         }
     }
 
+    //FUNÇÃO P/RESETAR OS DADOS (EXCEÇÃO: DICA)
+    function reloadT() {
+        setCount(0);
+        setAlt(altBkp);
+        setTaskT(task._text);
+        setChoice([])
+        setSelectedId([])
+    }
+
+    //CRIAÇÃO DE MULTIPLOS ELEMENTOS (ALTERNATIVAS)
     const alts = alt.length > 0 ? alt.map((e, index) => {
         return (
             <TouchableOpacity key={index} id={index}
@@ -151,6 +168,7 @@ export function IntermediaryTask({ task }) {
         );
     }) : []
 
+    //CRIAÇÃO DAS ALTERNATIVAS "RETIRADAS"
     const altRemoved = choice.length > 0 ? choice.map((e, index) => {
         try {
             return (
@@ -161,6 +179,7 @@ export function IntermediaryTask({ task }) {
         } catch { [] }
     }) : []
 
+    //FUNÇÃO P/RANDOMIZAÇÃO E ESCOLHA DAS DICAS
     const nRandom = () => {
         let answerTip = answer._text.split(" ")
         let positions = []
@@ -198,73 +217,72 @@ export function IntermediaryTask({ task }) {
         setIdTip(tipFinal);
     }
 
-    if (visible == true) {
+    return (
+        <>
+            {altBkp.length > 0 && (
+                <PaperProvider>
+                    <View style={styles.container}>
+                        <View style={styles.content}>
+                            <View style={styles.contentBtn}>
+                                <Portal>
+                                    <Modal
+                                        visible={visibleModal}
+                                        onDismiss={modalSwitch}
+                                        dismissable="true"
+                                        dismissableBackButton="true"
+                                        contentContainerStyle={{
+                                            position: 'absolute',
+                                            backgroundColor: 'white',
+                                            padding: 20,
+                                            width: '90%',
+                                            flex: 1,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            alignSelf: 'center'
+                                        }}>
+                                        <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                                    </Modal>
+                                </Portal>
 
-        return (
-            <PaperProvider>
-                <View style={styles.container}>
-                    <View style={styles.content}>
-                        <View style={styles.contentBtn}>
-                            <Portal>
-                                <Modal
-                                    visible={visibleModal}
-                                    onDismiss={modalSwitch}
-                                    dismissable="true"
-                                    dismissableBackButton="true"
-                                    contentContainerStyle={{
-                                        position: 'absolute',
-                                        backgroundColor: 'white',
-                                        padding: 20,
-                                        width: '90%',
-                                        flex: 1,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        alignSelf: 'center'
-                                    }}>
-                                    <Text>Example Modal.  Click outside this area to dismiss.</Text>
-                                </Modal>
-                            </Portal>
+                                <TouchableOpacity style={styles.btn}
+                                    disabled={idTip.length > 0 ? true : false}
+                                    onPress={nRandom}>
+                                    <MaterialCommunityIcons
+                                        name="lightbulb-on-outline"
+                                        size={24}
+                                        color="#06c244"
+                                    />
+                                </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.btn}
-                                disabled={idTip.length > 0 ? true : false}
-                                onPress={nRandom}>
-                                <MaterialCommunityIcons
-                                    name="lightbulb-on-outline"
-                                    size={24}
-                                    color="#06c244"
-                                />
-                            </TouchableOpacity>
+                                <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
+                                    <AntDesign
+                                        name="questioncircleo"
+                                        size={24}
+                                        color="#06c244"
+                                    />
+                                </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
-                                <AntDesign
-                                    name="questioncircleo"
-                                    size={24}
-                                    color="#06c244"
-                                />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.btn} onPress={reloadT}>
-                                <Ionicons
-                                    size={24}
-                                    color="#06c244"
-                                    name="reload"
-                                />
-                            </TouchableOpacity>
+                                <TouchableOpacity style={styles.btn} onPress={reloadT}>
+                                    <Ionicons
+                                        size={24}
+                                        color="#06c244"
+                                        name="reload"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.contentText}>
+                                <Text style={styles.titleA}>{taskT}</Text>
+                            </View>
                         </View>
-                        <View style={styles.contentText}>
-                            <Text style={styles.titleA}>{taskT}</Text>
+                        <View style={styles.contentA}>
+                            <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved}</ScrollView>
+                        </View>
+                        <View style={styles.contentB}>
+                            <ScrollView contentContainerStyle={styles.contentScroll}>{alts}</ScrollView>
                         </View>
                     </View>
-                    <View style={styles.contentA}>
-                        <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved}</ScrollView>
-                    </View>
-                    <View style={styles.contentB}>
-                        <ScrollView contentContainerStyle={styles.contentScroll}>{alts}</ScrollView>
-                    </View>
-                </View>
-            </PaperProvider>
-        );
-    } else {
-        [];
-    }
+                </PaperProvider>
+            )}
+        </>
+    )
 }

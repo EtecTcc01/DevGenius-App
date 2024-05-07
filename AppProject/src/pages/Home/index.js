@@ -5,8 +5,9 @@ import { Course } from '../../components/Course'; //IMPORT DO COMPONENTE DE CURS
 import { getCourseByGroup } from '../../functions/helper.services';
 
 export function Home() {
-    const [course, setCourse] = React.useState([]);
+    const [course, setCourse] = React.useState([]); //STATE P/ARMAZENAR OS CURSOS DA PAG. MAIN
 
+    //FUNÇÃO P/BUSCAR OS CURSOS DO 1° GRUPO (PUBLICO) 
     React.useEffect(() => {
         getCourseByGroup(1)
             .then((data) => setCourse(data))

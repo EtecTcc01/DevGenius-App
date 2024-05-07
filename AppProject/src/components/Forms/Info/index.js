@@ -72,6 +72,7 @@ export function InfoForm({ user }) {
                 label="Nome:"
                 id='firstName'
                 key="firstName"
+                textColor='white'
                 value={info.firstName || ''}
                 onChangeText={event => handlerOnChangeUser({ _name: "firstName", _value: event })}
             />
@@ -81,6 +82,7 @@ export function InfoForm({ user }) {
                 label="Sobrenome:"
                 id='lastName'
                 key="lastName"
+                textColor='white'
                 value={info.lastName || ''}
                 onChangeText={event => handlerOnChangeUser({ _name: "lastName", _value: event })}
             />
@@ -90,6 +92,7 @@ export function InfoForm({ user }) {
                 label="Sexo:"
                 id='userSex'
                 key="userSex"
+                textColor='white'
                 value={info.userSex || ''}
                 onChangeText={event => handlerOnChangeUser({ _name: "userSex", _value: event })}
             />
@@ -99,6 +102,7 @@ export function InfoForm({ user }) {
                 label="Data de nascimento:"
                 id='userDate'
                 key="userDate"
+                textColor='white'
                 value={info.userDate || ''}
                 onChangeText={event => handlerOnChangeUser({ _name: "userDate", _value: event })}
             />

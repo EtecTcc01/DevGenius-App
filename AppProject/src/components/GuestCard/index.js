@@ -28,8 +28,6 @@ export function GuestCard() {
                     lastName: data.last_name,
                     userDate: data.date_birth,
                     userSex: data._sex,
-                    // email: '',
-                    // password: '',
                     profileImage: data.profile_image,
                     userId: data.id_user,
                 })

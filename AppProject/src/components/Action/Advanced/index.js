@@ -1,39 +1,62 @@
 import * as React from "react";
 import { styles } from "./style";
-import api from "../../../../api";
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
-import { Modal, Portal, PaperProvider } from 'react-native-paper';
+
+
+import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS
+import { Modal, Portal, PaperProvider } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
+
+//IMPORT DE FUNCTIONS SEPARADAS P/EXECUÇÃO DE COD. DETERMINADOS
 import { getAnswerByTask } from "../../../functions/task.services";
 import { random } from "../randomizer";
 
 export function AdvancedTask({ task }) {
 
-    const [answer, setAnswer] = React.useState([]);
-    const [alt, setAlt] = React.useState([]);
-    const [altBkp, setAltBkp] = React.useState([]);
-    const [codeTxt, setCodeTxt] = React.useState([]);
-    const [subCode, setSubCode] = React.useState([]);
+    const [answer, setAnswer] = React.useState([]); //STATE DA REQUISIÇÃO
+    const [alt, setAlt] = React.useState([]); //STATE DAS ALTERNATIVAS
+    const [altBkp, setAltBkp] = React.useState([]); //STATE DO BKP DAS ALTERNATIVAS
+    const [codeTxt, setCodeTxt] = React.useState([]);//STATE DO COD. A SER EXIBIO
+    const [subCode, setSubCode] = React.useState([]); //STATE DO COD. A SER TRABALHADO
 
-    const [visible, setVisible] = React.useState(false);
-    const [first, setFirst] = React.useState(true);
-    const [count, setCount] = React.useState(0);
+    const [first, setFirst] = React.useState(true); //STATE DA VER. DA 1° TENTATIVA
+    //NÃO APAGUE...
+    const [count, setCount] = React.useState(0); //STATE DO CONTADOR P/TENTATIVAS REALIZADAS (?)
 
+    //STATE'S DOS ID'S E ALT'S SELECIONADAS
     const [selectedId, setSelectedId] = React.useState([]);
     const [selectedAlt, setSelectedAlt] = React.useState([]);
 
-    const [idCorrect, setIdCorrect] = React.useState([]);
+    const [idCorrect, setIdCorrect] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) CORRETOS
 
-    const [idTip, setIdTip] = React.useState([]);
+    const [idTip, setIdTip] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) DA DICA
+
+    //STATE'S DOS ID'S E ALT'S RESTANTES
     const [remainingId, setRemainingId] = React.useState([]);
     const [remainingAlt, setRemainingAlt] = React.useState([]);
 
-    const [visibleModal, setVisibleModal] = React.useState(false);
+    const [visibleModal, setVisibleModal] = React.useState(false); //STATE DA VISIBILIDADE DO MODAL
 
+    //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL
     const modalSwitch = () => {
         setVisibleModal(!visibleModal)
     }
 
+    //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
+    React.useEffect(() => {
+        if (task != undefined || task != null) {
+            setVisibleModal(false)
+            setRemainingAlt([])
+            setRemainingId([])
+            setIdTip([])
+            setIdCorrect([])
+            setSelectedAlt([])
+            setSelectedId([])
+            setCount(0)
+            setFirst(true)
+        }
+    }, [task])
+
+    //FUNÇÃO P/BUSCAR DADOS DA RESPOSTA DA TASK
     React.useEffect(() => {
         if (task != undefined || task != null) {
             getAnswerByTask("advancedAnswer", task._id)
@@ -50,6 +73,7 @@ export function AdvancedTask({ task }) {
         }
     }, [task])
 
+    //FUNÇÃO P/FORMATAÇÃO DO CÓDIGO DA TASK E SEPARAÇÃO DAS ALTERNATIVAS (NÃO MEXER!!!)
     const splitAnswer = async ({ answerTxt }) => {
         const splitTxt = answerTxt.split("\n");
         console.log(splitTxt)
@@ -112,6 +136,7 @@ export function AdvancedTask({ task }) {
         randomizer(splitFinal)
     };
 
+    //FUNÇÃO DE RANDOMIZAÇÃO DAS ALTERNATIVAS
     const randomizer = async (alts) => {
         let splitT = [];
 
@@ -137,9 +162,9 @@ export function AdvancedTask({ task }) {
 
         setAlt(splitT)
         setAltBkp(splitT);
-        setVisible(true);
     };
 
+    //FUNÇÃO P/VALIDAÇÃO DA RESPOSTA (POR "RODADA")
     function altCompare(altList, answerT, idsCorrect) {
         let answerText = []; let ccount = 0;
         let correctlyIds = idCorrect
@@ -201,6 +226,7 @@ export function AdvancedTask({ task }) {
 
     }
 
+    //FUNÇÃO P/EXECUÇÃO DA 1° TENTATIVA (SEM PENALIDADE)
     function firstReplace(e, index) {
 
         let listId = selectedId
@@ -269,6 +295,7 @@ export function AdvancedTask({ task }) {
         setCount(count + 1)
     }
 
+    //FUNÇÃO P/EXECUÇÃO DAS ALTERNATIVAS SEGUINTES
     function replaceTxt(e, altIndex) {
 
         let idsRemaining = remainingId
@@ -342,6 +369,7 @@ export function AdvancedTask({ task }) {
         setCount((count + 1))
     }
 
+    //FUNÇÃO P/RESET DOS DADOS (NÃO DISPONIBILIZADO P/1° TENTAIVA POR BUG E "NIVELAMENTO")
     function reloadT() {
         setCount(0)
         setRemainingId([])
@@ -349,10 +377,12 @@ export function AdvancedTask({ task }) {
         setSelectedId(idCorrect)
     }
 
-    // function nRandom() {
     //FUNÇÃO P/DISPONIBILIZAR A DICA
+    // function nRandom() {
+
     // }
 
+    //CRIAÇÃO DE MULTIPLOS ELEMENTOS (ALTERNATIVAS)
     const listAlts = alt.length > 0 ? alt.map((e, index) => {
         return (
             <TouchableOpacity
@@ -369,6 +399,7 @@ export function AdvancedTask({ task }) {
         )
     }) : []
 
+    //CRIAÇÃO DAS LINHAS DE CÓDIGO EXIBIDAS (OBS: BUG VISUAL APÓS TENTATIVA)
     const text = codeTxt.length > 0 ? codeTxt.map((e, index) => {
         return (
             <View id={index} name={index} key={index} style={{ margin: '5px' }}>
@@ -377,75 +408,76 @@ export function AdvancedTask({ task }) {
         )
     }) : []
 
-    if (visible == true) {
+    return (
+        <>
+            {
+                altBkp.length > 0 && (
+                    <PaperProvider>
+                        <View style={styles.container}>
+                            <View style={styles.content}>
+                                <View style={styles.contentBtn}>
+                                    <Portal>
+                                        <Modal visible={visibleModal}
+                                            onDismiss={modalSwitch}
+                                            dismissable="true"
+                                            dismissableBackButton="true"
+                                            contentContainerStyle={{
+                                                position: 'absolute',
+                                                backgroundColor: 'white',
+                                                padding: 20,
+                                                width: '90%',
+                                                flex: 1,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center'
+                                            }}>
+                                            <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                                        </Modal>
+                                    </Portal>
 
-        return (
-            <PaperProvider>
-                <View style={styles.container}>
-                    <View style={styles.content}>
-                        <View style={styles.contentBtn}>
-                            <Portal>
-                                <Modal visible={visibleModal}
-                                    onDismiss={modalSwitch}
-                                    dismissable="true"
-                                    dismissableBackButton="true"
-                                    contentContainerStyle={{
-                                        position: 'absolute',
-                                        backgroundColor: 'white',
-                                        padding: 20,
-                                        width: '90%',
-                                        flex: 1,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        alignSelf: 'center'
-                                    }}>
-                                    <Text>Example Modal.  Click outside this area to dismiss.</Text>
-                                </Modal>
-                            </Portal>
+                                    <TouchableOpacity style={styles.btn}
+                                        disabled={idTip.length > 0 ? true : false}
+                                    // onPress={nRandom}
+                                    >
+                                        <MaterialCommunityIcons
+                                            name="lightbulb-on-outline"
+                                            size={24}
+                                            color="#06c244"
+                                        />
+                                    </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.btn}
-                                disabled={idTip.length > 0 ? true : false}
-                            // onPress={nRandom}
-                            >
-                                <MaterialCommunityIcons
-                                    name="lightbulb-on-outline"
-                                    size={24}
-                                    color="#06c244"
-                                />
-                            </TouchableOpacity>
+                                    <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
+                                        <AntDesign
+                                            name="questioncircleo"
+                                            size={24}
+                                            color="#06c244"
+                                        />
+                                    </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
-                                <AntDesign
-                                    name="questioncircleo"
-                                    size={24}
-                                    color="#06c244"
-                                />
-                            </TouchableOpacity>
+                                    <TouchableOpacity style={styles.btn}
+                                        disabled={first == true ? true : false}
+                                        onPress={reloadT}
+                                    >
+                                        <Ionicons
+                                            size={24}
+                                            color={first == true ? "#aaaaaa" : "#06c244"}
+                                            name="reload"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
 
-                            <TouchableOpacity style={styles.btn}
-                                disabled={first == true ? true : false}
-                                onPress={reloadT}
-                            >
-                                <Ionicons
-                                    size={24}
-                                    color={first == true ? "#aaaaaa" : "#06c244"}
-                                    name="reload"
-                                />
-                            </TouchableOpacity>
+                                <View style={styles.contentText}>
+                                    {text}
+                                </View>
+
+                            </View>
+                            <View style={styles.contentB}>
+                                <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
+                            </View>
                         </View>
-
-                        <View style={styles.contentText}>
-                            {text}
-                        </View>
-
-                    </View>
-                    <View style={styles.contentB}>
-                        <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
-                    </View>
-                </View>
-            </PaperProvider>
-        );
-    } else {
-        [];
-    }
+                    </PaperProvider>
+                )
+            }
+        </>
+    )
 }

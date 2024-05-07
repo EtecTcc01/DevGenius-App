@@ -2,9 +2,12 @@ import { StyleSheet, View, } from 'react-native';
 import { GuestCard } from '../../components/GuestCard';
 
 export function Profile() {
+
+  //MELHORAR ESSA PAGINA
+
   return (
     <View style={styles.container}>
-      <GuestCard />
+      <GuestCard /> 
     </View>
   );
 }

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { StyleSheet, View, Text } from 'react-native';
+import { styles } from './style';
+import { View, Text } from 'react-native';
 import { ProgressBar, MD3Colors, Button } from 'react-native-paper';
 
 //IMPORT DAS FUNCTIONS USADAS PARA REQUISIÇÃO DE DADOS
@@ -12,13 +13,15 @@ import { IntermediaryTask } from '../../components/Action/Intermediary';
 import { AdvancedTask } from '../../components/Action/Advanced';
 
 export function Action({ route }) {
-    let registration = route.params.registration[0]
-    const course = route.params.course
+    let registration = route.params.registration[0] //VAR => PARAMETRO DE REGISTRO DE CURSO PELA ROTA
+    console.log(registration)
+    const course = route.params.course //VAR => PARAMETRO DE CURSO PELA ROTA
 
-    const [stages, setStages] = React.useState([])
-    const [tasks, setTasks] = React.useState([])
-    const [teorys, setTeorys] = React.useState([])
+    const [stageContent, setStageContent] = React.useState([]) //STATE P/ARMAZENAR TEORIAS/TASKS DO ESTAGIO
+    const [stages, setStages] = React.useState([]) //STATE P/ARMAZENAR ESTAGIOS DO CURSO
+    const [phase, setPhase] = React.useState(0) //STATE P/ARMAZENAR "FASES" DO ESTAGIO ATUAL
 
+    //FUNÇÃO P/BUSCAR CURSOS POR ESTAGIO
     React.useEffect(() => {
         getStagesByCourse(course.id_course)
             .then((data) => {
@@ -27,54 +30,86 @@ export function Action({ route }) {
                     return
                 }
                 setStages(data)
-                getTaskData(data[registration.level_stage]._id)
                 getTeoryData(data[registration.level_stage]._id)
 
-                console.log({st: data})
+                console.log({ st: data })
             })
     }, [])
 
-    const getTaskData = (stageId) => {
+    //FUNÇÃO P/TEORIAS POR ESTAGIO
+    const getTeoryData = (stageId) => {
+        let content = []
+
+        getTeoryByStage(stageId)
+            .then((data) => {
+                if (!data) {
+                    console.log("Teoria Inexistente...")
+                    getTaskData(stageId, content)
+                    return
+                }
+
+                data.forEach(element => {
+                    content.push(element)
+                });
+
+                console.log({ te: data })
+
+                getTaskData(stageId, content)
+            })
+    }
+
+    //FUNÇÃO P/TASKS POR ESTAGIO
+    const getTaskData = (stageId, content) => {
+        let stageC = content
+
         getTaskByStage(stageId)
             .then((data) => {
                 if (!data) {
                     console.log("Erro ao bucar dados referentes à task")
                     return
                 }
-                setTasks(data)
-                console.log({ta: data})
+
+                data.forEach(element => {
+                    stageC.push(element)
+                });
+
+                console.log({ ta: data })
+
+                setStageContent(stageC)
             })
     }
 
-    const getTeoryData = (stageId) => {
-        getTeoryByStage(stageId)
-            .then((data) => {
-                if (!data) {
-                    console.log("Teoria Inexistente...")
-                    return
-                }
-                setTeorys(data)
-                console.log({te: data})
-            })
-    }
+    //CRIAÇÃO DE ELEMENTOS COM SEU RESPECTIVO "TIPO" (?)
+    const listContent = stageContent.map((e) => {
+        console.log(e)
+        switch (e.id_operation) {
+            case 1:
+                return (
+                    <BasicTask task={e} />
+                )
+            case 2:
+                return (
+                    <IntermediaryTask task={e} />
+                )
+            case 3:
+                return (
+                    <AdvancedTask task={e} />
+                )
+        }
+        if (!e.id_operation) {
+            return <Text style={styles.titleA}>{e._name}</Text>
+        }
+    })
 
     return (
         <View style={styles.container}>
-            <Text style={styles.titleA}>Action</Text>
-            {/* {tasks.length > 0 ? <AdvancedTask task={tasks[0]}/> : []} */}
+            <View style={styles.content}>
+                <Text style={styles.titleA}>Action</Text>
+                <Button onPress={() => setPhase(phase + 1)} mode='contained'>Avançar</Button>
+            </View>
+            <View style={styles.contentA}>
+                {listContent.length > 0 ? listContent[phase] : []}
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#000'
-    },
-    titleA: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#06c244',
-        textAlign: 'center',
-    },
-});

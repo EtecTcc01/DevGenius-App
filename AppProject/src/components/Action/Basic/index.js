@@ -7,8 +7,8 @@ import { getAnswerByTask } from '../../../functions/task.services'; //IMPORT DA 
 
 export function BasicTask({ task }) {
 
-    const [answer, setAnswer] = React.useState([])
-    const [alt, setAlt] = React.useState([])
+    const [answer, setAnswer] = React.useState([]) //STATE P/ARMAZENAR DADOS DA RESPOSTA
+    const [alt, setAlt] = React.useState([]) //STATE P/ARMAZENAR ALTERNATIVAS
 
     //FUNÇÃO USADA PARA VALIDAR AS RESPOSTAS
     function altCompare(alternative) {
@@ -60,13 +60,17 @@ export function BasicTask({ task }) {
     )) : []
 
     return (
-        <View style={styles.container}>
-            <View style={styles.content}>
-                <Text style={styles.title}>{task._text}</Text>
-            </View>
-            <View style={styles.contentA}>
-                {listAlts}
-            </View>
-        </View>
-    );
+        <>
+            {alt.length > 0 && (
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <Text style={styles.title}>{task._text}</Text>
+                    </View>
+                    <View style={styles.contentA}>
+                        {listAlts}
+                    </View>
+                </View>
+            )}
+        </>
+    )
 }

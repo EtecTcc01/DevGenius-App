@@ -5,6 +5,8 @@ import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { List, Modal, Portal, PaperProvider, Button } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 // import { Ionicons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
 import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA
+
+//IMPORT DE FUNÇÕES EXTERNAS
 import { getRegistrationForStages } from '../../functions/helper.services';
 import { getDataUser } from '../../functions/async.services'
 
@@ -41,7 +43,7 @@ export function Course({ course, direction, message }) {
           return
         }
         console.log(data)
-        navigation.navigate(`${direction}`, {course: selected, registration: data})
+        navigation.navigate(`${direction}`, { course: selected, registration: data })
       })
   }
 
