@@ -7,29 +7,34 @@ export const styles = StyleSheet.create({
     },
     content: {
         backgroundColor: '#000',
-        paddingLeft: '3%',
-        paddingRight: '3%',
-        paddingTop: '1%',
-        paddingBottom: '1%',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        paddingHorizontal: '3%',
+        paddingVertical: '1%',
         alignItems: 'center'
     },
+    buttonContainer: {
+        flexDirection: 'column', // Alinhar os botões em uma coluna
+        alignItems: 'center', // Alinhar os botões no centro horizontal
+        justifyContent: 'center', // Alinhar os botões no centro vertical
+    },
     button: {
-        flex: 2,
-        borderRadius: 45,
-        borderColor: '#06c244',
-        borderWidth: 3,
+        borderRadius: 50, // Tornando o botão redondo
+        backgroundColor: '#06c244', // Cor de fundo do botão
         alignItems: 'center',
         justifyContent: 'center',
-        margin: "2%",
-        minHeight: 100,
-        minWidth: '100%'
+        marginVertical: 10, // Espaçamento vertical entre os botões
+        height: 100, // Altura fixa dos botões
+        width: 100, // Largura fixa dos botões para criar uma bolinha
     },
-    title: {
-        fontSize: 24,
+    buttonText: {
+        fontSize: 16,
         fontWeight: 'bold',
         color: 'white',
+    },
+    line: {
+        position: 'absolute',
+        height: '50%', // Ajuste a altura da linha conforme necessário
+        width: 2, // Largura da linha
+        backgroundColor: '#fff', // Cor da linha
     },
     modal: {
         position: 'absolute',
@@ -40,5 +45,5 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center'
-    }
+    },
 });

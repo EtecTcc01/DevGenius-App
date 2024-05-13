@@ -6,12 +6,14 @@ export const teoryDetailStyles = StyleSheet.create({
         backgroundColor: '#000',  // fundo preto
         paddingHorizontal: 20,
         paddingTop: 20,
+        justifyContent: 'center', // centralizar conteúdo verticalmente
     },
     title: {
-        fontSize: 24,
+        fontSize: 28, // tamanho do texto aumentado
         fontWeight: 'bold',
-        color: '#06c244',  // letras verdes
+        color: '#FFF',  // letras brancas
         marginBottom: 20,
+        textAlign: 'center', // centralizar texto horizontalmente
     },
     content: {
         flex: 1,
@@ -25,15 +27,16 @@ export const teoryDetailStyles = StyleSheet.create({
         borderRadius: 10,  // bordas arredondadas
     },
     listItemTitle: {
-        color: '#06c244',  // letras verdes
+        color: '#FFF',  // letras brancas
     },
     input: {
         backgroundColor: '#000',  // fundo preto
         borderRadius: 10,  // bordas arredondadas
         marginBottom: 20,
+        color: '#FFF',  // letras brancas
     },
     button: {
-        backgroundColor: '#06c244',  // botão verde
+        backgroundColor: '#FFF',  // botão branco
         marginTop: 20,
         borderRadius: 10,  // bordas arredondadas
     },

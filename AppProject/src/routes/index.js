@@ -1,29 +1,20 @@
-// IMPORT DOS ICONS USADOS
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-
-// IMPORT DOS NAVIGATORS USADOS
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-// IMPORT DOS COMPONENTS A SEREM EXIBIDOS POR ROTAS
 import { Welcome } from '../pages/Welcome';
 import { Home } from '../pages/Home';
 import { BeginForms } from '../pages/BeginForms';
-
-// CRIAÇÃO DAS VARIAVEIS QUE RECEBERÃO AS FUNÇÕES IMPORTADAS ANTES
-const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
-
-// IMPORT DAS PAGES PRA RENDERIZAÇÃO
-import { TeoryNote } from '../pages/TeoryNote/index'
+import { TeoryDetail } from '../pages/TeoryNote/Details/teoryDetail'; 
+import { TeoryNote } from '../pages/TeoryNote/index';
 import { Groups } from '../pages/Groups';
 import { Profile } from '../pages/Profile';
 import { Action } from '../pages/Action';
 
-// CRIAÇÃO DE UMA FUNÇÃO DE ROTA
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
 export function StackRoutes() {
     return (
-        // CRIAÇÃO DO CONTAINER A GUARDAR AS ROTAS ADCIONADAS, E CONFIG (ROTA INICIAL -> Welcome)
         <Stack.Navigator
             initialRouteName="Welcome"
             screenOptions={{
@@ -39,7 +30,6 @@ export function StackRoutes() {
                 },
             }}
         >
-            {/* CRIAÇÃO DA ROTA INICIAL, E OPTIONS (CHAME-A PELO NAME) */}
             <Stack.Screen
                 name="Welcome"
                 component={Welcome}
@@ -48,7 +38,6 @@ export function StackRoutes() {
                 }}
             />
 
-            {/* ROTAS DE FORMULÁRIOS PARA LOGIN/CADASTRO */}
             <Stack.Screen
                 name="Begin-Form"
                 component={BeginForms}
@@ -58,7 +47,6 @@ export function StackRoutes() {
                 }}
             />
 
-            {/* ROTA P/EXECUÇÃO DAS TAREFAS POR ESTÁGIO */}
             <Stack.Screen
                 name="Action"
                 component={Action}
@@ -76,7 +64,14 @@ export function StackRoutes() {
                 }}
             />
 
-            {/* INTERCALANDO AMBAS AS ROTAS (IMPORTANTE!!! P/TER ACESSO A FUNÇÃO E SUAS ROTAS, É NECESSÁRIO CHAMA-LÁ PELO NAME) */}
+            <Stack.Screen
+                name="TeoryDetail"
+                component={TeoryDetail}
+                options={{
+                    headerShown: false
+                }}
+            />
+
             <Stack.Screen
                 name="Tabs"
                 component={TabsRoutes}
@@ -88,11 +83,8 @@ export function StackRoutes() {
     );
 }
 
-// CRIAÇÃO DE UMA FUNÇÃO DE ROTA
 function TabsRoutes() {
-    // FUNÇÕES DE ROTAS A SEREM APARECIDAS ASSIM QUE PASSAR DO LOGIN NO APP
     return (
-        // CRIAÇÃO DO CONTAINER A GUARDAR AS ROTAS ADCIONADAS, E CONFIG (ROTA INICIAL -> 1° DENTRO DO CONTAINER)
         <Tab.Navigator
             backBehavior="history"
             screenOptions={{
@@ -104,7 +96,6 @@ function TabsRoutes() {
                 },
             }}
         >
-            {/* CRIAÇÃO DE UMA ROTA, E OPTIONS (CHAME-A PELO NAME) */}
             <Tab.Screen
                 name="Home"
                 component={Home}

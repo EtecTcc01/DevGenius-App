@@ -22,7 +22,7 @@ export function TeoryNote() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CADERNO TEÓRICO</Text>
-      {!courses ? [] : <Course course={courses} direction="TeoryDetails" />}
+      {!courses ? [] : <Course course={courses} direction="TeoryDetail" />}
       {/* <TeoryList /> */}
     </View>
   );

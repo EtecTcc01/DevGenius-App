@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styles } from './style';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, Button } from 'react-native'; // Adicionei Modal e Button
 
 import { random } from '../randomizer'; //IMPORT DA FUNÇÃO QUE IRÁ RANDOMIZAR AS ALTERNATIVAS
 import { getAnswerByTask } from '../../../functions/task.services'; //IMPORT DA FUNÇÃO P/BUSCAR AS ALTERNATIVAS
@@ -9,15 +9,17 @@ export function BasicTask({ task }) {
 
     const [answer, setAnswer] = React.useState([]) //STATE P/ARMAZENAR DADOS DA RESPOSTA
     const [alt, setAlt] = React.useState([]) //STATE P/ARMAZENAR ALTERNATIVAS
+    const [message, setMessage] = React.useState('') //STATE P/ARMAZENAR A MENSAGEM
+    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
 
     //FUNÇÃO USADA PARA VALIDAR AS RESPOSTAS
     function altCompare(alternative) {
-
-        if (alternative == answer._text) {
-            alert("Acertou!!!")
+        if (alternative === answer._text) {
+            setMessage("Acertou!!!")
         } else {
-            alert("Errouuuuuu!")
+            setMessage("Errouuuuuu!")
         }
+        setModalVisible(true); // Exibe a modal quando a resposta é comparada
     }
 
     //FUNÇÃO USADA PARA BUSCAR PELAS RESPOSTAS
@@ -52,6 +54,12 @@ export function BasicTask({ task }) {
         }
     }
 
+    //FUNÇÃO PARA FECHAR A MODAL
+    const closeModal = () => {
+        setModalVisible(false);
+        setMessage(''); // Limpa a mensagem quando a modal é fechada
+    }
+
     //FUNÇÃO P/CRIAR MULTIPLOS ELEMENTOS PARA EXIBIÇÃO DAS ALTERNATIVAS
     const listAlts = alt.length > 0 ? alt.map((e, index) => (
         <TouchableOpacity key={index} id={index} style={styles.button} onPress={() => altCompare(e)}>
@@ -69,6 +77,21 @@ export function BasicTask({ task }) {
                     <View style={styles.contentA}>
                         {listAlts}
                     </View>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={closeModal}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>{message}</Text>
+                                <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                                    <Text style={styles.closeButtonText}>Fechar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             )}
         </>
