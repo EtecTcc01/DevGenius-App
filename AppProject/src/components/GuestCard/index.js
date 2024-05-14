@@ -3,57 +3,62 @@ import { styles } from './style';
 import { View, Text, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
 
 // import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA
-import { Icon, MD3Colors } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
-import * as ImagePicker from 'expo-image-picker'; //IMPORT DO IMAGE PICKER DO EXPO
+// import { Icon, MD3Colors } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
+// import * as ImagePicker from 'expo-image-picker'; //IMPORT DO IMAGE PICKER DO EXPO
 import { getDataUser } from '../../functions/async.services'; //IMPORT DA FUNÇÃO ASYNC P/BUSCAR DADOS DO USUÁRIO
 
-export function GuestCard() {
+export function GuestCard({ user, info }) {
     // const navigation = useNavigation();
 
     const [isEditing, setIsEditing] = React.useState(false);
     const [userInfo, setUserInfo] = React.useState({});
     const [userData, setUserData] = React.useState({});
 
-    //ARMAZENANDO DADOS DO USUÁRIO APÓS RECEBE-LOS PELA ASYNC
     React.useEffect(() => {
-        getDataUser()
-            .then((data) => {
-                if (!data) {
-                    console.log("Erro ao buscar dados do usuário")
-                    return
-                }
+        setUserData(user)
+        setUserInfo(info)
+    }, [user, info])
 
-                setUserInfo({
-                    firstName: data.first_name,
-                    lastName: data.last_name,
-                    userDate: data.date_birth,
-                    userSex: data._sex,
-                    profileImage: data.profile_image,
-                    userId: data.id_user,
-                })
+    //ARMAZENANDO DADOS DO USUÁRIO APÓS RECEBE-LOS PELA ASYNC
+    // React.useEffect(() => {
+    //     getDataUser()
+    //         .then((data) => {
+    //             if (!data) {
+    //                 console.log("Erro ao buscar dados do usuário")
+    //                 return
+    //             }
 
-                setUserData({
-                    userName: data.user_name,
-                    userEmail: data._email,
-                    userPassword: data._password,
-                    userId: data.id_user,
-                })
-            })
-    }, []);
+    //             setUserInfo({
+    //                 firstName: data.first_name,
+    //                 lastName: data.last_name,
+    //                 userDate: data.date_birth,
+    //                 userSex: data._sex,
+    //                 profileImage: data.profile_image,
+    //                 userId: data.id_user,
+    //             })
+
+    //             setUserData({
+    //                 userName: data.user_name,
+    //                 userEmail: data._email,
+    //                 userPassword: data._password,
+    //                 userId: data.id_user,
+    //             })
+    //         })
+    // }, []);
 
     // SOLICITANDO PERMISSÃO P/TER ACESSO À GALERIA DO USUÁRIO
-    React.useEffect(() => {
-        (async () => {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== 'granted') {
-                Alert.alert(
-                    'Permissão necessária',
-                    'É necessário permitir o acesso à galeria para escolher uma imagem.',
-                    [{ text: 'OK' }]
-                );
-            }
-        })();
-    }, []);
+    // React.useEffect(() => {
+    //     (async () => {
+    //         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    //         if (status !== 'granted') {
+    //             Alert.alert(
+    //                 'Permissão necessária',
+    //                 'É necessário permitir o acesso à galeria para escolher uma imagem.',
+    //                 [{ text: 'OK' }]
+    //             );
+    //         }
+    //     })();
+    // }, []);
 
     //POSSIBILITANDO A EDIÇÃO DO USUÁRIO
     const handleEditPress = () => {
@@ -76,18 +81,18 @@ export function GuestCard() {
     // };
 
     //PEGANDO IMAGEM DA GALERIA
-    const pickImageFromGallery = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
+    // const pickImageFromGallery = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         aspect: [1, 1],
+    //         quality: 1,
+    //     });
 
-        if (!result.cancelled) {
-            setUserInfo({ ...userInfo, profileImage: result.uri });
-        }
-    };
+    //     if (!result.cancelled) {
+    //         setUserInfo({ ...userInfo, profileImage: result.uri });
+    //     }
+    // };
 
     //ALTERANDO/ADICIONANDO ELEMENTOS NO OBJECT DOS STATES
     const handleInputChangeInfo = (key, value) => {
@@ -105,7 +110,7 @@ export function GuestCard() {
             </View>
 
             <View style={styles.contentContainer}>
-                <View style={styles.profileImageContainer}>
+                {/* <View style={styles.profileImageContainer}>
                     <TouchableOpacity onPress={pickImageFromGallery}>
                         {userInfo.profileImage ? (
                             <Image style={styles.profileImage} source={{ uri: userInfo.profileImage }} />
@@ -127,7 +132,7 @@ export function GuestCard() {
 
                         )}
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <Text style={styles.label}>Nome:</Text>
                 <TextInput

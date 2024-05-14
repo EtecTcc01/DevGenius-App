@@ -1,16 +1,20 @@
+//IMPORT DOS COMPONENTES/ELEMENTOS USADOS
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+//IMPORT DAS PAGES
 import { Welcome } from '../pages/Welcome';
 import { Home } from '../pages/Home';
 import { BeginForms } from '../pages/BeginForms';
-// import { TeoryDetail } from '../pages/TeoryNote/Detail/teoryDetail'; 
 import { TeoryDetail } from '../pages/TeoryNote/Detail';
 import { TeoryNote } from '../pages/TeoryNote/index';
 import { Groups } from '../pages/Groups';
 import { Profile } from '../pages/Profile';
 import { Action } from '../pages/Action';
+import { UserOptions } from '../pages/Profile/Options';
 
+//TRANSFERENCIA DE FUNÇÕES P/CONSTANTE
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -87,6 +91,23 @@ export function StackRoutes() {
                 component={TabsRoutes}
                 options={{
                     headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="UserOptions"
+                component={UserOptions}
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: '#000',
+                        borderBottomWidth: 0,
+                        elevation: 0,
+                    },
+                    headerTitleStyle: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                    },
                 }}
             />
         </Stack.Navigator>

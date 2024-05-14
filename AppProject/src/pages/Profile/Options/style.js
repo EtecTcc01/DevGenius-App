@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const style = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
@@ -8,8 +8,7 @@ export const style = StyleSheet.create({
     },
     titleContainer: {
         alignItems: 'center',
-        marginTop: 32,
-        marginBottom: 16,
+        marginTop: 16,
     },
     title: {
         color: '#06c244',
@@ -20,26 +19,6 @@ export const style = StyleSheet.create({
     contentContainer: {
         flex: 1,
         justifyContent: 'center',
-    },
-    profileImageContainer: {
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    profileImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-    },
-    placeholderImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: '#ddd',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    editIcon: {
-        fontSize: 24,
     },
     label: {
         marginTop: 8,
@@ -54,6 +33,8 @@ export const style = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         color: 'white',
+        width: "65%",
+        marginRight: 15
     },
     button: {
         marginTop: 16,
@@ -67,15 +48,22 @@ export const style = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    cameraIconContainer: {
+    manager: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'center',
+        textAlign: 'center',
+        width: '100%'
     },
-    cameraIconBackground: {
-        backgroundColor: 'gray', // Cor de fundo desejada
-        borderRadius: 45, // Metade do tamanho do ícone para torná-lo circular
-        borderWidth: 2, // Largura da borda
-        borderColor: 'white', // Cor da borda
-        padding: 5, // Espaçamento interno
-    },
+    edit: {
+        borderColor: '#06C244',
+        borderWidth: 1,
+        padding: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        width: '30%',
+        marginTop: 8
+    }
 });

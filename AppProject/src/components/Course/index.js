@@ -13,7 +13,10 @@ export function Course({ course, direction, message, operation }) {
 
   const [visibleModal, setVisibleModal] = React.useState(false)
   const [selected, setSelected] = React.useState({})
+  const [registration, setRegistration] = React.useState([])
   const [user, setUser] = React.useState({})
+
+  console.log(registration)
 
   React.useEffect(() => {
     getDataUser()
@@ -31,14 +34,7 @@ export function Course({ course, direction, message, operation }) {
   }
 
   function handlerOnPressTransfer() {
-    getRegistrationForStages(user.id_user, selected.id_course)
-      .then((data) => {
-        if (!data) {
-          console.log("Erro ao buscar os dados do usuário")
-          return
-        }
-        navigation.navigate(`${direction}`, { course: selected, registration: data })
-      })
+    navigation.navigate(`${direction}`, { course: selected, registration: registration })
   }
 
   const listCourses = !course ? [] : course.map((element, index) => {
@@ -47,9 +43,23 @@ export function Course({ course, direction, message, operation }) {
         return (
           <View style={styles.button} key={index} id={index}>
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
+                let validation = false
                 setSelected(element)
-                modalSwitch()
+
+                await getRegistrationForStages(user.id_user, element.id_course)
+                  .then((data) => {
+                    if (!data) {
+                      console.log("Erro ao buscar os dados do usuário")
+                      return
+                    }
+                    validation = true
+                    setRegistration(() => data)
+                  })
+
+                if (validation === true) {
+                  modalSwitch()
+                }
               }}
             >
               <List.Item
@@ -80,10 +90,19 @@ export function Course({ course, direction, message, operation }) {
               dismissableBackButton={true}
               contentContainerStyle={styles.modal}>
               <View>
-                <Text>Exemplo Modal. Clique fora desta área para descartar.</Text>
-                <Button mode="contained" onPress={() => handlerOnPressTransfer()}>
-                  Transferir
-                </Button>
+                <>
+                  {registration[0] && (
+                    <Text>{registration[0].level_stage > 0 ? `CONTINUAR CURSO A PARTIR DO ESTAGIO ${registration[0].level_stage}` : "COMEÇAR CURSO DO ZERO"}</Text>
+                  )}
+                </>
+
+                <>
+                  {registration[0] && (
+                    <Button disabled={registration[0].level_stage < selected.qtd_stages ? false : true} mode="contained" onPress={() => handlerOnPressTransfer()}>
+                      {registration[0].level_stage > 0 ? `CONTINUAR` : "COMEÇAR"}
+                    </Button>
+                  )}
+                </>
               </View>
             </Modal>
           </Portal>

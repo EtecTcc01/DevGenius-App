@@ -14,7 +14,6 @@ import { AdvancedTask } from '../../components/Action/Advanced';
 
 export function Action({ route }) {
     let registration = route.params.registration[0] //VAR => PARAMETRO DE REGISTRO DE CURSO PELA ROTA
-    console.log(registration)
     const course = route.params.course //VAR => PARAMETRO DE CURSO PELA ROTA
 
     const [stageContent, setStageContent] = React.useState([]) //STATE P/ARMAZENAR TEORIAS/TASKS DO ESTAGIO
@@ -31,8 +30,6 @@ export function Action({ route }) {
                 }
                 setStages(data)
                 getTeoryData(data[registration.level_stage]._id)
-
-                console.log({ st: data })
             })
     }, [])
 
@@ -51,8 +48,6 @@ export function Action({ route }) {
                 data.forEach(element => {
                     content.push(element)
                 });
-
-                console.log({ te: data })
 
                 getTaskData(stageId, content)
             })
@@ -73,7 +68,6 @@ export function Action({ route }) {
                     stageC.push(element)
                 });
 
-                console.log({ ta: data })
 
                 setStageContent(stageC)
             })
