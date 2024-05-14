@@ -2,49 +2,40 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#000',
-        padding: '5%',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: 'white',
+        padding: 16,
     },
-    content: {
-        backgroundColor: '#000',
-        paddingLeft: '3%',
-        paddingRight: '3%',
-        paddingTop: '1%',
-        paddingBottom: '1%',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: '7%',
-        marginLeft: '7%',
+    dropdown: {
+        height: 50,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
     },
-    button: {
-        flex: 1,
-        borderRadius: 45,
-        borderColor: '#06c244',
-        borderWidth: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: "2%",
-        minHeight: 100,
-        minWidth: '40%',
-        flexDirection: 'row',
+    icon: {
+        marginRight: 5,
     },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginLeft: '5%',
+    label: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        left: 22,
+        top: 8,
+        zIndex: 999,
+        paddingHorizontal: 8,
+        fontSize: 14,
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#06c244',
-        marginBottom: 10,
-        textAlign: 'left',
+    placeholderStyle: {
+        fontSize: 16,
+    },
+    selectedTextStyle: {
+        fontSize: 16,
+    },
+    iconStyle: {
+        width: 20,
+        height: 20,
+    },
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
     },
 });

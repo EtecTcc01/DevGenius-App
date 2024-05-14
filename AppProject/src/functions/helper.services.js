@@ -42,12 +42,12 @@ const getCourseByGroup = async (groupId) => {
     }
 };
 
-//FUNÇÃO P/BUSCAR CURSOS COM TEORIAS PELO ID DE GRUPO
-const getAllTeoryByGroup = async (groupId) => {
+//FUNÇÃO P/BUSCAR CURSOS (ORDENADOS) COM TEORIAS PELO ID DE GRUPO
+const getAllTeoryByGroupOrdened = async (groupId) => {
     let validation = false
     let courses = []
 
-    await api.get(`/teory/by/group/${groupId}`)
+    await api.get(`/teory/by/group/ordened/${groupId}`)
         .then((res) => {
             courses = res.data.teory
             validation = true
@@ -101,10 +101,30 @@ const getStagesByCourse = async (courseId) => {
     }
 }
 
+//FUNÇÃO P/BUSCAR TODOS OS CURSOS (NÃO ORDENADOS) PELO ID DO CURSO
+const getAllTeoryByCourse = async (courseId) => {
+    let validation = false
+    let teory = []
+
+    await api.get(`teory/by/course/${courseId}`)
+        .then((res) => {
+            teory = res.data.teory
+            validation = true
+        }).catch((error) => {
+            alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    if (validation == true) {
+        return teory
+    }
+}
+
 export {
     getCourseByGroup,
-    getAllTeoryByGroup,
+    getAllTeoryByGroupOrdened,
     getRegistrationForStages,
     getAllUserGroups,
-    getStagesByCourse
+    getStagesByCourse,
+    getAllTeoryByCourse
 }

@@ -1,82 +1,107 @@
-import * as React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { styles } from './style'
+import { Text, View } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
-import api from '../../../api';
-import { styles } from './style';
-import { Ionicons } from '@expo/vector-icons'; // Importando o Ionicons
+import { Dropdown } from 'react-native-element-dropdown'; //IMPORT DO COMPONENT USADO
+// import AntDesign from '@expo/vector-icons/AntDesign'; //IMPORT DOS ICONS USADOS (EXPO)
+import { getAllTeoryByCourse } from '../../functions/helper.services'; //IMPORT DE UMA FUNÇÃO EXTERNA
 
-export function TeoryList() {
-    const [courses, setCourses] = React.useState([]);
-    const [teories, setTeories] = React.useState([]);
-    const navigation = useNavigation();
+export function TeoryList({ container }) {
+    const navigation = useNavigation(); //TRANSFERENCIA DE FUNÇÕES P/UMA CONSTANTE
 
-    const getAllLangGroup = async () => {
-        try {
-            const res = await api.get(`/language/group/1`);
-            setCourses(res.data.language);
-        } catch (error) {
-            alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+    const [value, setValue] = useState(null); //STATE USADO P/ARMAZENAR ITEM ESCOLHIDO
+    const [isFocus, setIsFocus] = useState(false); //STATE UTILIZADO P/VERIFICAR FOCO DO USUÁRIO
+
+    const [teory, setTeory] = useState([]); //STATE P/ARMAZENAR TEORIAS
+    const [displayT, setDisplayT] = useState([]); //STATE P/EXIBIÇÃO DOS ITENS
+
+    useEffect(() => {
+        if (value != null) {
+            let data = []
+
+            teory.map((element, index) => {
+                if (element.id_teory === value && element != undefined) {
+                    data.push(element)
+                }
+            });
+
+            navigation.navigate("TeoryDetail", { teory: data })
         }
+    }, [value])
+
+    //FUNÇÃO P/BUSCAR TEORIAS PELO ID DO CURSO
+    useEffect(() => {
+        getAllTeoryByCourse(container.id_course)
+            .then((data) => {
+                if (!data) {
+                    console.log("Erro ao buscar dados das teoria do grupo.")
+                    return
+                }
+                setTeory(data)
+                dataDisplay(data)
+            })
+    }, [container])
+
+    //FUNÇÃO P/SEPARAR VALORES USADOS NA EXIBIÇÃO
+    function dataDisplay(content) {
+        let dataDisplay = []
+
+        content.map((e, index) => {
+            dataDisplay.push({
+                label: e._teory,
+                value: e.id_teory,
+                course: e._course
+            })
+        })
+
+        setDisplayT(dataDisplay)
     }
 
-    const getTeoriesByLangAndDiff = async (idLang, idDiff) => {
-        try {
-            const res = await api.get(`/teories/${idLang}/${idDiff}`);
-            setTeories(res.data.teories);
-        } catch (error) {
-            alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
-        }
-    }
-
-    React.useEffect(() => {
-        getAllLangGroup();
-    }, []);
-
-    const handleCoursePress = (course) => {
-        getTeoriesByLangAndDiff(course.id_lang, course.id_diff);
+    //FUNÇÃO P/RENDERIZAR UM TEXTO QUANDO EM FOCO
+    const renderLabel = () => {
+        return (
+            <Text style={[styles.label, isFocus && { color: 'blue' }]}>
+                {container._course}
+            </Text>
+        );
     };
-
-    const handleTeoryPress = (teory) => {
-        navigation.navigate('TeoryDetail', { teory });
-    };
-
-    const listCourses = courses.map((e, index) => (
-        <TouchableOpacity
-            key={index}
-            style={styles.button}
-            // onPress={() => handleCoursePress(e)}
-        >
-            <Ionicons
-                size={24}
-                color='#06c244'
-                name={e.avatar} // supondo que 'avatar' é o nome do ícone
-            />
-            <Text style={styles.buttonText}>{e._name}</Text>
-        </TouchableOpacity>
-    ));
-
-    const listTeories = teories.map((teory, index) => (
-        <TouchableOpacity
-            key={index}
-            style={styles.button}
-            // onPress={() => handleTeoryPress(teory)}
-        >
-            <Ionicons
-                size={24}
-                color='#06c244'
-                name={teory.avatar} // supondo que 'avatar' é o nome do ícone
-            />
-            <Text style={styles.buttonText}>{teory._name}</Text>
-        </TouchableOpacity>
-    ));
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>CADERNO TEÓRICO</Text>
-            {listCourses}
-            {listTeories}
-        </View>
+        <>
+            {teory.length > 0 ? <View style={styles.container}>
+                {renderLabel()}
+                <Dropdown
+                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    data={displayT}
+                    // search
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={'Escolha a Teoria...'}
+                    // searchPlaceholder="Search..."
+                    value={value}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                        setValue(item.value);
+                        setIsFocus(false);
+                    }}
+                // renderLeftIcon={() => (
+                //     <AntDesign
+                //         style={styles.icon}
+                //         color={isFocus ? 'blue' : 'black'}
+                //         name="Safety"
+                //         size={20}
+                //     />
+                // )}
+                />
+            </View> : <> </>
+            }
+        </>
     );
-}
-
-export default TeoryList;
+};

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const teoryDetailStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#000',  // fundo preto
@@ -9,11 +9,10 @@ export const teoryDetailStyles = StyleSheet.create({
         justifyContent: 'center', // centralizar conteúdo verticalmente
     },
     title: {
-        fontSize: 28, // tamanho do texto aumentado
+        color: '#06c244',
+        textAlign: 'center',
         fontWeight: 'bold',
-        color: '#FFF',  // letras brancas
-        marginBottom: 20,
-        textAlign: 'center', // centralizar texto horizontalmente
+        fontSize: 24,
     },
     content: {
         flex: 1,

@@ -4,7 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Welcome } from '../pages/Welcome';
 import { Home } from '../pages/Home';
 import { BeginForms } from '../pages/BeginForms';
-import { TeoryDetail } from '../pages/TeoryNote/Details/teoryDetail'; 
+// import { TeoryDetail } from '../pages/TeoryNote/Detail/teoryDetail'; 
+import { TeoryDetail } from '../pages/TeoryNote/Detail';
 import { TeoryNote } from '../pages/TeoryNote/index';
 import { Groups } from '../pages/Groups';
 import { Profile } from '../pages/Profile';
@@ -68,7 +69,16 @@ export function StackRoutes() {
                 name="TeoryDetail"
                 component={TeoryDetail}
                 options={{
-                    headerShown: false
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: '#000',
+                        borderBottomWidth: 0,
+                        elevation: 0,
+                    },
+                    headerTitleStyle: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                    },
                 }}
             />
 

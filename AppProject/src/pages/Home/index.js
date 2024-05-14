@@ -18,7 +18,7 @@ export function Home() {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>HOME</Text>
-            {!course ? [] : <Course course={course} direction="Action" />}
+            {!course ? [] : <Course course={course} direction="Action" operation="modal" />}
         </View>
     )
 }

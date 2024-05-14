@@ -6,8 +6,9 @@ import { List, Modal, Portal, PaperProvider, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationForStages } from '../../functions/helper.services';
 import { getDataUser } from '../../functions/async.services'
+import { TeoryList } from '../TeoryList';
 
-export function Course({ course, direction, message }) {
+export function Course({ course, direction, message, operation }) {
   const navigation = useNavigation();
 
   const [visibleModal, setVisibleModal] = React.useState(false)
@@ -41,21 +42,30 @@ export function Course({ course, direction, message }) {
   }
 
   const listCourses = !course ? [] : course.map((element, index) => {
-    return (
-      <View style={styles.button} key={index} id={index}>
-        <TouchableOpacity
-          onPress={() => {
-            setSelected(element)
-            modalSwitch()
-          }}
-        >
-          <List.Item
-            title={element._course}
-            titleStyle={styles.title}
-          />
-        </TouchableOpacity>
-      </View>
-    )
+    switch (operation) {
+      case "modal":
+        return (
+          <View style={styles.button} key={index} id={index}>
+            <TouchableOpacity
+              onPress={() => {
+                setSelected(element)
+                modalSwitch()
+              }}
+            >
+              <List.Item
+                title={element._course}
+                titleStyle={styles.title}
+              />
+            </TouchableOpacity>
+          </View>
+        )
+      case "drop":
+        return (
+          <View style={{ backgroundColor: "white", width: "99%", height: 50, marginBottom: 25 }} key={index} id={index}>
+            <TeoryList container={element} />
+          </View>
+        )
+    }
   });
 
   return (

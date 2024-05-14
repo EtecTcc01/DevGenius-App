@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { View, StyleSheet, Text } from 'react-native';
 
-// IMPORT DOS COMPONENTS USADOS
-// import { TeoryList } from '../../components/TeoryList';
-import { Course } from '../../components/Course';
+import { Course } from '../../components/Course'; // IMPORT DO COMPONENTE USADO
 
-import { getAllTeoryByGroup } from '../../functions/helper.services';
+import { getAllTeoryByGroupOrdened } from '../../functions/helper.services';
 
 export function TeoryNote() {
 
@@ -13,7 +11,7 @@ export function TeoryNote() {
 
   //DISPARO DA FUNÇÃO DE FORMA AUTOMATICA E UNICA
   React.useEffect(() => {
-    getAllTeoryByGroup(1)
+    getAllTeoryByGroupOrdened(1)
       .then((data) => setCourses(data))
   }, []);
 
@@ -22,8 +20,7 @@ export function TeoryNote() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CADERNO TEÓRICO</Text>
-      {!courses ? [] : <Course course={courses} direction="TeoryDetail" />}
-      {/* <TeoryList /> */}
+      {!courses ? [] : <Course course={courses} direction="TeoryDetail" operation="drop" />}
     </View>
   );
 }
