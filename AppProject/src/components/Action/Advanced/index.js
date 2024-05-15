@@ -1,16 +1,16 @@
 import * as React from "react";
 import { styles } from "./style";
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Modal } from "react-native";
 
 
 import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS
-import { Modal, Portal, PaperProvider } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
+import { Portal, PaperProvider } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 
 //IMPORT DE FUNCTIONS SEPARADAS P/EXECUÇÃO DE COD. DETERMINADOS
 import { getAnswerByTask } from "../../../functions/task.services";
 import { random } from "../randomizer";
 
-export function AdvancedTask({ task }) {
+export function AdvancedTask({ task, press }) {
 
     const [answer, setAnswer] = React.useState([]); //STATE DA REQUISIÇÃO
     const [alt, setAlt] = React.useState([]); //STATE DAS ALTERNATIVAS
@@ -34,17 +34,31 @@ export function AdvancedTask({ task }) {
     const [remainingId, setRemainingId] = React.useState([]);
     const [remainingAlt, setRemainingAlt] = React.useState([]);
 
-    const [visibleModal, setVisibleModal] = React.useState(false); //STATE DA VISIBILIDADE DO MODAL
+    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
+    const [message, setMessage] = React.useState({
+        msg: "", state: false
+    }) //STATE P/ARMAZENAR A MENSAGEM
+
+    // const [visibleModal, setVisibleModal] = React.useState(false); //STATE DA VISIBILIDADE DO MODAL
 
     //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL
-    const modalSwitch = () => {
-        setVisibleModal(!visibleModal)
+    // const modalSwitch = () => {
+    //     setVisibleModal(!visibleModal)
+    // }
+
+    const closeModal = () => {
+        setModalVisible(false);
+        setMessage({ ...message, msg: "" }); // Limpa a mensagem quando a modal é fechada
+
+        if (message.state == true) {
+            press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        }
     }
 
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
-            setVisibleModal(false)
+            // setVisibleModal(false)
             setRemainingAlt([])
             setRemainingId([])
             setIdTip([])
@@ -183,10 +197,7 @@ export function AdvancedTask({ task }) {
         if (first == true) {
             for (let i = 0; i < answerText.length; i++) {
                 if (answerText[i] == altList[i]) {
-                    console.log(true)
                     ccount++
-                } else {
-                    console.log(false)
                 }
             }
         } else {
@@ -203,27 +214,30 @@ export function AdvancedTask({ task }) {
 
             for (let i = 0; i < answerText.length; i++) {
                 if (answerText[i] == altVerify[i]) {
-                    console.log(true)
                     ccount++
-                } else {
-                    console.log(false)
                 }
             }
         }
 
         setTimeout(() => {
             if (ccount >= answerText.length) {
-                alert("Corretissimo")
+                // alert("Corretissimo")
+                setMessage({ msg: "Acertou!!!", state: true })
             } else {
-                alert("Erradissimo")
+                // alert("Erradissimo")
+                setMessage({ msg: "Errouu!!!", state: false })
                 setCount(0)
                 setRemainingId([])
                 setRemainingAlt([])
                 setSelectedId(correctlyIds)
             }
         }, 250)
-        setFirst(false)
 
+        if (first == true) {
+            setFirst(false)
+        }
+
+        setModalVisible(true); // Exibe a modal quando a resposta é comparada
     }
 
     //FUNÇÃO P/EXECUÇÃO DA 1° TENTATIVA (SEM PENALIDADE)
@@ -242,8 +256,6 @@ export function AdvancedTask({ task }) {
 
             let subCount = 0; let subCodeText = subCode;
             let codeTxtTemp = []; let idsCorrect = []
-
-            console.log({ subCodeText })
 
             codeTxt.forEach((element, index) => {
                 codeTxtTemp.push(element.slice(5, element.length - 1))
@@ -416,7 +428,7 @@ export function AdvancedTask({ task }) {
                         <View style={styles.container}>
                             <View style={styles.content}>
                                 <View style={styles.contentBtn}>
-                                    <Portal>
+                                    {/* <Portal>
                                         <Modal visible={visibleModal}
                                             onDismiss={modalSwitch}
                                             dismissable="true"
@@ -433,7 +445,7 @@ export function AdvancedTask({ task }) {
                                             }}>
                                             <Text>Example Modal.  Click outside this area to dismiss.</Text>
                                         </Modal>
-                                    </Portal>
+                                    </Portal> */}
 
                                     <TouchableOpacity style={styles.btn}
                                         disabled={idTip.length > 0 ? true : false}
@@ -446,13 +458,13 @@ export function AdvancedTask({ task }) {
                                         />
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
+                                    {/* <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
                                         <AntDesign
                                             name="questioncircleo"
                                             size={24}
                                             color="#06c244"
                                         />
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
 
                                     <TouchableOpacity style={styles.btn}
                                         disabled={first == true ? true : false}
@@ -471,9 +483,26 @@ export function AdvancedTask({ task }) {
                                 </View>
 
                             </View>
+
                             <View style={styles.contentB}>
                                 <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
                             </View>
+
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible}
+                                onRequestClose={closeModal}
+                            >
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>{message.msg}</Text>
+                                        <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                                            <Text style={styles.closeButtonText}>Fechar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </Modal>
                         </View>
                     </PaperProvider>
                 )

@@ -1,15 +1,16 @@
 import * as React from "react";
 import { styles } from "./style";
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, Modal, ScrollView } from "react-native";
 
 import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
-import { Modal, Portal, PaperProvider } from 'react-native-paper'; //IMPOR DOS COMPONENTES DO PAPER
+// import { Modal, Portal, PaperProvider } from 'react-native-paper'; //IMPOR DOS COMPONENTES DO PAPER
+import { Portal, PaperProvider } from 'react-native-paper'; //IMPOR DOS COMPONENTES DO PAPER
 
 //IMPORT DAS FUNÇÕES DE COMPONENTE EXTERIORES USADOS
 import { random } from "../randomizer";
 import { getAnswerByTask } from "../../../functions/task.services";
 
-export function IntermediaryTask({ task }) {
+export function IntermediaryTask({ task, press }) {
 
     const [count, setCount] = React.useState(0); //STATE P/CONTADOR DE ALTERNATIVAS SELECIONADAS
     const [taskT, setTaskT] = React.useState(""); //STATE P/ARMAZENAR O TEXTO DA TASK
@@ -21,17 +22,32 @@ export function IntermediaryTask({ task }) {
     const [selectedId, setSelectedId] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) SELECIONADAS
     const [idTip, setIdTip] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) DA DICA
 
-    const [visibleModal, setVisibleModal] = React.useState(false); //STATE P/VISIBILIDADE DO MODAL
+    // const [visibleModal, setVisibleModal] = React.useState(false); //STATE P/VISIBILIDADE DO MODAL
 
-    //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL
-    const modalSwitch = () => {
-        setVisibleModal(!visibleModal)
+    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL A EXIBIR A MSG
+    const [message, setMessage] = React.useState({
+        msg: "", state: false
+    }) //STATE P/ARMAZENAR A MENSAGEM
+
+    // //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL DE EXPLICAÇÃO
+    // const modalSwitch = () => {
+    //     setVisibleModal(!visibleModal)
+    // }
+
+    //FUNÇÃO PARA FECHAR A MODAL DE MSG
+    const closeModal = () => {
+        setModalVisible(false);
+        setMessage({ ...message, msg: "" }); // Limpa a mensagem quando a modal é fechada
+
+        if (message.state == true) {
+            press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        }
     }
 
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
-            setVisibleModal(false)
+            // setVisibleModal(false)
             setTaskT(task._text);
             setCount(0);
             setChoice([])
@@ -114,15 +130,19 @@ export function IntermediaryTask({ task }) {
             });
             setTaskT(temp)
             setTimeout(() => {
-                alert("Acertou!!!");
+                // alert("Acertou!!!");
+                setMessage({ msg: "Acertou!!!", state: true })
             }, 500);
         } else {
-            alert("Errouuuuuu!");
+            // alert("Errouuuuuu!");
+            setMessage({ msg: "Errouuuu!!!", state: false })
             setTaskT(task._text);
             setAlt(altBkp);
             setChoice([]);
             setSelectedId([])
         }
+        
+        setModalVisible(true); // Exibe a modal quando a resposta é comparada
     }
 
     //FUNÇÃO P/SELEÇÃO DE UMA ALTERNATIVA
@@ -224,7 +244,7 @@ export function IntermediaryTask({ task }) {
                     <View style={styles.container}>
                         <View style={styles.content}>
                             <View style={styles.contentBtn}>
-                                <Portal>
+                                {/* <Portal>
                                     <Modal
                                         visible={visibleModal}
                                         onDismiss={modalSwitch}
@@ -242,7 +262,7 @@ export function IntermediaryTask({ task }) {
                                         }}>
                                         <Text>Example Modal.  Click outside this area to dismiss.</Text>
                                     </Modal>
-                                </Portal>
+                                </Portal> */}
 
                                 <TouchableOpacity style={styles.btn}
                                     disabled={idTip.length > 0 ? true : false}
@@ -254,13 +274,13 @@ export function IntermediaryTask({ task }) {
                                     />
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
+                                {/* <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
                                     <AntDesign
                                         name="questioncircleo"
                                         size={24}
                                         color="#06c244"
                                     />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                                 <TouchableOpacity style={styles.btn} onPress={reloadT}>
                                     <Ionicons
@@ -274,12 +294,30 @@ export function IntermediaryTask({ task }) {
                                 <Text style={styles.titleA}>{taskT}</Text>
                             </View>
                         </View>
+
                         <View style={styles.contentA}>
                             <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved}</ScrollView>
                         </View>
+
                         <View style={styles.contentB}>
                             <ScrollView contentContainerStyle={styles.contentScroll}>{alts}</ScrollView>
                         </View>
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={closeModal}
+                        >
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>{message.msg}</Text>
+                                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                                        <Text style={styles.closeButtonText}>Fechar</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
                     </View>
                 </PaperProvider>
             )}

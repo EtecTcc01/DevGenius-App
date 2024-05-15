@@ -95,7 +95,7 @@ const getStagesByCourse = async (courseId) => {
             alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
             return
         })
-    
+
     if (validation == true) {
         return stages
     }
@@ -120,11 +120,30 @@ const getAllTeoryByCourse = async (courseId) => {
     }
 }
 
+const progressUpdate = async (progress) => {
+    let validation = false
+    let registration = []
+
+    await api.put("/registration/level", progress)
+        .then((res) => {
+            registration = res.data.registration
+            validation = true
+        }).catch((error) => {
+            alert(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    if (validation == true) {
+        return registration
+    }
+}
+
 export {
     getCourseByGroup,
     getAllTeoryByGroupOrdened,
     getRegistrationForStages,
     getAllUserGroups,
     getStagesByCourse,
-    getAllTeoryByCourse
+    getAllTeoryByCourse,
+    progressUpdate
 }

@@ -1,23 +1,25 @@
 import * as React from 'react'
 import { styles } from './style';
-import { Text, View, TouchableOpacity, Modal, Button } from 'react-native'; // Adicionei Modal e Button
+import { Text, View, TouchableOpacity, Modal } from 'react-native'; // Adicionei Modal e Button
 
 import { random } from '../randomizer'; //IMPORT DA FUNÇÃO QUE IRÁ RANDOMIZAR AS ALTERNATIVAS
 import { getAnswerByTask } from '../../../functions/task.services'; //IMPORT DA FUNÇÃO P/BUSCAR AS ALTERNATIVAS
 
-export function BasicTask({ task }) {
+export function BasicTask({ task, press }) {
 
     const [answer, setAnswer] = React.useState([]) //STATE P/ARMAZENAR DADOS DA RESPOSTA
     const [alt, setAlt] = React.useState([]) //STATE P/ARMAZENAR ALTERNATIVAS
-    const [message, setMessage] = React.useState('') //STATE P/ARMAZENAR A MENSAGEM
+    const [message, setMessage] = React.useState({
+        msg: "", state: false
+    }) //STATE P/ARMAZENAR A MENSAGEM
     const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
 
     //FUNÇÃO USADA PARA VALIDAR AS RESPOSTAS
     function altCompare(alternative) {
         if (alternative === answer._text) {
-            setMessage("Acertou!!!")
+            setMessage({ msg: "Acertou!!!", state: true })
         } else {
-            setMessage("Errouuuuuu!")
+            setMessage({ msg: "Errouuuuuu!", state: false })
         }
         setModalVisible(true); // Exibe a modal quando a resposta é comparada
     }
@@ -57,12 +59,16 @@ export function BasicTask({ task }) {
     //FUNÇÃO PARA FECHAR A MODAL
     const closeModal = () => {
         setModalVisible(false);
-        setMessage(''); // Limpa a mensagem quando a modal é fechada
+        setMessage({ ...message, msg: "" }); // Limpa a mensagem quando a modal é fechada
+
+        if (message.state == true) {
+            press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        }
     }
 
     //FUNÇÃO P/CRIAR MULTIPLOS ELEMENTOS PARA EXIBIÇÃO DAS ALTERNATIVAS
     const listAlts = alt.length > 0 ? alt.map((e, index) => (
-        <TouchableOpacity key={index} id={index} style={styles.button} onPress={() => altCompare(e)}>
+        <TouchableOpacity key={index} id={index} style={styles.button} onPress={() => { altCompare(e) }}>
             <Text style={styles.title}>{e}</Text>
         </TouchableOpacity>
     )) : []
@@ -85,7 +91,7 @@ export function BasicTask({ task }) {
                     >
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
-                                <Text style={styles.modalText}>{message}</Text>
+                                <Text style={styles.modalText}>{message.msg}</Text>
                                 <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
                                     <Text style={styles.closeButtonText}>Fechar</Text>
                                 </TouchableOpacity>

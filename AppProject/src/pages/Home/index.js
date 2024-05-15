@@ -3,9 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card } from 'react-native-paper';
 
 import { Course } from '../../components/Course'; //IMPORT DO COMPONENTE DE CURSOS
-import { getCourseByGroup } from '../../functions/helper.services';
-
-
+import { getCourseByGroup } from '../../functions/helper.services'; //IMPORT DE FUNÇÃO EXTERNA
 
 export function Home() {
 
@@ -14,15 +12,16 @@ export function Home() {
     //FUNÇÃO P/BUSCAR OS CURSOS DO 1° GRUPO (PUBLICO) 
     React.useEffect(() => {
         getCourseByGroup(1)
-            .then((data) => setCourse(data))
+            .then((data) => {
+                setCourse(data)
+                console.log(data)
+            })
     }, [])
-
-    console.log(course)
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>HOME</Text>
-            <Card>
+            {/* <Card>
                 <Card.Title title="HTML" subtitle="HTML é uma linguagem de marcação" />
                 <Card.Cover source={{ uri: 'https://cdn.dribbble.com/users/783/screenshots/104300/shot_1295820312.gif' }} />
                 <Card.Actions>
@@ -38,10 +37,10 @@ export function Home() {
                 <Button>Voltar</Button>
                 <Button>Iniciar</Button>
                 </Card.Actions>
-            </Card>
+            </Card> */}
             {!course ? [] : <Course course={course} direction="Action" operation="modal" />}
         </View>
-        
+
     )
 }
 
@@ -57,5 +56,3 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
 });
-
-export default Home;

@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from './style';
 
-export function TeoryDetail({ route }) {
-    const teory = route.params.teory[0];
+export function TeoryDetail({ route, data }) {
+    const teory = route ? route.params.teory[0] : data
     console.log(teory)
 
     // Verifica se teory está definido antes de acessar suas propriedades
@@ -18,8 +18,8 @@ export function TeoryDetail({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.title}>{teory._teory}</Text>
-                <Text style={styles.title}>{teory.teory_text}</Text>
+                <Text style={styles.title}>{route ? teory._teory : teory._name}</Text>
+                <Text style={styles.title}>{route ? teory.teory_text : teory._text}</Text>
             </View>
         </View>
     );

@@ -16,8 +16,6 @@ export function Course({ course, direction, message, operation }) {
   const [registration, setRegistration] = React.useState([])
   const [user, setUser] = React.useState({})
 
-  console.log(registration)
-
   React.useEffect(() => {
     getDataUser()
       .then((data) => {
@@ -34,7 +32,8 @@ export function Course({ course, direction, message, operation }) {
   }
 
   function handlerOnPressTransfer() {
-    navigation.navigate(`${direction}`, { course: selected, registration: registration })
+    modalSwitch()
+    navigation.navigate(`${direction}`, { course: selected, registration: registration[0] })
   }
 
   const listCourses = !course ? [] : course.map((element, index) => {
@@ -54,6 +53,7 @@ export function Course({ course, direction, message, operation }) {
                       return
                     }
                     validation = true
+                    console.log(data)
                     setRegistration(() => data)
                   })
 

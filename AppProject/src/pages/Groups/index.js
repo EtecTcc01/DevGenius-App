@@ -6,10 +6,11 @@ import api from '../../../api'; //IMPORTAÇÃO DA API AXIOS DO BACK
 import { getDataUser } from '../../functions/async.services'; //FUNÇÃO ASYNC QUE BUSCA DADOS DO USUÁRIO
 import { getAllUserGroups } from '../../functions/helper.services'; //FUNÇÃO P/BUSCAR DADOS DOS GRUPOS DO USUÁRIO
 import { Button, TextInput, List } from 'react-native-paper'; //IMPORT DOS ELEMENTOS DO PAPER
-// import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA 
+import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA 
 
 export function Groups() {
-    // const navigation = useNavigation()
+    const navigation = useNavigation()
+
     const [user, setUser] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [groupId, setGroupId] = React.useState("");
@@ -60,7 +61,7 @@ export function Groups() {
 
     //CRIAÇÃO DOS ITEMS REFERENTES AOS GRUPOS DO USUÁRIO
     const listGroups = !groups ? <View /> : groups.map((item, index) =>
-        <TouchableOpacity style={styles.listItem} key={index}>
+        <TouchableOpacity style={styles.listItem} key={index} onPress={() => navigation.navigate("GroupCourses", { group: item })}>
             <List.Item
                 title={item.group_name}
                 titleStyle={styles.listItemTitle}

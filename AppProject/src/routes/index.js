@@ -11,8 +11,10 @@ import { TeoryDetail } from '../pages/TeoryNote/Detail';
 import { TeoryNote } from '../pages/TeoryNote/index';
 import { Groups } from '../pages/Groups';
 import { Profile } from '../pages/Profile';
+// import { Action, DoneScreen } from '../pages/Action';
 import { Action } from '../pages/Action';
 import { UserOptions } from '../pages/Profile/Options';
+import { GroupCourses } from '../pages/Groups/GroupCourses';
 
 //TRANSFERENCIA DE FUNÇÕES P/CONSTANTE
 const Stack = createStackNavigator();
@@ -51,6 +53,15 @@ export function StackRoutes() {
                     headerLeft: () => { return }
                 }}
             />
+{/* 
+            <Stack.Screen
+                name="DoneScreen"
+                component={DoneScreen}
+                options={{
+                    headerShown: false,
+                    headerLeft: () => { return }
+                }}
+            /> */}
 
             <Stack.Screen
                 name="Action"
@@ -87,10 +98,19 @@ export function StackRoutes() {
             />
 
             <Stack.Screen
-                name="Tabs"
-                component={TabsRoutes}
+                name="GroupCourses"
+                component={GroupCourses}
                 options={{
-                    headerShown: false
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: '#000',
+                        borderBottomWidth: 0,
+                        elevation: 0,
+                    },
+                    headerTitleStyle: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                    },
                 }}
             />
 
@@ -108,6 +128,14 @@ export function StackRoutes() {
                         color: '#fff',
                         fontWeight: 'bold',
                     },
+                }}
+            />
+
+            <Stack.Screen
+                name="Tabs"
+                component={TabsRoutes}
+                options={{
+                    headerShown: false
                 }}
             />
         </Stack.Navigator>
