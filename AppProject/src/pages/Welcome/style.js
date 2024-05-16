@@ -3,18 +3,19 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000d06',
+        backgroundColor: '#011205',
         alignItems: 'center',
         justifyContent: 'center',
     },
     content: {
         flex: 2,
-        backgroundColor: '#000d06',
+        backgroundColor: '#011205',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '5%'
     },
     screenSwitch: {
+        fontFamily: 'Courier',
         backgroundColor: '#000',
         flex: 1,
         width: '100%',
@@ -23,19 +24,23 @@ export const styles = StyleSheet.create({
         padding: '7%'
     },
     title: {
-        color: '#06c244',
+        color: '#fff',
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center',
+        fontFamily: 'Arial',
+        top: '80'
     },
     subTitle: {
         paddingTop: 18,
-        color: '#06c244',
+        color: '#fff',
+        fontFamily: 'Courier',
         fontWeight: 'bold',
         fontSize: 20
     },
     contentTxt: {
-        color: '#06c244',
+        color: '#fff',
+        fontFamily: 'Courier',
         fontWeight: 'bold',
         fontSize: 17,
         textAlign: 'center'

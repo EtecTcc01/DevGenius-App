@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styles } from './style';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { Avatar } from 'react-native-paper';
 
 import { userLogin } from '../../functions/user.services'; //IMPORT DAS FUNÇÕES DE LOGIN DO USUÁRIO
 import { storeUserData } from '../../functions/async.services'; //IMPORT DAS FUNÇÕES DE ASYNC
@@ -43,9 +44,10 @@ export function Welcome() {
         <View style={styles.container}>
             {/* VIEW COM ANIMAÇÃO, E SUAS CONFIG */}
             <Animatable.View style={styles.content} animation='bounceInDown' duration={2000}>
+            <Avatar.Image size={85} source={('https://png.pngtree.com/png-clipart/20190424/ourmid/pngtree-hand-drawn-green-leaf-logo-png-image_981758.jpg')} />
                 <Text style={styles.title}>Bem-vindo ao DevGenius</Text>
                 <TouchableOpacity onPress={async () => handlerLogin()}>
-                    <Text style={styles.subTitle}>Deseja pular login?</Text>
+                    {/* <Text style={styles.subTitle}>Deseja pular login?</Text> */}
                 </TouchableOpacity>
             </Animatable.View>
             <Animatable.View animation='fadeInUp' style={styles.screenSwitch}>
