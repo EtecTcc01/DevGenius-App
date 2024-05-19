@@ -1,45 +1,49 @@
 import * as React from "react";
 import { styles } from "./style";
-import { Text, View, TouchableOpacity, Modal, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
-// import { Modal, Portal, PaperProvider } from 'react-native-paper'; //IMPOR DOS COMPONENTES DO PAPER
-import { Portal, PaperProvider } from 'react-native-paper'; //IMPOR DOS COMPONENTES DO PAPER
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
 
 //IMPORT DAS FUNÇÕES DE COMPONENTE EXTERIORES USADOS
 import { random } from "../randomizer";
 import { getAnswerByTask } from "../../../functions/task.services";
+import { ModalAct } from "../Modal";
+import { AltList } from "../AltList";
 
 export function IntermediaryTask({ task, press }) {
+
+    const [fail, setFail] = React.useState(false); //STATE P/ARMAZENAR "FALHAS" 
+
+    if (fail === true) {
+        return (
+            <View style={styles.container} >
+                <Text style={styles.title}>Ocorreu um erro ao renderizar o componente</Text>
+            </View>
+        )
+    }
 
     const [count, setCount] = React.useState(0); //STATE P/CONTADOR DE ALTERNATIVAS SELECIONADAS
     const [taskT, setTaskT] = React.useState(""); //STATE P/ARMAZENAR O TEXTO DA TASK
     const [answer, setAnswer] = React.useState([]); //STATE P/ARMAZENAR DADOS DA RESPOSTA
     const [alt, setAlt] = React.useState([]); //STATE P/ARMAZENAR ALTERNATIVAS
+
     const [altBkp, setAltBkp] = React.useState([]); //STATE P/ARMAZENAR BKP DAS ALTERNATIVAS
     const [choice, setChoice] = React.useState([]); //STATE P/ARMAZENAR AS ALTERNATIVAS ESCOLHIDAS
 
     const [selectedId, setSelectedId] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) SELECIONADAS
     const [idTip, setIdTip] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) DA DICA
 
-    // const [visibleModal, setVisibleModal] = React.useState(false); //STATE P/VISIBILIDADE DO MODAL
-
-    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL A EXIBIR A MSG
-    const [message, setMessage] = React.useState({
+    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
+    const [modalInfo, setModalInfo] = React.useState({
         msg: "", state: false
-    }) //STATE P/ARMAZENAR A MENSAGEM
+    });
 
-    // //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL DE EXPLICAÇÃO
-    // const modalSwitch = () => {
-    //     setVisibleModal(!visibleModal)
-    // }
-
-    //FUNÇÃO PARA FECHAR A MODAL DE MSG
+    //FUNÇÃO PARA FECHAR A MODAL
     const closeModal = () => {
         setModalVisible(false);
-        setMessage({ ...message, msg: "" }); // Limpa a mensagem quando a modal é fechada
+        setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
 
-        if (message.state == true) {
+        if (modalInfo.state == true) {
             press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
         }
     }
@@ -47,9 +51,10 @@ export function IntermediaryTask({ task, press }) {
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
-            // setVisibleModal(false)
-            setTaskT(task._text);
+            setModalVisible(false)
             setCount(0);
+            setAlt(altBkp);
+            setTaskT(task._text);
             setChoice([])
             setSelectedId([])
             setIdTip([])
@@ -63,10 +68,11 @@ export function IntermediaryTask({ task, press }) {
                 .then((data) => {
                     if (!data) {
                         console.log("Erro ao buscar dados referentes à resposta da task.")
+                        setFail(true)
                         return
                     }
-                    setAnswer(data)
                     console.log(data)
+                    setAnswer(data)
                     randomizer(data)
                 })
         }
@@ -86,6 +92,7 @@ export function IntermediaryTask({ task, press }) {
 
             let splitT = [];
 
+            //SEPARANDO OS ELEMENTOS POR " "
             for (let i = data.length - 1; i > -1; i--) {
                 let temp = data[i];
                 try {
@@ -108,6 +115,7 @@ export function IntermediaryTask({ task, press }) {
             setAltBkp(randomic);
         } catch (error) {
             console.log(error)
+            setFail(true)
         }
     }
 
@@ -130,23 +138,27 @@ export function IntermediaryTask({ task, press }) {
             });
             setTaskT(temp)
             setTimeout(() => {
-                // alert("Acertou!!!");
-                setMessage({ msg: "Acertou!!!", state: true })
+                setModalInfo({ msg: "Acertou!!!", state: true })
             }, 500);
         } else {
-            // alert("Errouuuuuu!");
-            setMessage({ msg: "Errouuuu!!!", state: false })
+            setModalInfo({ msg: "Errouuuu!!!", state: false })
             setTaskT(task._text);
             setAlt(altBkp);
             setChoice([]);
             setSelectedId([])
         }
-        
+
         setModalVisible(true); // Exibe a modal quando a resposta é comparada
     }
 
     //FUNÇÃO P/SELEÇÃO DE UMA ALTERNATIVA
-    async function handlePress(e) {
+    async function handlePress(e, index) {
+        setSelectedId(() => {
+            let test = selectedId
+            test.push(index)
+            return test
+        })
+
         const list = choice;
         list.push(e); setChoice(list)
 
@@ -168,25 +180,6 @@ export function IntermediaryTask({ task, press }) {
         setChoice([])
         setSelectedId([])
     }
-
-    //CRIAÇÃO DE MULTIPLOS ELEMENTOS (ALTERNATIVAS)
-    const alts = alt.length > 0 ? alt.map((e, index) => {
-        return (
-            <TouchableOpacity key={index} id={index}
-                disabled={selectedId.includes(index) || idTip.includes(index) ? true : false}
-                style={selectedId.includes(index) || idTip.includes(index) ? [styles.button, { borderColor: "#aaaaaa" }] : styles.button}
-                onPress={() => {
-                    handlePress(e, index)
-                    setSelectedId(() => {
-                        let test = selectedId
-                        test.push(index)
-                        return test
-                    })
-                }}>
-                <Text style={styles.title}>{e}</Text>
-            </TouchableOpacity>
-        );
-    }) : []
 
     //CRIAÇÃO DAS ALTERNATIVAS "RETIRADAS"
     const altRemoved = choice.length > 0 ? choice.map((e, index) => {
@@ -231,95 +224,50 @@ export function IntermediaryTask({ task, press }) {
                     ccount++
                 }
             }
-            console.log(tipFinal)
         }
-
         setIdTip(tipFinal);
     }
 
     return (
         <>
-            {altBkp.length > 0 && (
-                <PaperProvider>
-                    <View style={styles.container}>
-                        <View style={styles.content}>
-                            <View style={styles.contentBtn}>
-                                {/* <Portal>
-                                    <Modal
-                                        visible={visibleModal}
-                                        onDismiss={modalSwitch}
-                                        dismissable="true"
-                                        dismissableBackButton="true"
-                                        contentContainerStyle={{
-                                            position: 'absolute',
-                                            backgroundColor: 'white',
-                                            padding: 20,
-                                            width: '90%',
-                                            flex: 1,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            alignSelf: 'center'
-                                        }}>
-                                        <Text>Example Modal.  Click outside this area to dismiss.</Text>
-                                    </Modal>
-                                </Portal> */}
+            {altBkp.length > 0 && fail === false && (
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <View style={styles.contentBtn}>
 
-                                <TouchableOpacity style={styles.btn}
-                                    disabled={idTip.length > 0 ? true : false}
-                                    onPress={nRandom}>
-                                    <MaterialCommunityIcons
-                                        name="lightbulb-on-outline"
-                                        size={24}
-                                        color="#06c244"
-                                    />
-                                </TouchableOpacity>
+                            <TouchableOpacity style={styles.btn}
+                                disabled={idTip.length > 0 ? true : false}
+                                onPress={nRandom}>
+                                <MaterialCommunityIcons
+                                    name="lightbulb-on-outline"
+                                    size={24}
+                                    color={idTip.length > 0 ? "gray" : "#06c244"}
+                                />
+                            </TouchableOpacity>
 
-                                {/* <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
-                                    <AntDesign
-                                        name="questioncircleo"
-                                        size={24}
-                                        color="#06c244"
-                                    />
-                                </TouchableOpacity> */}
-
-                                <TouchableOpacity style={styles.btn} onPress={reloadT}>
-                                    <Ionicons
-                                        size={24}
-                                        color="#06c244"
-                                        name="reload"
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.contentText}>
-                                <Text style={styles.titleA}>{taskT}</Text>
-                            </View>
+                            <TouchableOpacity style={styles.btn} onPress={reloadT}>
+                                <Ionicons
+                                    size={24}
+                                    color="#06c244"
+                                    name="reload"
+                                />
+                            </TouchableOpacity>
                         </View>
-
-                        <View style={styles.contentA}>
-                            <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved}</ScrollView>
+                        <View style={styles.contentText}>
+                            <Text style={styles.titleA}>{taskT.replaceAll("‼", "__‼__")}</Text>
                         </View>
-
-                        <View style={styles.contentB}>
-                            <ScrollView contentContainerStyle={styles.contentScroll}>{alts}</ScrollView>
-                        </View>
-
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={modalVisible}
-                            onRequestClose={closeModal}
-                        >
-                            <View style={styles.centeredView}>
-                                <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>{message.msg}</Text>
-                                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                                        <Text style={styles.closeButtonText}>Fechar</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </Modal>
                     </View>
-                </PaperProvider>
+
+                    <View style={styles.contentA}>
+                        <ScrollView contentContainerStyle={styles.contentScroll}>{altRemoved}</ScrollView>
+                    </View>
+
+                    <View style={styles.contentB}>
+                        <AltList alt={alt.length > 0 ? alt : []} selects={selectedId.length > 0 ? selectedId : []} remaining={[]} tips={idTip.length > 0 ? idTip : []} pressing={(alt, altIndex) => handlePress(alt, altIndex)} />
+                    </View>
+
+                    <ModalAct message={modalInfo.msg} visible={modalVisible} close={closeModal} />
+                </View>
             )}
         </>
     )

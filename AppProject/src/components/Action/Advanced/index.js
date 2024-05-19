@@ -2,15 +2,25 @@ import * as React from "react";
 import { styles } from "./style";
 import { Text, View, TouchableOpacity, ScrollView, Modal } from "react-native";
 
-
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS
-import { Portal, PaperProvider } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS
 
 //IMPORT DE FUNCTIONS SEPARADAS P/EXECUÇÃO DE COD. DETERMINADOS
 import { getAnswerByTask } from "../../../functions/task.services";
 import { random } from "../randomizer";
+import { ModalAct } from "../Modal";
+import { AltList } from "../AltList";
 
 export function AdvancedTask({ task, press }) {
+
+    const [fail, setFail] = React.useState(false); //STATE P/ARMAZENAR "FALHAS" 
+
+    if (fail === true) {
+        return (
+            <View style={styles.container} >
+                <Text style={styles.title}>Ocorreu um erro ao renderizar o componente</Text>
+            </View>
+        )
+    }
 
     const [answer, setAnswer] = React.useState([]); //STATE DA REQUISIÇÃO
     const [alt, setAlt] = React.useState([]); //STATE DAS ALTERNATIVAS
@@ -18,16 +28,11 @@ export function AdvancedTask({ task, press }) {
     const [codeTxt, setCodeTxt] = React.useState([]);//STATE DO COD. A SER EXIBIO
     const [subCode, setSubCode] = React.useState([]); //STATE DO COD. A SER TRABALHADO
 
-    const [first, setFirst] = React.useState(true); //STATE DA VER. DA 1° TENTATIVA
-    //NÃO APAGUE...
+    const [first, setFirst] = React.useState(true); //STATE DA VERIFICAÇÃO DA 1° TENTATIVA
     const [count, setCount] = React.useState(0); //STATE DO CONTADOR P/TENTATIVAS REALIZADAS (?)
 
-    //STATE'S DOS ID'S E ALT'S SELECIONADAS
-    const [selectedId, setSelectedId] = React.useState([]);
-    const [selectedAlt, setSelectedAlt] = React.useState([]);
-
+    const [selectedId, setSelectedId] = React.useState([]);//STATE'S DOS ID'S SELECIONADAS
     const [idCorrect, setIdCorrect] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) CORRETOS
-
     const [idTip, setIdTip] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) DA DICA
 
     //STATE'S DOS ID'S E ALT'S RESTANTES
@@ -35,22 +40,16 @@ export function AdvancedTask({ task, press }) {
     const [remainingAlt, setRemainingAlt] = React.useState([]);
 
     const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
-    const [message, setMessage] = React.useState({
+    const [modalInfo, setModalInfo] = React.useState({
         msg: "", state: false
-    }) //STATE P/ARMAZENAR A MENSAGEM
+    });
 
-    // const [visibleModal, setVisibleModal] = React.useState(false); //STATE DA VISIBILIDADE DO MODAL
-
-    //FUNÇÃO P/TROCAR VISIBILIDADE DO MODAL
-    // const modalSwitch = () => {
-    //     setVisibleModal(!visibleModal)
-    // }
-
+    //FUNÇÃO PARA FECHAR A MODAL
     const closeModal = () => {
         setModalVisible(false);
-        setMessage({ ...message, msg: "" }); // Limpa a mensagem quando a modal é fechada
+        setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
 
-        if (message.state == true) {
+        if (modalInfo.state == true) {
             press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
         }
     }
@@ -58,12 +57,10 @@ export function AdvancedTask({ task, press }) {
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
-            // setVisibleModal(false)
             setRemainingAlt([])
             setRemainingId([])
             setIdTip([])
             setIdCorrect([])
-            setSelectedAlt([])
             setSelectedId([])
             setCount(0)
             setFirst(true)
@@ -77,6 +74,7 @@ export function AdvancedTask({ task, press }) {
                 .then((data) => {
                     if (!data) {
                         console.log("Erro ao buscar dados referentes à resposta da task.")
+                        setFail(true)
                         return
                     }
 
@@ -95,21 +93,22 @@ export function AdvancedTask({ task, press }) {
         let splitFinal = []; let subFinal = [];
         let controlTxt = [];
 
+        //ENTRANDO EM CD UMA DAS LINHAS PARA MODIFICA-LAS
         for (let i = 0; i < splitTxt.length; i++) {
-            let splitTemp = splitTxt[i].split(" ")
-            let splitChar = splitTxt[i].split("")
+            let splitTemp = splitTxt[i].split(" ") //SEPARANDO PARA CRIAR ALTERNATIVASS
+            let splitChar = splitTxt[i].split("") //SEPARANDO P/FORMATAÇÃO DOS CARACTERES
 
             let subTxt = []; let subTemp = [];
             let controlT = [];
 
+            //SEPARANDO/ADICIONANDO ALTS EM UM ELEMENTO P/RANDOMIZA-LOS POSTERIORMENTE
             splitTemp.forEach(e => {
                 if (e.length > 0) {
                     splitFinal.push(e);
-                } else {
-                    []
                 }
             });
 
+            //MODIFICANDO CD CARACTERE COM EXCESÃO DO " "
             splitChar.forEach(e => {
                 if (e !== " ") {
                     subTxt.push(e.replace(e, "_"));
@@ -118,6 +117,7 @@ export function AdvancedTask({ task, press }) {
                 }
             });
 
+            //ADICIONANDO ELEMENTOS SEM ESPECILHOS PARA VISUALIZAÇÃO DO TEXTO
             subTxt.forEach(e => {
                 if (subTemp.length < 1) {
                     subTemp.push(e)
@@ -126,6 +126,7 @@ export function AdvancedTask({ task, press }) {
                 }
             });
 
+            //ADICIONANDO CHAR P/USAR DE CONDIÇÃO PARA FORMATAÇÃO DE TEXTO
             subTemp[0].split(" ").forEach(e => {
                 if (controlT.length < 1) {
                     controlT = e + "‼‼‼";
@@ -139,6 +140,7 @@ export function AdvancedTask({ task, press }) {
         }
 
         setSubCode(controlTxt)
+
         setCodeTxt(() => {
             const final = []
             for (let i = 0; i < subFinal.length; i++) {
@@ -167,7 +169,8 @@ export function AdvancedTask({ task, press }) {
                     splitT.push(temp);
                 }
             } catch {
-                [];
+                console.log("Erro ao randomizar os elementos.")
+                setFail(true)
             }
         }
 
@@ -183,6 +186,7 @@ export function AdvancedTask({ task, press }) {
         let answerText = []; let ccount = 0;
         let correctlyIds = idCorrect
 
+        //ADICIONANDO MAIS ALTERNATIVAS CORRETAS NO STATE
         idsCorrect.forEach(element => {
             correctlyIds.push(element)
         });
@@ -194,38 +198,28 @@ export function AdvancedTask({ task, press }) {
             }
         })
 
-        if (first == true) {
-            for (let i = 0; i < answerText.length; i++) {
-                if (answerText[i] == altList[i]) {
-                    ccount++
-                }
+        let altChoice = []; let altVerify = []
+
+        altList.forEach((element, index) => {
+            altChoice.push(element.slice(5, element.length - 1))
+
+            const altsV = altChoice[index].split(" ")
+            for (let i = 0; i < altsV.length; i++) {
+                altVerify.push(altsV[i])
             }
-        } else {
-            let altChoice = []; let altVerify = []
+        })
 
-            altList.forEach((element, index) => {
-                altChoice.push(element.slice(5, element.length - 1))
-
-                const altsV = altChoice[index].split(" ")
-                for (let i = 0; i < altsV.length; i++) {
-                    altVerify.push(altsV[i])
-                }
-            })
-
-            for (let i = 0; i < answerText.length; i++) {
-                if (answerText[i] == altVerify[i]) {
-                    ccount++
-                }
+        for (let i = 0; i < answerText.length; i++) {
+            if (answerText[i] == altVerify[i]) {
+                ccount++
             }
         }
 
         setTimeout(() => {
             if (ccount >= answerText.length) {
-                // alert("Corretissimo")
-                setMessage({ msg: "Acertou!!!", state: true })
+                setModalInfo({ msg: "Acertou!!!", state: true })
             } else {
-                // alert("Erradissimo")
-                setMessage({ msg: "Errouu!!!", state: false })
+                setModalInfo({ msg: "Errouu!!!", state: false })
                 setCount(0)
                 setRemainingId([])
                 setRemainingAlt([])
@@ -238,73 +232,6 @@ export function AdvancedTask({ task, press }) {
         }
 
         setModalVisible(true); // Exibe a modal quando a resposta é comparada
-    }
-
-    //FUNÇÃO P/EXECUÇÃO DA 1° TENTATIVA (SEM PENALIDADE)
-    function firstReplace(e, index) {
-
-        let listId = selectedId
-        listId.push(index)
-        setSelectedId(listId)
-
-        let altList = selectedAlt
-        altList.push(e)
-        setSelectedAlt(altList)
-
-        if (listId.length >= altBkp.length) {
-            const answerT = answer._code.split("\n")
-
-            let subCount = 0; let subCodeText = subCode;
-            let codeTxtTemp = []; let idsCorrect = []
-
-            codeTxt.forEach((element, index) => {
-                codeTxtTemp.push(element.slice(5, element.length - 1))
-            })
-
-            answerT.forEach((element, index) => {
-                const eSplit = element.split(" ")
-                const subCodeT = subCodeText[index].split(" ")
-                let ccount = 0; let textTemp = "";
-                let subTextTemp = "";
-
-                while (ccount < eSplit.length) {
-                    if (altList[subCount] == eSplit[ccount] && subCodeT[ccount].includes("‼")) {
-                        if (textTemp.length < 1) {
-                            textTemp = `${altList[subCount]}`
-                            subTextTemp = `${altList[subCount]}`
-
-                            idsCorrect.push(listId[subCount])
-                            // altCorrects.push(altList[subCount])
-                        } else {
-                            textTemp += ` ${altList[subCount]}`
-                            subTextTemp += ` ${altList[subCount]}`
-
-                            idsCorrect.push(listId[subCount])
-                            // altCorrects.push(altList[subCount])
-                        }
-                    } else {
-                        if (textTemp.length < 1) {
-                            textTemp = `${subCodeT[ccount].includes("‼") == true ? subCodeT[ccount].slice(0, subCodeT[ccount].length - 3) : subCodeT[ccount]}`
-                            subTextTemp = `${subCodeT[ccount]}`
-                        } else {
-                            textTemp += ` ${subCodeT[ccount].includes("‼") == true ? subCodeT[ccount].slice(0, subCodeT[ccount].length - 3) : subCodeT[ccount]}`
-                            subTextTemp += ` ${subCodeT[ccount]}`
-                        }
-                    }
-
-                    ccount++; subCount++;
-                }
-
-                codeTxtTemp[index] = `${index}.   ${textTemp.slice(0, textTemp.length)}\n`
-                subCodeText[index] = `${subTextTemp}`
-            })
-
-            setCodeTxt([codeTxtTemp]); setSubCode(subCodeText)
-
-            altCompare(altList, answerT, idsCorrect)
-        }
-
-        setCount(count + 1)
     }
 
     //FUNÇÃO P/EXECUÇÃO DAS ALTERNATIVAS SEGUINTES
@@ -394,23 +321,6 @@ export function AdvancedTask({ task, press }) {
 
     // }
 
-    //CRIAÇÃO DE MULTIPLOS ELEMENTOS (ALTERNATIVAS)
-    const listAlts = alt.length > 0 ? alt.map((e, index) => {
-        return (
-            <TouchableOpacity
-                style={selectedId.includes(index) || remainingId.includes(index) ? [styles.button, { borderColor: "#aaaaaa" }] : styles.button}
-                id={index}
-                name={index}
-                key={index}
-                disabled={selectedId.includes(index) || remainingId.includes(index) ? true : false}
-                onPress={() => {
-                    first == true ? firstReplace(e, index) : replaceTxt(e, index)
-                }}>
-                <Text style={styles.title}>{e}</Text>
-            </TouchableOpacity>
-        )
-    }) : []
-
     //CRIAÇÃO DAS LINHAS DE CÓDIGO EXIBIDAS (OBS: BUG VISUAL APÓS TENTATIVA)
     const text = codeTxt.length > 0 ? codeTxt.map((e, index) => {
         return (
@@ -423,88 +333,46 @@ export function AdvancedTask({ task, press }) {
     return (
         <>
             {
-                altBkp.length > 0 && (
-                    <PaperProvider>
-                        <View style={styles.container}>
-                            <View style={styles.content}>
-                                <View style={styles.contentBtn}>
-                                    {/* <Portal>
-                                        <Modal visible={visibleModal}
-                                            onDismiss={modalSwitch}
-                                            dismissable="true"
-                                            dismissableBackButton="true"
-                                            contentContainerStyle={{
-                                                position: 'absolute',
-                                                backgroundColor: 'white',
-                                                padding: 20,
-                                                width: '90%',
-                                                flex: 1,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                alignSelf: 'center'
-                                            }}>
-                                            <Text>Example Modal.  Click outside this area to dismiss.</Text>
-                                        </Modal>
-                                    </Portal> */}
+                altBkp.length > 0 && fail === false && (
+                    <View style={styles.container}>
+                        <View style={styles.content}>
+                            <View style={styles.contentBtn}>
 
-                                    <TouchableOpacity style={styles.btn}
-                                        disabled={idTip.length > 0 ? true : false}
-                                    // onPress={nRandom}
-                                    >
-                                        <MaterialCommunityIcons
-                                            name="lightbulb-on-outline"
-                                            size={24}
-                                            color="#06c244"
-                                        />
-                                    </TouchableOpacity>
+                                <TouchableOpacity style={styles.btn}
+                                    disabled={idTip.length > 0 ? true : false}
+                                // onPress={nRandom}
+                                >
+                                    <MaterialCommunityIcons
+                                        name="lightbulb-on-outline"
+                                        size={24}
+                                        color="#06c244"
+                                    />
+                                </TouchableOpacity>
 
-                                    {/* <TouchableOpacity style={styles.btn} onPress={modalSwitch}>
-                                        <AntDesign
-                                            name="questioncircleo"
-                                            size={24}
-                                            color="#06c244"
-                                        />
-                                    </TouchableOpacity> */}
-
-                                    <TouchableOpacity style={styles.btn}
-                                        disabled={first == true ? true : false}
-                                        onPress={reloadT}
-                                    >
-                                        <Ionicons
-                                            size={24}
-                                            color={first == true ? "#aaaaaa" : "#06c244"}
-                                            name="reload"
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.contentText}>
-                                    {text}
-                                </View>
-
+                                <TouchableOpacity style={styles.btn}
+                                    disabled={first == true ? true : false}
+                                    onPress={reloadT}
+                                >
+                                    <Ionicons
+                                        size={24}
+                                        color={first == true ? "#aaaaaa" : "#06c244"}
+                                        name="reload"
+                                    />
+                                </TouchableOpacity>
                             </View>
 
-                            <View style={styles.contentB}>
-                                <ScrollView contentContainerStyle={styles.contentScroll}>{listAlts}</ScrollView>
+                            <View style={styles.contentText}>
+                                {text}
                             </View>
 
-                            <Modal
-                                animationType="slide"
-                                transparent={true}
-                                visible={modalVisible}
-                                onRequestClose={closeModal}
-                            >
-                                <View style={styles.centeredView}>
-                                    <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>{message.msg}</Text>
-                                        <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                                            <Text style={styles.closeButtonText}>Fechar</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </Modal>
                         </View>
-                    </PaperProvider>
+
+                        <View style={styles.contentB}>
+                            <AltList alt={alt.length > 0 ? alt : []} selects={selectedId.length > 0 ? selectedId : []} remaining={remainingId.length > 0 ? remainingId : []} tips={idTip.length > 0 ? idTip : []} pressing={(alt, altIndex) => replaceTxt(alt, altIndex)} />
+                        </View>
+
+                        <ModalAct message={modalInfo.msg} visible={modalVisible} close={closeModal} />
+                    </View>
                 )
             }
         </>
