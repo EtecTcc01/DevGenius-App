@@ -3,32 +3,34 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#011205',
+        backgroundColor: '#111212',
         alignItems: 'center',
         justifyContent: 'center',
     },
     content: {
         flex: 2,
-        backgroundColor: '#011205',
+        backgroundColor: '#111212',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '5%'
     },
     screenSwitch: {
-        fontFamily: 'Courier',
-        backgroundColor: '#000',
+        fontFamily: 'sans-serif',
+        backgroundColor: '#111212',
         flex: 1,
         width: '100%',
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
-        padding: '7%'
+        padding: '7%',
+        textAlign: 'center'
     },
     title: {
-        color: '#fff',
-        fontSize: 25,
+        color: '#06c244',
+        fontSize: 35,
         fontWeight: 'bold',
         textAlign: 'center',
-        fontFamily: 'Arial',
+        fontFamily: 'sans-serif',
+        marginTop: 35,
         top: '80'
     },
     subTitle: {
@@ -39,26 +41,42 @@ export const styles = StyleSheet.create({
         fontSize: 20
     },
     contentTxt: {
-        color: '#fff',
-        fontFamily: 'Courier',
-        fontWeight: 'bold',
+        color: '#4f4f4f',
+        fontFamily: 'sans-serif',
+        fontWeight: 550,
         fontSize: 17,
-        textAlign: 'center'
+        textAlign: 'center',
+        marginTop: 30
     },
-    button: {
+    button1: {
         backgroundColor: '#06c244',
-        position: 'absolute',
         borderRadius: 30,
-        width: '60%',
-        bottom: '35%',
+        marginTop: 150,
+        width: '95%',
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '4%',
+        // marginBottom: 20,
+        bottom: '35%'
+    },
+    button2: {
+        color: '#06c244',
+        backgroundColor: '#06c244',
+        marginTop: 'auto',
+        borderRadius: 30,
+        borderColor: '#06c244',
+        width: '95%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '4%',
+        bottom: '20%'
     },
     access: {
-        color: '#000',
+        // color: '#000',
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: 25,
+        fontFamily: 'sans-serif'
     }
 });

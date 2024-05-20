@@ -44,17 +44,27 @@ export function Welcome() {
         <View style={styles.container}>
             {/* VIEW COM ANIMAÇÃO, E SUAS CONFIG */}
             <Animatable.View style={styles.content} animation='bounceInDown' duration={2000}>
-                <Avatar.Image size={85} source={('https://png.pngtree.com/png-clipart/20190424/ourmid/pngtree-hand-drawn-green-leaf-logo-png-image_981758.jpg')} />
-                <Text style={styles.title}>Bem-vindo ao DevGenius</Text>
+
                 <TouchableOpacity onPress={async () => handlerLogin()}>
-                    <Text style={styles.subTitle}>Deseja pular login?</Text>
+                <Avatar.Image size={85} source={('https://png.pngtree.com/png-clipart/20190424/ourmid/pngtree-hand-drawn-green-leaf-logo-png-image_981758.jpg')} />
                 </TouchableOpacity>
+
+                <Text style={styles.title}>DevGenius</Text>
+
+                <Text style={styles.contentTxt}>Pratique programação de forma mais dinâmica e em qualquer lugar!</Text>
+
             </Animatable.View>
             <Animatable.View animation='fadeInUp' style={styles.screenSwitch}>
-                <Text style={styles.contentTxt}>Pratique programação de forma mais dinâmica e em qualquer lugar!</Text>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Begin-Form', { operation: "Login" })}>
-                    <Text style={styles.access}>Acessar</Text>
+
+                <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Begin-Form', { operation: "Register" })}>
+                    <Text style={styles.access}>Começar</Text>
                 </TouchableOpacity>
+
+
+                <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Begin-Form', { operation: "Login" })}>
+                    <Text style={styles.access}>Já tenho uma conta</Text>
+                </TouchableOpacity>
+
             </Animatable.View>
         </View>
     );
