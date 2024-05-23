@@ -124,14 +124,14 @@ export function Action({ route }) {
     }
 
     function handlerTransfer() {
-        // navigation.navigate(`Action`, { course: course, registration: registration })
-        // navigation.navigate(`DoneScreen`, { course: course, registration: registration })
         navigation.navigate(`Home`)
     }
 
     function onPressing(state) {
-        if (state == true) {
+        if (state == 1) {
             setPoints(points + 1)
+            setPhase(phase + 1)
+        } else if (state == 2) {
             setPhase(phase + 1)
         }
     }
@@ -178,17 +178,3 @@ export function Action({ route }) {
         </View>
     );
 }
-
-// export function DoneScreen({ route }) {
-//     const navigation = useNavigation()
-//     console.log(route.params)
-//     const course = route.params.course
-//     const registration = route.params.registration
-
-//     return (
-//         <View style={styles.container}>
-//             <Text style={styles.titleA}>ESTAGIO CONCLUIDO</Text>
-//             <Button onPress={() => navigation.navigate(`Action`, { course: course, registration: registration[0] })} mode='contained'>Avançar Estágio</Button>
-//         </View>
-//     )
-// }

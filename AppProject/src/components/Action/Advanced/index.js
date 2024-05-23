@@ -1,14 +1,13 @@
 import * as React from "react";
 import { styles } from "./style";
-import { Text, View, TouchableOpacity, ScrollView, Modal } from "react-native";
-
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS
+import { Text, View } from "react-native";
 
 //IMPORT DE FUNCTIONS SEPARADAS P/EXECUÇÃO DE COD. DETERMINADOS
 import { getAnswerByTask } from "../../../functions/task.services";
 import { random } from "../randomizer";
 import { ModalAct } from "../Modal";
 import { AltList } from "../AltList";
+import { TopBarUtils } from "../TopBarUtils";
 
 export function AdvancedTask({ task, press }) {
 
@@ -28,6 +27,7 @@ export function AdvancedTask({ task, press }) {
     const [codeTxt, setCodeTxt] = React.useState([]);//STATE DO COD. A SER EXIBIO
     const [subCode, setSubCode] = React.useState([]); //STATE DO COD. A SER TRABALHADO
 
+    const [lifes, setLifes] = React.useState(0) //STATE P/ARMAZENAR OS N. DE VIDAS
     const [first, setFirst] = React.useState(true); //STATE DA VERIFICAÇÃO DA 1° TENTATIVA
     const [count, setCount] = React.useState(0); //STATE DO CONTADOR P/TENTATIVAS REALIZADAS (?)
 
@@ -41,7 +41,7 @@ export function AdvancedTask({ task, press }) {
 
     const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
     const [modalInfo, setModalInfo] = React.useState({
-        msg: "", state: false
+        msg: "", state: 0
     });
 
     //FUNÇÃO PARA FECHAR A MODAL
@@ -49,8 +49,10 @@ export function AdvancedTask({ task, press }) {
         setModalVisible(false);
         setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
 
-        if (modalInfo.state == true) {
-            press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        if (modalInfo.state == 1) {
+            press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        } else if (lifes == 0) {
+            press(2)
         }
     }
 
@@ -69,8 +71,10 @@ export function AdvancedTask({ task, press }) {
 
     //FUNÇÃO P/BUSCAR DADOS DA RESPOSTA DA TASK
     React.useEffect(() => {
+        setLifes(task._lifes)
+
         if (task != undefined || task != null) {
-            getAnswerByTask("advancedAnswer", task._id)
+            getAnswerByTask("advancedAnswer", task.id_task)
                 .then((data) => {
                     if (!data) {
                         console.log("Erro ao buscar dados referentes à resposta da task.")
@@ -217,9 +221,13 @@ export function AdvancedTask({ task, press }) {
 
         setTimeout(() => {
             if (ccount >= answerText.length) {
-                setModalInfo({ msg: "Acertou!!!", state: true })
+                setModalInfo({ msg: "Acertou!!!", state: 1 })
             } else {
-                setModalInfo({ msg: "Errouu!!!", state: false })
+                setModalInfo({
+                    msg: lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa. Vidas restantes: ${lifes - 1}...`,
+                    state: 0
+                })
+                setLifes(lifes - 1)
                 setCount(0)
                 setRemainingId([])
                 setRemainingAlt([])
@@ -317,9 +325,9 @@ export function AdvancedTask({ task, press }) {
     }
 
     //FUNÇÃO P/DISPONIBILIZAR A DICA
-    // function nRandom() {
+    function nRandom() {
 
-    // }
+    }
 
     //CRIAÇÃO DAS LINHAS DE CÓDIGO EXIBIDAS (OBS: BUG VISUAL APÓS TENTATIVA)
     const text = codeTxt.length > 0 ? codeTxt.map((e, index) => {
@@ -336,30 +344,7 @@ export function AdvancedTask({ task, press }) {
                 altBkp.length > 0 && fail === false && (
                     <View style={styles.container}>
                         <View style={styles.content}>
-                            <View style={styles.contentBtn}>
-
-                                <TouchableOpacity style={styles.btn}
-                                    disabled={idTip.length > 0 ? true : false}
-                                // onPress={nRandom}
-                                >
-                                    <MaterialCommunityIcons
-                                        name="lightbulb-on-outline"
-                                        size={24}
-                                        color="#06c244"
-                                    />
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.btn}
-                                    disabled={first == true ? true : false}
-                                    onPress={reloadT}
-                                >
-                                    <Ionicons
-                                        size={24}
-                                        color={first == true ? "#aaaaaa" : "#06c244"}
-                                        name="reload"
-                                    />
-                                </TouchableOpacity>
-                            </View>
+                            <TopBarUtils idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={first} lifes={lifes} />
 
                             <View style={styles.contentText}>
                                 {text}

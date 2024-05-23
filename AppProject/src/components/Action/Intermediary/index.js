@@ -2,13 +2,14 @@ import * as React from "react";
 import { styles } from "./style";
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
-
-//IMPORT DAS FUNÇÕES DE COMPONENTE EXTERIORES USADOS
+//IMPORT DAS FUNÇÕES EXTERIORES USADOS
 import { random } from "../randomizer";
 import { getAnswerByTask } from "../../../functions/task.services";
+
+//IMPORT DE COMPONENTES USADOS
 import { ModalAct } from "../Modal";
 import { AltList } from "../AltList";
+import { TopBarUtils } from "../TopBarUtils";
 
 export function IntermediaryTask({ task, press }) {
 
@@ -26,6 +27,7 @@ export function IntermediaryTask({ task, press }) {
     const [taskT, setTaskT] = React.useState(""); //STATE P/ARMAZENAR O TEXTO DA TASK
     const [answer, setAnswer] = React.useState([]); //STATE P/ARMAZENAR DADOS DA RESPOSTA
     const [alt, setAlt] = React.useState([]); //STATE P/ARMAZENAR ALTERNATIVAS
+    const [lifes, setLifes] = React.useState(0) //STATE P/ARMAZENAR OS N. DE VIDAS
 
     const [altBkp, setAltBkp] = React.useState([]); //STATE P/ARMAZENAR BKP DAS ALTERNATIVAS
     const [choice, setChoice] = React.useState([]); //STATE P/ARMAZENAR AS ALTERNATIVAS ESCOLHIDAS
@@ -35,7 +37,7 @@ export function IntermediaryTask({ task, press }) {
 
     const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
     const [modalInfo, setModalInfo] = React.useState({
-        msg: "", state: false
+        msg: "", state: 0
     });
 
     //FUNÇÃO PARA FECHAR A MODAL
@@ -43,8 +45,10 @@ export function IntermediaryTask({ task, press }) {
         setModalVisible(false);
         setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
 
-        if (modalInfo.state == true) {
-            press(true) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        if (modalInfo.state == 1) {
+            press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+        } else if (lifes == 0) {
+            press(2)
         }
     }
 
@@ -64,7 +68,9 @@ export function IntermediaryTask({ task, press }) {
     //FUNÇÃO P/BUSCAR DADOS DA RESPOSTA DA TASK
     React.useEffect(() => {
         if (task != undefined || task != null) {
-            getAnswerByTask("intermediaryAnswer", task._id)
+            setLifes(task._lifes)
+
+            getAnswerByTask("intermediaryAnswer", task.id_task)
                 .then((data) => {
                     if (!data) {
                         console.log("Erro ao buscar dados referentes à resposta da task.")
@@ -138,10 +144,14 @@ export function IntermediaryTask({ task, press }) {
             });
             setTaskT(temp)
             setTimeout(() => {
-                setModalInfo({ msg: "Acertou!!!", state: true })
+                setModalInfo({ msg: `Parabens! Você concluiu a tarefa com ${lifes} restantes.`, state: 1 })
             }, 500);
         } else {
-            setModalInfo({ msg: "Errouuuu!!!", state: false })
+            setModalInfo({
+                msg: lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa. Vidas restantes: ${lifes - 1}...`,
+                state: 0
+            })
+            setLifes(lifes - 1)
             setTaskT(task._text);
             setAlt(altBkp);
             setChoice([]);
@@ -233,26 +243,8 @@ export function IntermediaryTask({ task, press }) {
             {altBkp.length > 0 && fail === false && (
                 <View style={styles.container}>
                     <View style={styles.content}>
-                        <View style={styles.contentBtn}>
+                        <TopBarUtils idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={false} lifes={lifes} />
 
-                            <TouchableOpacity style={styles.btn}
-                                disabled={idTip.length > 0 ? true : false}
-                                onPress={nRandom}>
-                                <MaterialCommunityIcons
-                                    name="lightbulb-on-outline"
-                                    size={24}
-                                    color={idTip.length > 0 ? "gray" : "#06c244"}
-                                />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.btn} onPress={reloadT}>
-                                <Ionicons
-                                    size={24}
-                                    color="#06c244"
-                                    name="reload"
-                                />
-                            </TouchableOpacity>
-                        </View>
                         <View style={styles.contentText}>
                             <Text style={styles.titleA}>{taskT.replaceAll("‼", "__‼__")}</Text>
                         </View>

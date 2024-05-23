@@ -58,17 +58,6 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         minWidth: "100%",
     },
-    contentBtn: {
-        width: 'auto',
-        height: 'auto',
-        position: 'absolute',
-        display: 'flex',
-        flexDirection: 'row',
-        alignSelf: 'flex-end',
-    },
-    btn: {
-        margin: '3px',
-    },
     title: {
         fontSize: 16,
         fontWeight: "bold",

@@ -50,7 +50,7 @@ export function BasicTask({ task, press }) {
     //FUNÇÃO USADA PARA BUSCAR PELAS RESPOSTAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
-            getAnswerByTask("basicAnswer", task._id)
+            getAnswerByTask("basicAnswer", task.id_task)
                 .then((data) => {
                     if (!data) {
                         console.log("Erro ao buscar dados referentes à resposta da task.")
