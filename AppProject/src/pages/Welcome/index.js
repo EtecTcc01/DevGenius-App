@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styles } from './style';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import { Avatar } from 'react-native-paper';
 
 import { userLogin } from '../../functions/user.services'; //IMPORT DAS FUNÇÕES DE LOGIN DO USUÁRIO
@@ -46,10 +46,12 @@ export function Welcome() {
             <Animatable.View style={styles.content} animation='bounceInDown' duration={2000}>
 
                 <TouchableOpacity onPress={async () => handlerLogin()}>
-                <Avatar.Image size={85} source={('https://png.pngtree.com/png-clipart/20190424/ourmid/pngtree-hand-drawn-green-leaf-logo-png-image_981758.jpg')} />
+            
+                <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
+
                 </TouchableOpacity>
 
-                <Text style={styles.title}>DevGenius</Text>
+                {/* <Text style={styles.title}>DevGenius</Text> */}
 
                 <Text style={styles.contentTxt}>Pratique programação de forma mais dinâmica e em qualquer lugar!</Text>
 
@@ -57,7 +59,7 @@ export function Welcome() {
             <Animatable.View animation='fadeInUp' style={styles.screenSwitch}>
 
                 <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Begin-Form', { operation: "Register" })}>
-                    <Text style={styles.access}>Começar</Text>
+                    <Text style={styles.access1}>Começar</Text>
                 </TouchableOpacity>
 
 

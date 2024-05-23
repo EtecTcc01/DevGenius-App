@@ -35,18 +35,18 @@ export const styles = StyleSheet.create({
     },
     subTitle: {
         paddingTop: 18,
-        color: '#fff',
+        color: '#06c244',
         fontFamily: 'Courier',
         fontWeight: 'bold',
         fontSize: 20
     },
     contentTxt: {
-        color: '#4f4f4f',
+        color: '#808080',
         fontFamily: 'sans-serif',
         fontWeight: 550,
-        fontSize: 17,
+        fontSize: 23,
         textAlign: 'center',
-        marginTop: 30
+        marginTop: 40
     },
     button1: {
         backgroundColor: '#06c244',
@@ -61,11 +61,12 @@ export const styles = StyleSheet.create({
         bottom: '35%'
     },
     button2: {
-        color: '#06c244',
-        backgroundColor: '#06c244',
+        color: '#fff',
+        backgroundColor: 'transparent',
         marginTop: 'auto',
         borderRadius: 30,
         borderColor: '#06c244',
+        borderWidth: '3px',
         width: '95%',
         alignSelf: 'center',
         justifyContent: 'center',
@@ -73,10 +74,20 @@ export const styles = StyleSheet.create({
         padding: '4%',
         bottom: '20%'
     },
-    access: {
+    access1: {
         // color: '#000',
         fontWeight: 'bold',
         fontSize: 25,
         fontFamily: 'sans-serif'
+    },
+    access: {
+        color: '#06c244',
+        fontWeight: 'bold',
+        fontSize: 25,
+        fontFamily: 'sans-serif'
+    },
+    logo: {
+        width: 230,
+        height: 200
     }
 });
