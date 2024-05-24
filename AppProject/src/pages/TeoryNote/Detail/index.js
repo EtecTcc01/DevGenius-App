@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { styles } from './style';
 
 export function TeoryDetail({ route, data }) {
-    const teory = route ? route.params.teory[0] : data
+    const teory = route ? route.params.teory : data
     console.log(teory)
 
     // Verifica se teory está definido antes de acessar suas propriedades

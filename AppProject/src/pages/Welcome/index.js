@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styles } from './style';
 import { Text, TouchableOpacity, View, Image } from 'react-native';
-import { Avatar } from 'react-native-paper';
+// import { Avatar } from 'react-native-paper';
 
 import { userLogin } from '../../functions/user.services'; //IMPORT DAS FUNÇÕES DE LOGIN DO USUÁRIO
 import { storeUserData } from '../../functions/async.services'; //IMPORT DAS FUNÇÕES DE ASYNC
@@ -46,8 +46,8 @@ export function Welcome() {
             <Animatable.View style={styles.content} animation='bounceInDown' duration={2000}>
 
                 <TouchableOpacity onPress={async () => handlerLogin()}>
-            
-                <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
+
+                    <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
 
                 </TouchableOpacity>
 
