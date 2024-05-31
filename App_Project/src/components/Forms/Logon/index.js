@@ -93,6 +93,7 @@ export function Logon({ handlerOnPress }) {
                 value={user.userPassword}
                 onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
                 secureTextEntry
+                right={<TextInput.Icon icon="eye" />}
             />
 
             <Button

@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
         margin: 10,
         width: '100%',
         backgroundColor: '#000',
+        color: '#dedace'
     },
     button: {
         marginTop: 20,
@@ -32,4 +33,15 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold', 
         fontSize: RFValue(11)
     },
+    img_demo: {
+        flex: 0.8,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    img: {
+        minWidth: 110,
+        minHeight: 110,
+        maxHeight: 210,
+        maxWidth: 210,
+    }
 });

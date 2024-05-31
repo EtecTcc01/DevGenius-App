@@ -139,7 +139,7 @@ export function IntermediaryAct({ task, press }) {
             });
             setTaskT(temp)
             setTimeout(() => {
-                setModalInfo({ msg: `Parabens! Você concluiu a tarefa com ${lifes} restantes.`, state: 1 })
+                setModalInfo({ msg: `Parabéns! Você concluiu a tarefa com ${lifes} restantes.`, state: 1 })
             }, 500);
         } else {
             setModalInfo({

@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { styles } from './style';
+// import { useState } from 'react';
 
 import { Text, TouchableOpacity, View, Image } from 'react-native';
-import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕES
+// import CircularProgress from 'react-native-circular-progress-indicator';
 import { userLogin } from '../../functions/user.services';
 import { storeUserData } from '../../functions/async.services';
 
 export function Welcome({ navigation }) {
+    // const [value, setValue] = useState(0);
 
     async function handlerLogin() {
         // REALIZANDO LOGIN COM CONTA DO ADMIN
@@ -40,7 +43,19 @@ export function Welcome({ navigation }) {
 
                 <TouchableOpacity onPress={async () => handlerLogin()}>
 
-                    <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
+                {/* <CircularProgress
+                radius={90}
+                value={85}
+                color='#222'
+                fontSize={20}
+                valueSuffix={'%'}
+                inActiveStrokeColor={'#2ecc71'}
+                inActiveStrokeOpacity={0.2}
+                inActiveStrokeWidth={6}
+                duration={3000}
+                onAnimationComplete={()=> setValue(50)}
+                /> */}
+                <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
 
                 </TouchableOpacity>
 

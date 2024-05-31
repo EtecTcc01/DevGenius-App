@@ -39,5 +39,5 @@ export const styles = StyleSheet.create({
         color: '#000', // Letra preta
         fontWeight: 'bold',
         textAlign: 'center',
-    }
+    },
 });

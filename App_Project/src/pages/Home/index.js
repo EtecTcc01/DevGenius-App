@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styles } from './style';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View, Image } from 'react-native';
 
 // import { Modal, Portal, PaperProvider, Button, Card } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 import { ListCourses } from '../../components/Lists/ListCourses';
@@ -73,8 +73,8 @@ export function Home({ route }) {
             {
                 course.length > 0 && (
                     <>
-                        <View style={styles.demo}>
-                            <Text style={styles.title_demo}>DEVGENIUS</Text>
+                        <View style={styles.logo}>
+                            <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
                         </View>
 
                         <View style={styles.content}>

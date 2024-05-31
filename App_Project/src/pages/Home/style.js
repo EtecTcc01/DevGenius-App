@@ -10,29 +10,21 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 5
     },
-    demo: {
+    logo: {
         flex: 0.5,
         minHeight: 50,
         justifyContent: 'center',
-        alignItems: "center"
-    },
-    title_demo: {
-        textAlign: "center",
-        fontSize: RFValue(35),
-        color: '#06c244',
-        fontFamily: 'sans-serif-thin',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius: 10,
-        borderColor: "gray",
-        borderWidth: 0.5
+        alignItems: "center",
+        width: '125px',
+        height: '15px',
     },
     title: {
         textAlign: "left",
         fontSize: RFValue(15),
         color: '#06c244',
         fontFamily: 'sans-serif',
-        margin: 15
+        margin: 15,
+        textAlign: 'center'
     },
     content: {
         flex: 1, 

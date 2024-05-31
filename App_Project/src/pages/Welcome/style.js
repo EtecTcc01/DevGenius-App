@@ -36,5 +36,8 @@ export const styles = StyleSheet.create({
         minHeight: 70,
         maxWidth: 210,
         maxHeight: 180
-    }
+    },
+    // circleProgress: {
+    //     fontSize:
+    // }
 });
