@@ -10,18 +10,19 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 5
     },
-    logo: {
-        flex: 0.5,
-        minHeight: 50,
-        justifyContent: 'center',
-        alignItems: "center",
-        width: '125px',
-        height: '15px',
-    },
+    // logo: {
+    //     flex: 0.5,
+    //     minHeight: 50,
+    //     justifyContent: 'center',
+    //     alignItems: "center",
+    //     width: '125px',
+    //     height: '15px',
+    // },
     title: {
         textAlign: "left",
         fontSize: RFValue(15),
         color: '#06c244',
+        fontWeight: 800,
         fontFamily: 'sans-serif',
         margin: 15,
         textAlign: 'center'

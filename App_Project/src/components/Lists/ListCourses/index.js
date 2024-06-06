@@ -28,10 +28,10 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
         <Image style={styles.cover} source={{ uri: element.course_icon }} />
 
         <View style={styles.action}>
-          <Button style={[styles.button, { borderWidth: 1, borderColor: "black" }]} labelStyle={styles.label} onPress={(() => {
+          <Button style={[styles.button, { borderWidth: 1.5, borderColor: "#284703" }]} labelStyle={styles.label} onPress={(() => {
             handlerOnPress(element, "Stages")
           })}>Lista</Button>
-          <Button style={[styles.button, { backgroundColor: '#663399' }]} labelStyle={[styles.label, { color: "white" }]} onPress={(() => {
+          <Button style={[styles.button, { backgroundColor: '#284703' }]} labelStyle={[styles.label, { color: "#cfe3d4" }]} onPress={(() => {
             handlerOnPress(element, "Action")
           })}>{levels[index] > 0 ? "Retomar" : "Iniciar"}</Button>
         </View>

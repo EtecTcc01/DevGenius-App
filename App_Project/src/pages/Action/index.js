@@ -142,43 +142,43 @@ export function Action({ route }) {
     }
 
     //CRIAÇÃO DE ELEMENTOS COM SEU RESPECTIVO "TIPO" (?)
-    // const listContent = stageContent.length > 0 ? stageContent.map((e, i) => {
-    //     switch (e.id_operation) {
-    //         case 1:
-    //             return (
-    //                 <BasicAct task={e} press={(e) => onPressing(e)} />
-    //             )
-    //         case 2:
-    //             return (
-    //                 <IntermediaryAct task={e} press={(e) => onPressing(e)} />
-    //             )
-    //         case 3:
-    //             return (
-    //                 <AdvancedAct task={e} press={(e) => onPressing(e)} />
-    //             )
-    //     }
-    //     if (!e.id_operation) {
-    //         return (
-    //             <View key={i} style={{ flex: 1, flexDirection: 'column', padding: 15 }}>
-    //                 <Details data={e} />
-    //                 <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => onPressing(true)} mode='contained'>Avançar</Button>
-    //             </View>
-    //         )
-    //     }
-    // }) : []
+    const listContent = stageContent.length > 0 ? stageContent.map((e, i) => {
+        switch (e.id_operation) {
+            case 1:
+                return (
+                    <BasicAct task={e} press={(e) => onPressing(e)} />
+                )
+            case 2:
+                return (
+                    <IntermediaryAct task={e} press={(e) => onPressing(e)} />
+                )
+            case 3:
+                return (
+                    <AdvancedAct task={e} press={(e) => onPressing(e)} />
+                )
+        }
+        if (!e.id_operation) {
+            return (
+                <View key={i} style={{ flex: 1, flexDirection: 'column', padding: 15 }}>
+                    <Details data={e} />
+                    <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => onPressing(true)} mode='contained'>Avançar</Button>
+                </View>
+            )
+        }
+    }) : []
 
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                {/* {listContent.length > 0 && phase < stageContent.length ? listContent[phase] : <></>}
-                {phase >= stageContent.length && stageContent.length > 0 && ( */}
+                {listContent.length > 0 && phase < stageContent.length ? listContent[phase] : <></>}
+                {phase >= stageContent.length && stageContent.length > 0 && (
                     <View>
                         <Text style={styles.title}>ESTÁGIO CONCLUÍDO</Text>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <ProgressBar />
                         </View>
                     </View>
-                {/* )} */}
+                )}
             </View>
         </View>
     );

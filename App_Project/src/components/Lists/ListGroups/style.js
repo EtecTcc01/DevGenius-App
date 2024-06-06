@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     },
     item: {
         alignSelf: "center",
-        backgroundColor: "white",
+        backgroundColor: "#88b257",
         borderRadius: 5,
         width: "92%",
         margin: 8

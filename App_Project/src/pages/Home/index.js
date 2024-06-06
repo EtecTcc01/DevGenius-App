@@ -73,9 +73,9 @@ export function Home({ route }) {
             {
                 course.length > 0 && (
                     <>
-                        <View style={styles.logo}>
+                        {/* <View style={styles.logo}>
                             <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
-                        </View>
+                        </View> */}
 
                         <View style={styles.content}>
                             <Text style={styles.title}>CURSOS PÚBLICOS</Text>

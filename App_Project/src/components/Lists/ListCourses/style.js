@@ -10,12 +10,15 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: RFValue(13),
-        fontWeight: "bold",
-        alignSelf: "flex-start"
+        fontWeight: 900,
+        alignSelf: "flex-start",
+        color: '#000'
     },
     subTitle: {
-        fontSize: RFValue(8),
-        alignSelf: "flex-start"
+        fontSize: RFValue(13),
+        fontWeight: '750',
+        alignSelf: "flex-start",
+        color: '#284703'
     },
     cover: {
         minWidth: 100,
@@ -25,26 +28,31 @@ export const styles = StyleSheet.create({
         borderRadius: 15,
     },
     card: {
+        fontSize: RFValue(22),
         width: "40%",
         height: 270,
         margin: 5,
         marginBottom: 20,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "white",
+        backgroundColor:'#88b257', //Verde claro,
         paddingHorizontal: 10,
         paddingVertical: 15,
         borderRadius: 15,
-        maxWidth: 300,
-        minWidth: 165
+        maxWidth: 600,
+        minWidth: 250,
     },
     button: {
         width: "41%",
         height: "auto",
-        minWidth: 70
+        minWidth: 70,
+        borderWidth: 2,
     },
     label: {
-        fontSize: RFValue(8)
+        fontSize: RFValue(8),
+        color: 'black',
+        fontWeight: 700,
+        fontSize: 12
     },
     action: {
         width: "100%", 
