@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, View, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { styles } from './style';
 import { ListStages } from '../../components/Lists/ListStages';
 import { getStagesByCourse } from '../../functions/helper.services';
@@ -14,8 +14,9 @@ export function Stages({ route }) {
 
     React.useEffect(() => {
         const data = route.params
+        console.log(data.registration[0] || data.registration)
         setCourse(data.course)
-        setRegistration(data.registration[0])
+        setRegistration(data.registration[0] || data.registration)
     }, [route.params])
 
     //FUNÇÃO P/BUSCAR CURSOS POR ESTAGIO
@@ -33,14 +34,24 @@ export function Stages({ route }) {
         }
     }, [course])
 
-    function handlerTransfer(element) {
-        navigation.navigate("Action", { course, registration, stage: element })
+    function handlerTransfer(element, index) {
+        navigation.navigate("Action", { course, registration: [registration], stage: {...element, "index": index} })
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                {stages || stages.length > 0 ? <ListStages handlerOnPress={(element) => handlerTransfer(element)} filter={{ total: course.qtd_stages, actual: registration.level_stage }} stages={stages} /> : <></>}
+                {stages || stages.length > 0 ? <ListStages handlerOnPress={(element, index) => handlerTransfer(element, index)} filter={{ total: course.qtd_stages, actual: registration.level_stage }} stages={stages} /> : <></>}
+                {course && registration && (
+                    <View style={{ flex: 1, width: "100%"}}>
+                        {
+                            registration.level_stage >= course.qtd_stages - 1 ?
+                                <Text style={styles.title}>Máximo de estágios atingidos. Peço que espere por mais atualizações</Text>
+                                :
+                                <Text style={styles.title}>Continue avançando nos estágios para desbloquea mais estágios...</Text>
+                        }
+                    </View>
+                )}
             </View>
         </View>
     );

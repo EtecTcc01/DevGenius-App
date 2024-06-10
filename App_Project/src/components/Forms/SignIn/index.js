@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styles } from './style';
-import { ScrollView, View, Image } from 'react-native';
+import { ScrollView, View, Image, TouchableWithoutFeedback } from 'react-native';
 
 import { Button, HelperText, Text, TextInput } from 'react-native-paper'; //IMPORT DO PAPER
 import api from '../../../../api';
@@ -79,7 +79,7 @@ export function SignIn({ handlerOnPress }) {
     function hasErrors(name, op) {
         if (user[name] || confirmPass) {
             if (name === "userEmail") {
-                return !user[name].includes('@') || !user[name].includes(" ");
+                return !user[name].includes('@') || user[name].includes(" ");
             }
             if (name === "userPassword") {
                 if (user[name].length >= 8) {
@@ -103,10 +103,11 @@ export function SignIn({ handlerOnPress }) {
     };
 
     return (
-        <><View style={styles.img_demo}>
-            <Image style={styles.img} source={require("../../../../assets/img/logo.png")} />
-        </View>
-        <ScrollView style={{ flex: 1, width: "100%", color: '#dedace' }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
+        <>
+            <View style={styles.img_demo}>
+                <Image style={styles.img} source={require("../../../../assets/img/logo.png")} />
+            </View>
+            <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.title} variant="titleLarge">Cadastro</Text>
                 <TextInput style={styles.input}
                     label="Nome de Usuário:"
@@ -115,7 +116,8 @@ export function SignIn({ handlerOnPress }) {
                     placeholderTextColor="#dedace"
                     textColor='#dedace'
                     value={user.userName || ''}
-                    onChangeText={event => handlerOnChangeUser({ _name: "userName", _value: event })} />
+                    onChangeText={event => handlerOnChangeUser({ _name: "userName", _value: event })}
+                />
 
                 <HelperText type="error" visible={hasErrors("userName", "view")}>
                     <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Nome de usuário inválido!</Text>
@@ -128,7 +130,8 @@ export function SignIn({ handlerOnPress }) {
                     placeholderTextColor="#dedace"
                     value={user.userEmail || ''}
                     textColor='#dedace'
-                    onChangeText={event => handlerOnChangeUser({ _name: "userEmail", _value: event })} />
+                    onChangeText={event => handlerOnChangeUser({ _name: "userEmail", _value: event })}
+                />
 
                 <HelperText type="error" visible={hasErrors("userEmail", "view")}>
                     <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Email inválido!</Text>
@@ -143,7 +146,8 @@ export function SignIn({ handlerOnPress }) {
                     textColor='#dedace'
                     background='#dedace'
                     value={user.userPassword || ''}
-                    onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })} />
+                    onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
+                />
 
                 <HelperText type="error" visible={hasErrors("userPassword", "view")}>
                     <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>A senha deve conter mais de 8 caracteres!</Text>
@@ -157,7 +161,8 @@ export function SignIn({ handlerOnPress }) {
                     placeholderTextColor="#dedace"
                     textColor='#dedace'
                     value={confirmPass || ''}
-                    onChangeText={confirmPass => setConfirmPass(confirmPass)} />
+                    onChangeText={confirmPass => setConfirmPass(confirmPass)}
+                />
 
                 <HelperText type="error" visible={hasErrors("confirmPass", "view")}>
                     <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>As senhas não coincidem!</Text>
@@ -172,6 +177,7 @@ export function SignIn({ handlerOnPress }) {
                 >
                     Cadastre-se
                 </Button>
-            </ScrollView></>
+            </ScrollView>
+        </>
     );
 }

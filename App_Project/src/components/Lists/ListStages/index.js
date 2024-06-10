@@ -7,12 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 export function ListStages({ stages, filter, handlerOnPress }) {
     const navigation = useNavigation()
 
-
     const ListStages = !stages ? [] : stages.map((element, i) => {
         return (
             <View key={i}>
                 {i <= filter.actual + 1 && (
-                    <TouchableOpacity disabled={i === filter.actual + 1 ? true : false} onPress={() => handlerOnPress(element)}>
+                    <TouchableOpacity disabled={i === filter.actual + 1 ? true : false} onPress={() => handlerOnPress(element, i)}>
                         <List.Item
                             title={element._name}
                             style={i === filter.actual + 1 ? [styles.item, {backgroundColor: "gray"}] : styles.item}

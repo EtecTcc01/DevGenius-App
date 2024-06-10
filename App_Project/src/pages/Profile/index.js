@@ -57,6 +57,8 @@ export function Profile() {
         }
     };
 
+    console.log({st: storedData})
+
     return (
         <View style={styles.container}>
 
@@ -88,8 +90,8 @@ export function Profile() {
                 </View>
 
                 <View style={styles.progressInfo}>
-                    {storedData ? <Progress.Bar progress={storedData.total_exp / 10 || 0} width={null} /> : <></>}
-                    <Text style={styles.infoTitle}>EXP {storedData.totalExp}/10 - LEVEL {storedData.userLvl}</Text>
+                    {storedData ? <Progress.Bar progress={storedData.total_exp ? storedData.total_exp : 0} width={null} /> : <></>}
+                    <Text style={styles.infoTitle}>EXP {storedData.total_exp}/10 - LEVEL {storedData._level}</Text>
                 </View>
 
                 <ScrollView style={{ flex: 1, width: "100%", paddingVertical: 30 }} contentContainerStyle={styles.options}>

@@ -10,13 +10,13 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: RFValue(13),
-        fontWeight: 900,
+        fontWeight: "bold",
         alignSelf: "flex-start",
         color: '#000'
     },
     subTitle: {
         fontSize: RFValue(13),
-        fontWeight: '750',
+        fontWeight: "bold",
         alignSelf: "flex-start",
         color: '#284703'
     },
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
     label: {
         fontSize: RFValue(8),
         color: 'black',
-        fontWeight: 700,
+        fontWeight: "bold",
         fontSize: 12
     },
     action: {

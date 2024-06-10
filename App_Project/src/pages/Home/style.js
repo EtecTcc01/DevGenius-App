@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
         textAlign: "left",
         fontSize: RFValue(15),
         color: '#06c244',
-        fontWeight: 800,
+        fontWeight: "bold",
         fontFamily: 'sans-serif',
         margin: 15,
         textAlign: 'center'

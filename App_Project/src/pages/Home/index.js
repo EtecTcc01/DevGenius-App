@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styles } from './style';
-import { ScrollView, Text, View, Image } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 // import { Modal, Portal, PaperProvider, Button, Card } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 import { ListCourses } from '../../components/Lists/ListCourses';

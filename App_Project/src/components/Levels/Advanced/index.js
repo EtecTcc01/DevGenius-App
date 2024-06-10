@@ -9,7 +9,7 @@ import { ModalAct } from "../Modal";
 import { ListAlts } from "../../Lists/ListAlts";
 import { TopBarUtils } from "../TopBarUtils";
 
-export function AdvancedAct({ task, press }) {
+export function AdvancedAct({ task, press, _lifes }) {
 
     const [expanded, setExpanded] = React.useState(false)
 
@@ -19,7 +19,6 @@ export function AdvancedAct({ task, press }) {
     const [codeTxt, setCodeTxt] = React.useState([]);//STATE DO COD. A SER EXIBIO
     const [subCode, setSubCode] = React.useState([]); //STATE DO COD. A SER TRABALHADO
 
-    const [lifes, setLifes] = React.useState(0) //STATE P/ARMAZENAR OS N. DE VIDAS
     const [first, setFirst] = React.useState(true); //STATE DA VERIFICAÇÃO DA 1° TENTATIVA
     const [count, setCount] = React.useState(0); //STATE DO CONTADOR P/TENTATIVAS REALIZADAS (?)
 
@@ -33,7 +32,7 @@ export function AdvancedAct({ task, press }) {
 
     const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
     const [modalInfo, setModalInfo] = React.useState({
-        msg: "", state: 0
+        msg: "", state: 3
     });
 
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
@@ -54,17 +53,23 @@ export function AdvancedAct({ task, press }) {
         setModalVisible(false);
         setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
 
+        if (_lifes == 0) {
+            press(2)
+        }
+
         if (modalInfo.state == 1) {
             press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
-        } else if (lifes == 0) {
-            press(2)
+        } else if (modalInfo.state == 0 && first === false) {
+            press(3)
+        }
+
+        if (first == true) {
+            setFirst(false)
         }
     }
 
     //FUNÇÃO P/BUSCAR DADOS DA RESPOSTA DA TASK
     React.useEffect(() => {
-        setLifes(task._lifes)
-
         if (task != undefined || task != null) {
             getAnswerByTask("advancedAnswer", task.id_task)
                 .then((data) => {
@@ -215,20 +220,15 @@ export function AdvancedAct({ task, press }) {
                 setModalInfo({ msg: "Acertou!!!", state: 1 })
             } else {
                 setModalInfo({
-                    msg: lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa. Vidas restantes: ${lifes - 1}...`,
+                    msg: _lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa...`,
                     state: 0
                 })
-                setLifes(lifes - 1)
                 setCount(0)
                 setRemainingId([])
                 setRemainingAlt([])
                 setSelectedId(correctlyIds)
             }
         }, 250)
-
-        if (first == true) {
-            setFirst(false)
-        }
 
         setModalVisible(true); // Exibe a modal quando a resposta é comparada
     }
@@ -333,7 +333,7 @@ export function AdvancedAct({ task, press }) {
                         <View style={styles.task_content}>
 
                             <View style={styles.content_utils}>
-                                <TopBarUtils idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={first} lifes={lifes} />
+                                <TopBarUtils onlyLifes={false} idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={first} lifes={_lifes} />
                             </View>
 
                             <ScrollView horizontal={true} style={styles.contentHScroll} contentContainerStyle={styles.content_text}>

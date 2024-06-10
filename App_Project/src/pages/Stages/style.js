@@ -11,9 +11,9 @@ export const styles = StyleSheet.create({
         paddingVertical: 5
     },
     title: {
-        fontSize: RFValue(20),
+        fontSize: RFValue(12),
         color: '#06c244',
-        textAlign: "left",
+        textAlign: "center",
         margin: 2.5
     },
     content: {

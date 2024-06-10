@@ -11,12 +11,31 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
   const [levels, setLevels] = React.useState([])
 
   React.useEffect(() => {
-    let data = []
+    let cc = []; let reg = []
+    let data = []; let ccount = 0
+    let subcount = 0
 
-    registrations.forEach(element => {
-      data.push(element.level_stage)
-    })
+    try {
+      courses.forEach(e => {
+        cc.push(e.id_course)
+      })
 
+      registrations.forEach(e => {
+        reg.push(e.id_course)
+      })
+
+      while (ccount < cc.length) {
+        if (reg[subcount] === cc[ccount]) {
+          data.push(registrations[subcount].level_stage)
+          ccount++; subcount++
+        } else {
+          data.push(0)
+          ccount++;
+        }
+      }
+    } catch { [] }
+
+    console.log(data, cc)
     setLevels(data)
   }, [registrations])
 
@@ -28,12 +47,13 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
         <Image style={styles.cover} source={{ uri: element.course_icon }} />
 
         <View style={styles.action}>
-          <Button style={[styles.button, { borderWidth: 1.5, borderColor: "#284703" }]} labelStyle={styles.label} onPress={(() => {
+          <Button style={[styles.button, { borderWidth: 1, borderColor: "black" }]} labelStyle={styles.label} onPress={(() => {
             handlerOnPress(element, "Stages")
           })}>Lista</Button>
-          <Button style={[styles.button, { backgroundColor: '#284703' }]} labelStyle={[styles.label, { color: "#cfe3d4" }]} onPress={(() => {
-            handlerOnPress(element, "Action")
-          })}>{levels[index] > 0 ? "Retomar" : "Iniciar"}</Button>
+          <Button style={levels[index] >= element.qtd_stages ? [styles.button, { backgroundColor: 'gray' }] : [styles.button, { backgroundColor: '#284703' }]}
+            disabled={levels[index] >= element.qtd_stages ? true : false}
+            labelStyle={[styles.label, { color: "#cfe3d4" }]} onPress={(() => handlerOnPress(element, "Action"))
+            }>{levels[index] > 0 ? "Continuar" : "Iniciar"}</Button>
         </View>
       </View>
     )

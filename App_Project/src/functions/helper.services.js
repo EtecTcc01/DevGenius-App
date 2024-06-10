@@ -158,6 +158,42 @@ const progressUpdate = async (progress) => {
     }
 }
 
+const lifesUpdate = async (progress) => {
+    let validation = false
+    let registration = []
+
+    await api.put("/registration/lifes", progress)
+        .then((res) => {
+            registration = res.data.registration
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    if (validation == true) {
+        return registration
+    }
+}
+
+const phaseUpdate = async (progress) => {
+    let validation = false
+    let registration = []
+
+    await api.put("/registration/phase", progress)
+        .then((res) => {
+            registration = res.data.registration
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    if (validation == true) {
+        return registration
+    }
+}
+
 const getRegistrationByGroup = async (userId, groupId) => {
     const dataIds = [userId, groupId]
 
@@ -187,5 +223,7 @@ export {
     getAllTeoryByCourse,
     progressUpdate,
     getAllTeoryByGroup,
-    getRegistrationByGroup
+    getRegistrationByGroup,
+    lifesUpdate,
+    phaseUpdate
 }

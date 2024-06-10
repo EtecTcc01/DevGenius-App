@@ -1,4 +1,6 @@
 //IMPORT DOS COMPONENTES/ELEMENTOS USADOS
+import * as React from 'react';
+
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -129,7 +131,7 @@ export function StackRoutes() {
     );
 }
 
-function TabsRoutes() {
+function TabsRoutes({ route }) {
     return (
         <Tab.Navigator
             backBehavior="history"

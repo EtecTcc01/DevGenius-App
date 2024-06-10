@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styles } from './style';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 
 import { Button, Text, TextInput, HelperText } from 'react-native-paper'; //IMPORT DO PAPER
 
@@ -16,6 +16,7 @@ export function Logon({ handlerOnPress }) {
         userEmail: '',
         userPassword: ''
     })
+    const [vSecurity, setVSecurity] = React.useState(true)
 
     //FUNÇÃO P/LOGAR NA CONTA DO USUÁRIO
     async function handlerLogin() {
@@ -92,8 +93,8 @@ export function Logon({ handlerOnPress }) {
                 textColor='white'
                 value={user.userPassword}
                 onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
-                secureTextEntry
-                right={<TextInput.Icon icon="eye" />}
+                secureTextEntry={vSecurity}
+                right={<TextInput.Icon onPress={() => setVSecurity(!vSecurity)} icon="eye" />}
             />
 
             <Button

@@ -24,6 +24,12 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    content_utils: {
+        flex: 0.1,
+        paddingTop: 10,
+        minHeight: 10,
+        width: "100%"
+    },
     button: {
         width: '90%',
         padding: 17,

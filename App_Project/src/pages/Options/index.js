@@ -9,12 +9,12 @@ import { TextInput, HelperText } from 'react-native-paper'; //IMPORT DE ELEMENTO
 export function Options({ route }) {
 
     const data = route.params.stored
+    console.log(data)
 
-    const [storedData, setStoredData] = React.useState(() => route.params.stored);
+    const [storedData, setStoredData] = React.useState(data);
 
     const [isEditing, setIsEditing] = React.useState({
-        "first_name": false,
-        "last_name": false,
+        "user_name": false,
         "_sex": false,
         "userDate": false,
         "_email": false,
@@ -53,7 +53,7 @@ export function Options({ route }) {
 
     function hasErrors(name) {
         if (storedData[name]) {
-            if (name === "first_name") {
+            if (name === "user_name") {
                 return storedData[name].includes(" ")
             }
 
@@ -76,33 +76,18 @@ export function Options({ route }) {
 
             <View style={styles.contentContainer}>
                 <TextInput
-                    style={isEditing.first_name == true ? styles.input : [styles.input, { color: 'gray' }]}
-                    label="Nome:"
-                    id='first_name'
-                    key="first_name"
+                    style={isEditing.user_name == true ? styles.input : [styles.input, { color: 'gray' }]}
+                    label="Nome de usuário:"
+                    id='user_name'
+                    key="user_name"
                     textColor='black'
-                    // editable={isEditing.first_name}
-                    value={storedData.first_name || ''}
-                    onChangeText={event => handlerInputChange({ _name: "first_name", _value: event })}
+                    // editable={isEditing.user_name}
+                    value={storedData.user_name || ''}
+                    onChangeText={event => handlerInputChange({ _name: "user_name", _value: event })}
                 />
 
-                <HelperText type="error" visible={hasErrors("first_name")}>
-                    <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Nome inválido!</Text>
-                </HelperText>
-
-                <TextInput
-                    style={isEditing.last_name == true ? styles.input : [styles.input, { color: 'gray' }]}
-                    label="SobreNome:"
-                    id='last_name'
-                    key="last_name"
-                    textColor='black'
-                    // editable={isEditing.first_name}
-                    value={storedData.last_name || ''}
-                    onChangeText={event => handlerInputChange({ _name: "last_name", _value: event })}
-                />
-
-                <HelperText type="error" visible={hasErrors("first_name")}>
-                    <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Sobrenome inválido!</Text>
+                <HelperText type="error" visible={hasErrors("user_name")}>
+                    <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Nome de Usuário inválido!</Text>
                 </HelperText>
 
                 <DropdownComponent handlerChoice={(e) => handlerEditPress({ _name: '_sex', _value: e })} />

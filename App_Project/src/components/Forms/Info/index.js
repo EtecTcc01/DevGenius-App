@@ -16,8 +16,6 @@ export function Info({ data, handlerOnPress }) {
 
     //STATE P/ARMAZENAR DADOS DO USUÁRIO
     const [info, setInfo] = React.useState({
-        firstName: "",
-        lastName: "",
         userDate: "",
         userSex: "",
         // userId: user._id,
@@ -32,7 +30,7 @@ export function Info({ data, handlerOnPress }) {
     //FUNÇÃO P/CADASTRAR O UUÁRIO
     function handlerRegisterInfo() {
         let ok = true
-        let verification = ["userSex", "userDate", "firstName", "lastName"]
+        let verification = ["userSex", "userDate"]
 
         //FAZENDO AS VALIDAÇÕES DE NEGAÇÃO
         verification.forEach(element => {
@@ -82,34 +80,6 @@ export function Info({ data, handlerOnPress }) {
             if (name === "userDate") {
                 return false
             }
-            if (name === "lastName" || name === "firstName") {
-
-                if (name === "firstName" && info[name].includes(" ")) {
-                    return true
-                }
-
-                let test = info[name].split("") || []
-                let verify = true
-
-                if (test.length > 0) {
-                    test.forEach(element => {
-                        if (verify === true) {
-                            for (let i = 0; i < 10; i++) {
-                                if (element === `${i}`) {
-                                    verify = false
-                                    break
-                                }
-                            }
-                        }
-                    });
-                }
-
-                if (verify === false) {
-                    return true
-                }
-
-                return false
-            }
         }
         return operation === "verify" ? true : false
     };
@@ -117,7 +87,7 @@ export function Info({ data, handlerOnPress }) {
     return (
         <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
             <Text style={styles.title} variant="titleLarge">Informações</Text>
-            <TextInput
+            {/* <TextInput
                 style={styles.input}
                 label="Nome:"
                 id='firstName'
@@ -143,7 +113,7 @@ export function Info({ data, handlerOnPress }) {
 
             <HelperText type="error" visible={hasErrors("lastName", "view")}>
                 <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Nome inválido!</Text>
-            </HelperText>
+            </HelperText> */}
 
             <DropdownComponent handlerChoice={(e) => setInfo({ ...info, "userSex": e })} />
 

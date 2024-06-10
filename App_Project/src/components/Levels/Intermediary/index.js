@@ -11,7 +11,7 @@ import { ModalAct } from "../Modal";
 import { ListAlts } from "../../Lists/ListAlts";
 import { TopBarUtils } from "../TopBarUtils";
 
-export function IntermediaryAct({ task, press }) {
+export function IntermediaryAct({ task, press, _lifes }) {
 
     const [expanded, setExpanded] = React.useState(false) //STATE P/GERENCIAR EXPANSÃO DA VIEW
 
@@ -19,7 +19,6 @@ export function IntermediaryAct({ task, press }) {
     const [taskT, setTaskT] = React.useState(""); //STATE P/ARMAZENAR O TEXTO DA TASK
     const [answer, setAnswer] = React.useState({}); //STATE P/ARMAZENAR DADOS DA RESPOSTA
     const [alt, setAlt] = React.useState([]); //STATE P/ARMAZENAR ALTERNATIVAS
-    const [lifes, setLifes] = React.useState(0) //STATE P/ARMAZENAR OS N. DE VIDAS
 
     const [altBkp, setAltBkp] = React.useState([]); //STATE P/ARMAZENAR BKP DAS ALTERNATIVAS
     const [choice, setChoice] = React.useState([]); //STATE P/ARMAZENAR AS ALTERNATIVAS ESCOLHIDAS
@@ -29,7 +28,7 @@ export function IntermediaryAct({ task, press }) {
 
     const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
     const [modalInfo, setModalInfo] = React.useState({
-        msg: "", state: 0
+        msg: "", state: 3
     });
 
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
@@ -50,7 +49,6 @@ export function IntermediaryAct({ task, press }) {
     React.useEffect(() => {
         if (task != undefined || task != null) {
             console.log(task)
-            setLifes(task._lifes)
             setTaskT(task._text)
 
             getAnswerByTask("intermediaryAnswer", task.id_task)
@@ -72,10 +70,15 @@ export function IntermediaryAct({ task, press }) {
         setModalVisible(false);
         setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
 
+        if (_lifes == 0) {
+            press(2)
+            return
+        }
+
         if (modalInfo.state == 1) {
             press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
-        } else if (lifes == 0) {
-            press(2)
+        } else if (modalInfo.state == 0) {
+            press(3)
         }
     }
 
@@ -139,14 +142,14 @@ export function IntermediaryAct({ task, press }) {
             });
             setTaskT(temp)
             setTimeout(() => {
-                setModalInfo({ msg: `Parabéns! Você concluiu a tarefa com ${lifes} restantes.`, state: 1 })
+                setModalInfo({ msg: `Parabéns! Você concluiu a tarefa com sucesso.`, state: 1 })
             }, 500);
         } else {
             setModalInfo({
-                msg: lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa. Vidas restantes: ${lifes - 1}...`,
+                msg: _lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa...`,
                 state: 0
             })
-            setLifes(lifes - 1)
+
             setTaskT(task._text);
             setAlt(altBkp);
             setChoice([]);
@@ -244,7 +247,7 @@ export function IntermediaryAct({ task, press }) {
                     <View style={styles.task_content}>
 
                         <View style={styles.content_utils}>
-                            <TopBarUtils idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={false} lifes={lifes} />
+                            <TopBarUtils onlyLifes={false} idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={false} lifes={_lifes} />
                         </View>
 
                         <ScrollView horizontal={true} style={styles.contentHScroll} contentContainerStyle={styles.content_text}>
