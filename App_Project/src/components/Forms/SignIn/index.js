@@ -104,9 +104,9 @@ export function SignIn({ handlerOnPress }) {
 
     return (
         <>
-            <View style={styles.img_demo}>
+            {/* <View style={styles.img_demo}>
                 <Image style={styles.img} source={require("../../../../assets/img/logo.png")} />
-            </View>
+            </View> */}
             <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.title} variant="titleLarge">Cadastro</Text>
                 <TextInput style={styles.input}

@@ -3,12 +3,11 @@ import { styles } from './style';
 import { View, ScrollView } from 'react-native';
 
 import { Button, HelperText, Text, TextInput } from 'react-native-paper'; //IMPORT DO PAPER
-import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
-import { DatePicker } from '../../DatePicker';
+import MaskInput, { Masks } from 'react-native-mask-input';
 import { DropdownComponent } from '../../Dropdown';
 
 import { useNavigation } from '@react-navigation/native';
-import { userRegisterInfo } from '../../../functions/user.services';
+import { userUpdateInfo } from '../../../functions/user.services';
 import { storeUserData } from '../../../functions/async.services';
 
 export function Info({ data, handlerOnPress }) {
@@ -17,9 +16,9 @@ export function Info({ data, handlerOnPress }) {
     //STATE P/ARMAZENAR DADOS DO USUÁRIO
     const [info, setInfo] = React.useState({
         userDate: "",
+        profileImage: "", 
         userSex: "",
-        // userId: user._id,
-        userId: ""
+        userId: data._id || "",
     })
 
     //FUNÇÃO P/ALTERAR OU ADICIONAR UM NOVO "ELEMENTO" NO OBJETO
@@ -34,7 +33,7 @@ export function Info({ data, handlerOnPress }) {
 
         //FAZENDO AS VALIDAÇÕES DE NEGAÇÃO
         verification.forEach(element => {
-            let verify = hasErrors(element)
+            let verify = hasErrors(element, "verify")
 
             if (verify === true) {
                 ok = false
@@ -46,31 +45,34 @@ export function Info({ data, handlerOnPress }) {
             return
         }
 
-        // //REGISTRANDO INFORMAÇÕES DE USUÁRIO
-        // userRegisterInfo({ info: info })
-        //     .then(async (data) => {
-        //         if (!data) {
-        //             console.log("Erro ao cadastrar informações do usuário")
-        //             return
-        //         }
+        console.log(data)
 
-        //         // ARMAZENANDO INFORMAÇÕES NO ASYNC STORAGE
-        //         await storeUserData({ user: data })
-        //             .then(async (res) => {
-        //                 if (!res) {
-        //                     console.log("Erro ao armazenar informações do usuário")
-        //                     return
-        //                 }
-        //                 await handlerOnPress("success", "Informações Cadastradas.")
-        //                 setTimeout(() => {
-        //                     navigation.navigate('Tabs') //USANDO DA TRANSFERENCIA DE TELA E NAVEGANDO P/A FUNÇÃO DE ROTA TabsRoutes
-        //                 }, 3200);
-        //             })
-        //     })
+        //REGISTRANDO INFORMAÇÕES DE USUÁRIO
+        userUpdateInfo({ info: info })
+            .then(async (data) => {
+                if (!data) {
+                    console.log("Erro ao atualizar informações do usuário")
+                    return
+                }
+
+                // ARMAZENANDO INFORMAÇÕES NO ASYNC STORAGE
+                await storeUserData({ user: data })
+                    .then(async (res) => {
+                        if (!res) {
+                            console.log("Erro ao armazenar informações do usuário")
+                            return
+                        }
+                        await handlerOnPress("success", "Informações Atualizadas.")
+                        setTimeout(() => {
+                            navigation.navigate('Tabs') //USANDO DA TRANSFERENCIA DE TELA E NAVEGANDO P/A FUNÇÃO DE ROTA TabsRoutes
+                        }, 3200);
+                    })
+            })
     }
 
     function hasErrors(name, operation) {
         if (info[name]) {
+            console.log(info[name])
             if (name === "userSex") {
                 if (info[name] === "M" || info[name] === "F" || info[name] === "O") {
                     return false
@@ -78,42 +80,20 @@ export function Info({ data, handlerOnPress }) {
                 return true
             }
             if (name === "userDate") {
+                if (info[name].length < 10) {
+                    return true
+                }
                 return false
             }
         }
+
         return operation === "verify" ? true : false
+
     };
 
     return (
         <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
             <Text style={styles.title} variant="titleLarge">Informações</Text>
-            {/* <TextInput
-                style={styles.input}
-                label="Nome:"
-                id='firstName'
-                key="firstName"
-                textColor='white'
-                value={info.firstName || ''}
-                onChangeText={event => handlerOnChangeUser({ _name: "firstName", _value: event })}
-            />
-
-            <HelperText type="error" visible={hasErrors("firstName", "view")}>
-                <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Nome inválido!</Text>
-            </HelperText>
-
-            <TextInput
-                style={styles.input}
-                label="Sobrenome:"
-                id='lastName'
-                key="lastName"
-                textColor='white'
-                value={info.lastName || ''}
-                onChangeText={event => handlerOnChangeUser({ _name: "lastName", _value: event })}
-            />
-
-            <HelperText type="error" visible={hasErrors("lastName", "view")}>
-                <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Nome inválido!</Text>
-            </HelperText> */}
 
             <DropdownComponent handlerChoice={(e) => setInfo({ ...info, "userSex": e })} />
 
@@ -121,7 +101,23 @@ export function Info({ data, handlerOnPress }) {
                 <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, escolha um genêro!</Text>
             </HelperText>
 
-            <DatePicker handleChoice={(e) => setInfo({ ...info, "userDate": e })} />
+            <TextInput
+                label="Data de Nascimento:"
+                style={styles.input}
+                value={info.userDate || ''}
+                textColor='white'
+                onChangeText={event => handlerOnChangeUser({ _name: "userDate", _value: event })}
+                render={props =>
+                    <MaskInput
+                        {...props}
+                        mask={Masks.DATE_YYYYMMDD}
+                    />
+                }
+            />
+
+            <HelperText type="error" visible={hasErrors("userDate", "view")}>
+                <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, defina uma data exata!</Text>
+            </HelperText>
 
             <Button
                 style={styles.button}

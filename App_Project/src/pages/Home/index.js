@@ -2,11 +2,11 @@ import * as React from 'react'
 import { styles } from './style';
 import { ScrollView, Text, View } from 'react-native';
 
-// import { Modal, Portal, PaperProvider, Button, Card } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 import { ListCourses } from '../../components/Lists/ListCourses';
 import { getCourseByGroup, getRegistrationByGroup, getRegistrationForStages } from '../../functions/helper.services';
 import { getDataUser } from '../../functions/async.services';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 
 export function Home({ route }) {
     const navigation = useNavigation()
@@ -70,20 +70,17 @@ export function Home({ route }) {
 
     return (
         <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-            {
-                course.length > 0 && (
-                    <>
-                        {/* <View style={styles.logo}>
-                            <Image style={styles.logo} source={require('../../../assets/img/logo.png')} />
-                        </View> */}
-
-                        <View style={styles.content}>
-                            <Text style={styles.title}>CURSOS PÚBLICOS</Text>
-                            <ListCourses registrations={registration.length > 0 ? registration : []} courses={course} handlerOnPress={(e, op) => handlerTransfer(e, op)} />
-                        </View>
-                    </>
-                )
-            }
+            <Animatable.View animation="flipInY" duration={750} style={styles.demo}>
+                <Text style={styles.title_demo}>DEVGENIUS</Text>
+            </Animatable.View>
+            <View style={styles.content}>
+                <Text style={styles.title}>CURSOS PÚBLICOS</Text>
+                {
+                    course.length > 0 && (
+                        <ListCourses registrations={registration.length > 0 ? registration : []} courses={course} handlerOnPress={(e, op) => handlerTransfer(e, op)} />
+                    )
+                }
+            </View>
         </ScrollView>
     );
 }

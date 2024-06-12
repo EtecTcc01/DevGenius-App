@@ -14,9 +14,10 @@ export function DropdownComponent({ handlerChoice }) {
 
     return (
         <Dropdown
-            style={styles.dropdown}
+            itemContainerStyle={{}}
+            style={[styles.dropdown, {borderTopLeftRadius: 7, borderTopEndRadius: 7}]}
             selectedTextStyle={styles.selectedTextStyle}
-            containerStyle={{ borderBottomStartRadius: 10, borderBottomEndRadius: 10 }}
+            containerStyle={{ borderBottomStartRadius: 7, borderBottomEndRadius: 7 }}
             data={data}
             maxHeight={300}
             labelField="label"

@@ -4,6 +4,7 @@ import { Image, Text, View } from 'react-native';
 import { ListNotes } from '../../components/Lists/ListNotes';
 import { getAllTeoryByGroup, getAllTeoryByGroupOrdened } from '../../functions/helper.services';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 
 export function Notes() {
     const navigation = useNavigation()
@@ -43,9 +44,9 @@ export function Notes() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.img_demo}>
+            <Animatable.View animation="fadeIn" duration={1000} style={styles.img_demo}>
                 <Image style={styles.img} source={require("../../../assets/img/book-stack.png")} />
-            </View>
+            </Animatable.View>
 
             <View style={styles.content}>
                 <ListNotes handlerOnPress={(e) => handlerTransfer(e)} notes={teory} courses={courses} />

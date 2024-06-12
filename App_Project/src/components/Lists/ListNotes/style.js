@@ -14,7 +14,8 @@ export const styles = StyleSheet.create({
     },
     item: {
         width: "100%",
-        backgroundColor: "white"
+        backgroundColor: "transparent",
+        margin: 0
     },
     item_title: {
         fontSize: RFValue(15),

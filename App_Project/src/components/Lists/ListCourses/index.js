@@ -4,6 +4,7 @@ import { View, ScrollView, Image, Text } from 'react-native';
 
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 
 export function ListCourses({ courses, handlerOnPress, registrations }) {
   const navigation = useNavigation()
@@ -41,7 +42,7 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
 
   const listCourses = !courses ? [] : courses.map((element, index) => {
     return (
-      <View style={styles.card} key={index}>
+      <Animatable.View style={styles.card} key={index} delay={100} animation="zoomIn" duration={350}>
         <Text style={styles.title}>{element._course}</Text>
         <Text style={styles.subTitle}>{element.course_desc}</Text>
         <Image style={styles.cover} source={{ uri: element.course_icon }} />
@@ -55,7 +56,7 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
             labelStyle={[styles.label, { color: "#cfe3d4" }]} onPress={(() => handlerOnPress(element, "Action"))
             }>{levels[index] > 0 ? "Continuar" : "Iniciar"}</Button>
         </View>
-      </View>
+      </Animatable.View>
     )
   });
 

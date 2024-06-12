@@ -3,13 +3,14 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { List } from 'react-native-paper';
 import { styles } from './style';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 
 export function ListStages({ stages, filter, handlerOnPress }) {
     const navigation = useNavigation()
 
     const ListStages = !stages ? [] : stages.map((element, i) => {
         return (
-            <View key={i}>
+            <Animatable.View style={styles.card} key={i} delay={100} animation="zoomIn" duration={350 * i + 1}>
                 {i <= filter.actual + 1 && (
                     <TouchableOpacity disabled={i === filter.actual + 1 ? true : false} onPress={() => handlerOnPress(element, i)}>
                         <List.Item
@@ -19,7 +20,7 @@ export function ListStages({ stages, filter, handlerOnPress }) {
                         />
                     </TouchableOpacity>
                 )}
-            </View>
+            </Animatable.View>
         )
     })
 

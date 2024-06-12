@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
         color: '#000'
     },
     subTitle: {
-        fontSize: RFValue(13),
+        fontSize: RFValue(9),
         fontWeight: "bold",
         alignSelf: "flex-start",
         color: '#284703'
@@ -28,9 +28,9 @@ export const styles = StyleSheet.create({
         borderRadius: 15,
     },
     card: {
-        fontSize: RFValue(22),
-        width: "40%",
-        height: 270,
+        // fontSize: RFValue(22),
+        width: "47%",
+        height: 250,
         margin: 5,
         marginBottom: 20,
         justifyContent: "center",
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 15,
         borderRadius: 15,
         maxWidth: 600,
-        minWidth: 250,
+        minWidth: 200,
     },
     button: {
         width: "41%",

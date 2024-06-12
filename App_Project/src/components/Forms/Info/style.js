@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
     },
     input: {
         margin: 5,
+        height: 60,
         width: '100%',
         backgroundColor: '#000',
     },

@@ -92,9 +92,37 @@ async function userRegisterInfo({ info }) {
     return data
 }
 
+//FUNÇÃO P/REGISTRAR INFO DO USUÁRIO
+async function userUpdateInfo({ info }) {
+    let validation = false
+    let data = []
+
+    await api.put('/info', info)
+        .then((res) => {
+            console.log(res.data.message)
+            validation = true
+        })
+        .catch((error) => {
+            console.log("Erro ao atualizar informações do usuário.")
+            return
+        })
+
+    if (validation == true) {
+        data = await getUserData(info.userId)
+    }
+
+    if (!data) {
+        console.log("Erro ao buscar as informações do usuário.")
+        return
+    }
+
+    return data
+}
+
 export {
     userLogin,
     getUserData,
     userRegister,
-    userRegisterInfo
+    userRegisterInfo,
+    userUpdateInfo
 };

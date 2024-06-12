@@ -7,17 +7,26 @@ export const styles = StyleSheet.create({
         backgroundColor: '#000',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 5,
         paddingVertical: 5
     },
-    // logo: {
-    //     flex: 0.5,
-    //     minHeight: 50,
-    //     justifyContent: 'center',
-    //     alignItems: "center",
-    //     width: '125px',
-    //     height: '15px',
-    // },
+    demo: {
+        flex: 0.1,
+        minHeight: 50,
+        justifyContent: 'center',
+        alignItems: "center"
+    },
+    title_demo: {
+        textAlign: "center",
+        fontSize: RFValue(35),
+        color: '#06c244',
+        fontFamily: 'sans-serif-thin',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        borderColor: "gray",
+        borderWidth: 0.5
+    },
     title: {
         textAlign: "left",
         fontSize: RFValue(15),
@@ -25,7 +34,6 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
         fontFamily: 'sans-serif',
         margin: 15,
-        textAlign: 'center'
     },
     content: {
         flex: 1, 
