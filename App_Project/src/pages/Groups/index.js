@@ -56,7 +56,7 @@ export function Groups() {
         } catch (error) {
             if (`${error}`.includes('401')) {
                 console.log(`Erro ao adicionar usuário ao grupo. ${error}`);
-                showToasts("success", "Grupo já adicionado.")
+                showToasts("warn", "Grupo já adicionado.")
             } else {
                 console.log(`${error}`)
             }
@@ -98,6 +98,9 @@ export function Groups() {
         <View style={styles.container}>
             <ToastManager
                 positionValue={0}
+                width={"90%"}
+                duration={1500}
+                height={70}
             />
             <Modal
                 animationType="slide"
@@ -107,6 +110,9 @@ export function Groups() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalContent}>
+                        <TouchableOpacity style={styles.closeBtn} onPress={() => visibleSwitch()}>
+                            <Text style={styles.title}>X</Text>
+                        </TouchableOpacity>
                         <Text style={styles.title}>Adicionar Grupo</Text>
                         <TextInput
                             style={styles.input}

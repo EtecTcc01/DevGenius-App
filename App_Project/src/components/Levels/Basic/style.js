@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         marginTop: 3,
-        backgroundColor: '#203E2E', // Verde escuro
+        backgroundColor: 'black',
+        // backgroundColor: '#203E2E', // Verde escuro
         paddingHorizontal: 20
     },
     alt_content: {

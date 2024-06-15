@@ -7,7 +7,6 @@ import { random } from "../randomizer";
 import { getAnswerByTask } from "../../../functions/task.services";
 
 //IMPORT DE COMPONENTES USADOS
-import { ModalAct } from "../Modal";
 import { ListAlts } from "../../Lists/ListAlts";
 import { TopBarUtils } from "../TopBarUtils";
 
@@ -26,16 +25,10 @@ export function IntermediaryAct({ task, press, _lifes }) {
     const [selectedId, setSelectedId] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) SELECIONADAS
     const [idTip, setIdTip] = React.useState([]); //STATE P/ARMAZENAR ID'S (ALT'S) DA DICA
 
-    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
-    const [modalInfo, setModalInfo] = React.useState({
-        msg: "", state: 3
-    });
-
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
             setExpanded(false)
-            setModalVisible(false)
             setCount(0);
             setAlt(altBkp);
             setTaskT(task._text);
@@ -64,23 +57,6 @@ export function IntermediaryAct({ task, press, _lifes }) {
                 })
         }
     }, [task])
-
-    //FUNÇÃO PARA FECHAR A MODAL
-    const closeModal = () => {
-        setModalVisible(false);
-        setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
-
-        if (_lifes == 0) {
-            press(2)
-            return
-        }
-
-        if (modalInfo.state == 1) {
-            press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
-        } else if (modalInfo.state == 0) {
-            press(3)
-        }
-    }
 
     //FUNÇÃO P/RANDOMIZAR AS ALTERNATIVAS
     const randomizer = async (alts) => {
@@ -126,7 +102,7 @@ export function IntermediaryAct({ task, press, _lifes }) {
     //FUNÇÃO P/COMPARAR AS ALTERNATIVAS ESCOLHIDAS
     function altCompare(answerC) {
         setCount(0); let ccount = 0;
-        let temp = taskT
+        let temp = taskT; let state = 3
 
         for (let i = 0; i < answerC.length; i++) {
             if (choice[i] == answerC[i]) {
@@ -141,22 +117,29 @@ export function IntermediaryAct({ task, press, _lifes }) {
                 temp = temp.replace("‼", e)
             });
             setTaskT(temp)
-            setTimeout(() => {
-                setModalInfo({ msg: `Parabéns! Você concluiu a tarefa com sucesso.`, state: 1 })
-            }, 500);
-        } else {
-            setModalInfo({
-                msg: _lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa...`,
-                state: 0
-            })
+            state = 1
 
+        } else {
+            state = 0
             setTaskT(task._text);
             setAlt(altBkp);
             setChoice([]);
             setSelectedId([])
         }
 
-        setModalVisible(true); // Exibe a modal quando a resposta é comparada
+        if (_lifes == 0) {
+            press(2)
+            return
+        }
+
+        if (state === 1) {
+            setTimeout(() => {
+                press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+            }, 500);
+        } else if (state === 0) {
+            press(3)
+        }
+
     }
 
     //FUNÇÃO P/SELEÇÃO DE UMA ALTERNATIVA
@@ -263,8 +246,6 @@ export function IntermediaryAct({ task, press, _lifes }) {
                     <View style={styles.content_alts}>
                         <ListAlts expanded={expanded} expandPress={() => changeExpand()} alt={alt.length > 0 ? alt : []} selects={selectedId.length > 0 ? selectedId : []} remaining={[]} tips={idTip.length > 0 ? idTip : []} pressing={(alt, altIndex) => handlePress(alt, altIndex)} />
                     </View>
-
-                    <ModalAct message={modalInfo.msg} visible={modalVisible} close={closeModal} />
                 </View>
             )}
         </>

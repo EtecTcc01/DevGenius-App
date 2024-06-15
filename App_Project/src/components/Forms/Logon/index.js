@@ -23,7 +23,7 @@ export function Logon({ handlerOnPress }) {
         let verify = hasErrors("userEmail", "verify")
 
         if (verify === true) {
-            handlerOnPress("warn", "Insira os dados...")
+            handlerOnPress("warn", "Por favor, insira os dados...")
             return
         }
 
@@ -44,7 +44,7 @@ export function Logon({ handlerOnPress }) {
                         await handlerOnPress("success", "Usuário Logado.")
                         setTimeout(() => {
                             navigation.navigate('Tabs') //USANDO DA TRANSFERENCIA DE TELA E NAVEGANDO P/A FUNÇÃO DE ROTA TabsRoutes
-                        }, 3200);
+                        }, 2000);
                     })
             })
     }

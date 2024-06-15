@@ -5,7 +5,6 @@ import { ScrollView, Text, View } from "react-native";
 import { random } from "../randomizer";
 import { getAnswerByTask } from "../../../functions/task.services";
 
-import { ModalAct } from "../Modal";
 import { ListAlts } from "../../Lists/ListAlts";
 import { TopBarUtils } from "../TopBarUtils";
 
@@ -30,11 +29,6 @@ export function AdvancedAct({ task, press, _lifes }) {
     const [remainingId, setRemainingId] = React.useState([]);
     const [remainingAlt, setRemainingAlt] = React.useState([]);
 
-    const [modalVisible, setModalVisible] = React.useState(false); //STATE P/CONTROLAR A VISIBILIDADE DA MODAL
-    const [modalInfo, setModalInfo] = React.useState({
-        msg: "", state: 3
-    });
-
     //FUNÇÃO P/NÃO BUGAR INFORMAÇÃO NA TROCA DE TELAS
     React.useEffect(() => {
         if (task != undefined || task != null) {
@@ -47,26 +41,6 @@ export function AdvancedAct({ task, press, _lifes }) {
             setFirst(true)
         }
     }, [task])
-
-    //FUNÇÃO PARA FECHAR A MODAL
-    const closeModal = () => {
-        setModalVisible(false);
-        setModalInfo({ ...modalInfo, msg: "" }); // Limpa a mensagem quando a modal é fechada
-
-        if (_lifes == 0) {
-            press(2)
-        }
-
-        if (modalInfo.state == 1) {
-            press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
-        } else if (modalInfo.state == 0 && first === false) {
-            press(3)
-        }
-
-        if (first == true) {
-            setFirst(false)
-        }
-    }
 
     //FUNÇÃO P/BUSCAR DADOS DA RESPOSTA DA TASK
     React.useEffect(() => {
@@ -185,6 +159,7 @@ export function AdvancedAct({ task, press, _lifes }) {
     function altCompare(altList, answerT, idsCorrect) {
         let answerText = []; let ccount = 0;
         let correctlyIds = idCorrect
+        let state = 3
 
         //ADICIONANDO MAIS ALTERNATIVAS CORRETAS NO STATE
         idsCorrect.forEach(element => {
@@ -215,22 +190,36 @@ export function AdvancedAct({ task, press, _lifes }) {
             }
         }
 
-        setTimeout(() => {
-            if (ccount >= answerText.length) {
-                setModalInfo({ msg: "Acertou!!!", state: 1 })
-            } else {
-                setModalInfo({
-                    msg: _lifes - 1 == 0 ? `Que pena! Você perdeu sua ultima vida nessa tarefa. Desejo sucesso na próxima...` : `Oops..! Você errou a resposta correta da tarefa...`,
-                    state: 0
-                })
-                setCount(0)
-                setRemainingId([])
-                setRemainingAlt([])
-                setSelectedId(correctlyIds)
-            }
-        }, 250)
+        if (ccount >= answerText.length) {
+            state = 1
+        } else {
+            state = 0
+            setCount(0)
+            setRemainingId([])
+            setRemainingAlt([])
+            setSelectedId(correctlyIds)
+        }
 
-        setModalVisible(true); // Exibe a modal quando a resposta é comparada
+        if (_lifes == 0) {
+            setTimeout(() => {
+                press(2, false)
+            }, 500);
+            return
+        }
+
+        if (state === 1) {
+            setTimeout(() => {
+                press(1, false) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
+            }, 500);
+        } else if (state === 0) {
+            setTimeout(() => {
+                press(3, first)
+            }, 250);
+        }
+
+        if (first === true) {
+            setFirst(false)
+        }
     }
 
     //FUNÇÃO P/EXECUÇÃO DAS ALTERNATIVAS SEGUINTES
@@ -346,7 +335,6 @@ export function AdvancedAct({ task, press, _lifes }) {
                             <ListAlts expanded={expanded} expandPress={() => changeExpand()} alt={alt.length > 0 ? alt : []} selects={selectedId.length > 0 ? selectedId : []} remaining={remainingId.length > 0 ? remainingId : []} tips={idTip.length > 0 ? idTip : []} pressing={(alt, altIndex) => replaceTxt(alt, altIndex)} />
                         </View>
 
-                        <ModalAct message={modalInfo.msg} visible={modalVisible} close={closeModal} />
                     </View>
                 )
             }

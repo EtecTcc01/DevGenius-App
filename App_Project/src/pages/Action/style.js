@@ -21,5 +21,13 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: "center"
 
+    },
+    broken: {
+        position: 'absolute',
+        flexDirection: 'row',
+        height: '100%',
+        width: 'auto',
+        justifyContent: "center",
+        alignItems: "center"
     }
 });

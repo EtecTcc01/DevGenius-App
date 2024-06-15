@@ -3,9 +3,9 @@ import { styles } from "./style";
 import { View, TouchableOpacity } from "react-native";
 import * as Animatable from 'react-native-animatable'
 
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
+import { Ionicons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
 
-export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLifes }) {
+export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLifes, type }) {
 
     const [lifePoints, setLifePoints] = React.useState([])
 
@@ -27,11 +27,17 @@ export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLi
 
     return (
         <View style={styles.container}>
-            <View style={onlyLifes === false ? styles.contentImg : [styles.contentImg, {flex: 1, width: "100%", justifyContent: "center"}]}>
+            <View style={onlyLifes === false ? styles.contentImg : [styles.contentImg, { flex: 1, width: "100%", justifyContent: "center" }]}>
                 {lifePoints.length > 0 ? lifePoints.map((e) => {
                     return (
-                        <Animatable.View key={e} animation="pulse" duration={800} iterationCount="infinite">
-                            <MaterialCommunityIcons name="cards-heart" size={24} color="#06c244" />
+                        <Animatable.View key={e} animation={first === true ? "" : "pulse"} duration={800} iterationCount="infinite">
+                            {first === true ? <FontAwesome6 name="shield" size={24} color="#28F7B9" /> :
+                                <MaterialCommunityIcons
+                                    name="cards-heart"
+                                    size={24}
+                                    color="#06c244"
+                                />
+                            }
                         </Animatable.View>
                     )
                 }) : <></>}

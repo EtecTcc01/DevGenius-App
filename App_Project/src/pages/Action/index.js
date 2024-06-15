@@ -9,6 +9,8 @@ import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate } from '../
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
 // import { ProgressBar } from '../../components/ProgressBar';
 import { useNavigation } from '@react-navigation/native';
+import { FontAwesome5, Feather } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 
 // IMPORT DOS COMPONENTE USADOS
 import { BasicAct } from '../../components/Levels/Basic';
@@ -23,6 +25,8 @@ export function Action({ route }) {
     const [registration, setRegistration] = React.useState({})
     const [first, setFirst] = React.useState(true)
     const [actual, setActual] = React.useState(true)
+    const [lost, setLost] = React.useState(false)
+    const [type, setType] = React.useState("heart")
 
     const [stageContent, setStageContent] = React.useState([]) //STATE P/ARMAZENAR TEORIAS/TASKS DO ESTAGIO
     const [stage, setStage] = React.useState([]) //STATE P/ARMAZENAR ESTAGIOS DO CURSO
@@ -170,14 +174,21 @@ export function Action({ route }) {
             })
     }
 
-    function onPressing(state) {
+    function onPressing(state, shield) {
+        shield === true ? setType("shield") : []
+
         if (state === 1) {
             setPoints(points + 1)
             setPhase(phase + 1)
         } else if (state == 2) {
             setPhase(phase + 1)
         } else if (state === 3 && actual === true) {
-            setRegistration({ ...registration, "_lifes": registration._lifes - 1 })
+            setLost(true)
+            setTimeout(() => {
+                setLost(false)
+                setType("heart")
+                shield === true ? [] : setRegistration({ ...registration, "_lifes": registration._lifes - 1 })
+            }, 2000);
         }
 
         setFirst(false)
@@ -188,15 +199,15 @@ export function Action({ route }) {
         switch (e.id_operation) {
             case 1:
                 return (
-                    <BasicAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e)} />
+                    <BasicAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e, false)} />
                 )
             case 2:
                 return (
-                    <IntermediaryAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e)} />
+                    <IntermediaryAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e, false)} />
                 )
             case 3:
                 return (
-                    <AdvancedAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e)} />
+                    <AdvancedAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e, shield) => onPressing(e, shield)} />
                 )
         }
         if (!e.id_operation) {
@@ -213,15 +224,35 @@ export function Action({ route }) {
         <View style={styles.container}>
             <View style={styles.content}>
                 {listContent.length > 0 && phase < stageContent.length ? listContent[phase] : <></>}
+
                 {phase >= stageContent.length && stageContent.length > 0 && (
                     <View>
                         <Text style={styles.title}>ESTÁGIO CONCLUÍDO</Text>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             {/* <ProgressBar /> */}
                             <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => navigation.navigate("Stages", { course: course, registration: registration })} mode='contained'>Estágios</Button>
-                            <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => navigation.navigate("Tabs", {changed: true})} mode='contained'>Home</Button>
+                            <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => navigation.navigate("Tabs", { changed: true })} mode='contained'>Home</Button>
                         </View>
                     </View>
+                )}
+
+                {lost === true && (
+                    <Animatable.View animation='bounceIn' style={styles.broken}>
+                        {type === "heart" ? <>
+                            <FontAwesome5
+                                name="heart-broken"
+                                size={64}
+                                color='#06c244'
+                            />
+                            <Text style={[styles.title, { margin: 15 }]}>-1</Text>
+                        </>
+                            :
+                            <Feather
+                                name="shield-off"
+                                size={64}
+                                color='#06c244'
+                            />}
+                    </Animatable.View>
                 )}
             </View>
         </View>

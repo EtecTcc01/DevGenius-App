@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         width: "100%",
-        padding: 20,
         maxWidth: 600,
         backgroundColor: "transparent",
         justifyContent: "center",
@@ -32,7 +31,7 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: '30%',
         minHeight: 270,
-        padding: 30,
+        padding: 20,
         backgroundColor: "black",
         borderWidth: 2.5,
         borderRadius: 10,
@@ -72,5 +71,8 @@ export const styles = StyleSheet.create({
         minHeight: 110,
         maxHeight: 210,
         maxWidth: 210,
-    }
+    },
+    closeBtn: {
+        alignSelf: "flex-end"
+    },
 });

@@ -70,7 +70,7 @@ export function SignIn({ handlerOnPress }) {
                     await handlerOnPress("success", "Usuário Cadastrado.")
                     setTimeout(() => {
                         navigation.navigate("Begin", { operation: "Info", user: data })
-                    }, 3200);
+                    }, 2000);
                 })
         }
 

@@ -12,20 +12,21 @@ export const styles = StyleSheet.create({
     },
     demo: {
         flex: 0.1,
-        minHeight: 50,
+        minHeight: 70,
         justifyContent: 'center',
-        alignItems: "center"
+        alignItems: "center",
     },
     title_demo: {
         textAlign: "center",
         fontSize: RFValue(35),
+        fontWeight: 'bold',
         color: '#06c244',
         fontFamily: 'sans-serif-thin',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
-        borderColor: "gray",
-        borderWidth: 0.5
+        borderColor: '#06c244',
+        borderWidth: 1
     },
     title: {
         textAlign: "left",

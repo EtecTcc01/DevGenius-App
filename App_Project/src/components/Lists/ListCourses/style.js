@@ -28,7 +28,6 @@ export const styles = StyleSheet.create({
         borderRadius: 15,
     },
     card: {
-        // fontSize: RFValue(22),
         width: "47%",
         height: 250,
         margin: 5,
@@ -40,7 +39,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 15,
         borderRadius: 15,
         maxWidth: 600,
-        minWidth: 200,
+        minWidth: 180,
     },
     button: {
         width: "41%",

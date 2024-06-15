@@ -70,7 +70,7 @@ export function Home({ route }) {
 
     return (
         <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-            <Animatable.View animation="flipInY" duration={750} style={styles.demo}>
+            <Animatable.View animation="flipInY" duration={2000} style={styles.demo}>
                 <Text style={styles.title_demo}>DEVGENIUS</Text>
             </Animatable.View>
             <View style={styles.content}>

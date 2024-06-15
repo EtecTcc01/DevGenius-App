@@ -29,7 +29,12 @@ export function Begin({ route, navigation }) {
         case "Register":
             return (
                 <View style={styles.container}>
-                    <ToastManager />
+                    <ToastManager
+                        positionValue={0}
+                        width={"90%"}
+                        duration={1500}
+                        height={70}
+                    />
                     <View style={styles.content}>
                         <SignIn handlerOnPress={(op, message) => showToasts(op, message)} />
                     </View>
@@ -38,18 +43,28 @@ export function Begin({ route, navigation }) {
         case "Login":
             return (
                 <View style={styles.container}>
-                    <ToastManager />
+                    <ToastManager
+                        positionValue={0}
+                        width={"90%"}
+                        duration={1500}
+                        height={70}
+                    />
                     <View style={styles.content}>
-                        <Logon handlerOnPress={(op, message) => showToasts(op, message)}/>
+                        <Logon handlerOnPress={(op, message) => showToasts(op, message)} />
                     </View>
                 </View>
             )
         case "Info":
             return (
                 <View style={styles.container}>
-                    <ToastManager />
+                    <ToastManager
+                        positionValue={0}
+                        width={"90%"}
+                        duration={1500}
+                        height={70}
+                    />
                     <View style={styles.content}>
-                        <Info data={data} handlerOnPress={(op, message) => showToasts(op, message)}/>
+                        <Info data={data} handlerOnPress={(op, message) => showToasts(op, message)} />
                     </View>
                 </View>
             )
