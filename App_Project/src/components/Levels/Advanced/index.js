@@ -200,13 +200,6 @@ export function AdvancedAct({ task, press, _lifes }) {
             setSelectedId(correctlyIds)
         }
 
-        if (_lifes == 0) {
-            setTimeout(() => {
-                press(2, false)
-            }, 500);
-            return
-        }
-
         if (state === 1) {
             setTimeout(() => {
                 press(1, false) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL

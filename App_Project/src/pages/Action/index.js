@@ -8,7 +8,7 @@ import { Button } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate } from '../../functions/helper.services';
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
 import { useNavigation } from '@react-navigation/native';
-import { FontAwesome5, Feather } from '@expo/vector-icons';
+import { FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 
 // IMPORT DOS COMPONENTE USADOS
@@ -25,6 +25,7 @@ export function Action({ route }) {
     const [registration, setRegistration] = React.useState({})
     const [first, setFirst] = React.useState(true)
     const [actual, setActual] = React.useState(true)
+    const [transition, setTransition] = React.useState(false)
     const [lost, setLost] = React.useState(false)
     const [type, setType] = React.useState("heart")
     const [lifes, setLifes] = React.useState(0)
@@ -69,7 +70,7 @@ export function Action({ route }) {
     React.useEffect(() => {
         if (registration._lifes && first === false && actual === true) {
             const progress = {
-                lifes: registration._lifes,
+                lifes: lifes,
                 registrationId: registration.id_registration
             }
 
@@ -182,19 +183,30 @@ export function Action({ route }) {
         if (state === 1) {
             setPoints(points + 1)
             setPhase(phase + 1)
-        } else if (state == 2) {
-            setPhase(phase + 1)
-        } else if (state === 3 && actual === true) {
+            setTransition(true)
+        } else if (state === 3) {
             setLost(true)
             setTimeout(() => {
                 setLost(false)
-                setType("heart")
-                shield === true ? [] : setLifes(lifes - 1)
+                if (actual === true) {
+                    setType("heart")
+                    shield === true ? [] : setLifes(lifes - 1)
+                }
             }, 2000);
+        } else if (state === 4) {
+            setPhase(phase + 1)
         }
 
         setFirst(false)
     }
+
+    React.useEffect(() => {
+        if (transition === true) {
+            setTimeout(() => {
+                setTransition(false)
+            }, 2000);
+        }
+    }, [transition])
 
     //CRIAÇÃO DE ELEMENTOS COM SEU RESPECTIVO "TIPO" (?)
     const listContent = stageContent.length > 0 ? stageContent.map((e, i) => {
@@ -216,7 +228,7 @@ export function Action({ route }) {
             return (
                 <View key={i} style={{ flex: 1, flexDirection: 'column', padding: 15 }}>
                     <Details data={e} />
-                    <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => setPhase(phase + 1)} mode='contained'>Avançar</Button>
+                    <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => onPressing(4, "false")} mode='contained'>Avançar</Button>
                 </View>
             )
         }
@@ -237,12 +249,16 @@ export function Action({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                {listContent.length > 0 && phase < stageContent.length ? listContent[phase] : <></>}
+                {listContent.length > 0 && transition === false && phase < stageContent.length ?
+                    <Animatable.View animation="fadeIn" duration={1000} delay={500}>
+                        {listContent[phase]}
+                    </Animatable.View>
+                    : <></>}
 
-                {phase >= stageContent.length && stageContent.length > 0 && (
+                {phase >= stageContent.length && stageContent.length > 0 && transition === false && (
                     <View style={{ flex: 1, width: '100%' }}>
                         <View style={styles.final}>
-                            <FinalStatistics qtdTask={stageContent.length > 0 ? qtdCount() : 0} _lifes={lifes} _points={points} />
+                            <FinalStatistics state={actual} qtdTask={stageContent.length > 0 ? qtdCount() : 0} _lifes={actual === true ? lifes : 0} _points={points} />
                         </View>
                         <View style={styles.btnContainer}>
                             <Button style={styles.button} onPress={() => navigation.navigate("Stages", { course: course, registration: registration })} mode='contained'>Estágios</Button>
@@ -251,22 +267,34 @@ export function Action({ route }) {
                     </View>
                 )}
 
-                {lost === true && (
+                {lost === true && transition === false && (
                     <Animatable.View animation='bounceIn' style={styles.broken}>
                         {type === "heart" ? <>
                             <FontAwesome5
                                 name="heart-broken"
-                                size={64}
+                                size={160}
                                 color='#06c244'
                             />
-                            <Text style={[styles.title, { margin: 15 }]}>-1</Text>
-                        </>
-                            :
+                            <Text style={styles.txt}> {actual === true && lifes > 0 ? "-1" : "No Lifes"}</Text>
+                        </> : <>
                             <Feather
                                 name="shield-off"
-                                size={64}
+                                size={160}
                                 color='#06c244'
-                            />}
+                            />
+                            <Text style={styles.txt}> {actual === true && lifes > 0 ? "Shield Break" : "No Shield"}</Text>
+                        </>}
+                    </Animatable.View>
+                )}
+
+                {transition === true && (
+                    <Animatable.View animation="bounceIn" style={styles.gain}>
+                        <MaterialCommunityIcons
+                            name="cards-diamond-outline"
+                            size={160}
+                            color="#06c244"
+                        />
+                        <Text style={styles.txt}> {actual === true && lifes > 0 ? "+1" : "No Points"} </Text>
                     </Animatable.View>
                 )}
             </View>

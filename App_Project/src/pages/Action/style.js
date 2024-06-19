@@ -48,5 +48,19 @@ export const styles = StyleSheet.create({
         width: "45%",
         alignSelf: 'center',
         marginTop: 20
+    },
+    gain: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: "center",
+        flexDirection: 'row'
+    },
+    txt: {
+        fontSize: RFValue(32),
+        color: '#06c244', // verde "médio"
+        fontFamily: "sans-serif-condensed",
+        margin: 10,
+        fontWeight: 'bold'
     }
 });

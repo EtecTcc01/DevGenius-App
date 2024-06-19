@@ -127,11 +127,6 @@ export function IntermediaryAct({ task, press, _lifes }) {
             setSelectedId([])
         }
 
-        if (_lifes == 0) {
-            press(2)
-            return
-        }
-
         if (state === 1) {
             setTimeout(() => {
                 press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL

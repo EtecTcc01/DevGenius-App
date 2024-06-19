@@ -38,11 +38,6 @@ export function BasicAct({ task, press, _lifes }) {
             state = 0
         }
 
-        if (_lifes == 0) {
-            press(2)
-            return
-        }
-
         if (state === 1) {
             press(1) //ENVIA UMA RESPOSTA POSITIVA PARA A PAGINA CENTRAL
         } else if (state === 0) {

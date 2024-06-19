@@ -9,17 +9,17 @@ import * as Progress from 'react-native-progress';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
 
 
-export function FinalStatistics({ route, _lifes, _points, qtdTask }) {
+export function FinalStatistics({ _lifes, _points, qtdTask, state }) {
     const navigation = useNavigation()
 
     const [nProgress, setNProgress] = React.useState(0)
     const [lifePoints, setLifePoints] = React.useState([])
-    console.log(qtdTask, _points)
 
     React.useEffect(() => {
         let temp = []
-        setNProgress(_points / 10)
-        console.log(_lifes, _points)
+        if (_points >= 0 && qtdTask >= 0) {
+            setNProgress(_points / qtdTask)
+        }
 
         try {
             for (let i = 0; i < 5; i++) {
@@ -30,7 +30,7 @@ export function FinalStatistics({ route, _lifes, _points, qtdTask }) {
         } catch {
             []
         }
-    }, [_lifes, _points])
+    }, [_lifes, _points, qtdTask])
 
     return (
         <View style={styles.container}>
@@ -39,10 +39,15 @@ export function FinalStatistics({ route, _lifes, _points, qtdTask }) {
             </View>
 
             <View style={styles.statistics}>
-                <Progress.Circle size={200} formatText={() => `${(nProgress * 100).toFixed(1)}%`} showsText={true} progress={nProgress} color='#06c244' />
+                <Progress.Circle size={200} formatText={() => `${(nProgress * 100).toFixed(1)}%`} showsText={state === true ? true : false} progress={nProgress} color='#06c244' />
                 <View style={styles.totals}>
                     <MaterialCommunityIcons name="cards-diamond-outline" size={64} color="#06c244" />
-                    <Text style={styles.title}>Total Exp: {_points || 0}/{qtdTask || 0}</Text>
+                    {state === true && _lifes > 0 ? <>
+                        <Text style={styles.title}>Total Exp: {_points || 0}/{qtdTask || 0}</Text>
+                    </> : <>
+                        <Text style={styles.title}>No points</Text>
+                    </>
+                    }
                 </View>
             </View>
 
