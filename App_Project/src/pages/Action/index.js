@@ -7,7 +7,6 @@ import { Button } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 //IMPORT DAS FUNCTIONS USADAS PARA REQUISIÇÃO DE DADOS
 import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate } from '../../functions/helper.services';
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
-// import { ProgressBar } from '../../components/ProgressBar';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
@@ -17,6 +16,7 @@ import { BasicAct } from '../../components/Levels/Basic';
 import { IntermediaryAct } from '../../components/Levels/Intermediary';
 import { AdvancedAct } from '../../components/Levels/Advanced';
 import { Details } from '../Details';
+import { FinalStatistics } from '../../components/FinalStatistics';
 
 export function Action({ route }) {
     const navigation = useNavigation()
@@ -27,6 +27,7 @@ export function Action({ route }) {
     const [actual, setActual] = React.useState(true)
     const [lost, setLost] = React.useState(false)
     const [type, setType] = React.useState("heart")
+    const [lifes, setLifes] = React.useState(0)
 
     const [stageContent, setStageContent] = React.useState([]) //STATE P/ARMAZENAR TEORIAS/TASKS DO ESTAGIO
     const [stage, setStage] = React.useState([]) //STATE P/ARMAZENAR ESTAGIOS DO CURSO
@@ -60,6 +61,7 @@ export function Action({ route }) {
 
                     setStage(stages)
                     getTeoryData(stages[data.registration[0].level_stage]._id)
+                    setLifes(data.registration[0]._lifes)
                 })
         }
     }, [route.params])
@@ -82,7 +84,7 @@ export function Action({ route }) {
                 })
 
         }
-    }, [registration._lifes])
+    }, [lifes])
 
     //FUNÇÃO P/ATUALIZAR O LEVEL DE ESTAGIO DO USUÁRIO NO CURSO
     React.useEffect(() => {
@@ -100,7 +102,7 @@ export function Action({ route }) {
                             console.log("Erro ao atualizar os dados")
                             return
                         }
-                        setRegistration(data)
+                        setRegistration(data[0])
                     })
 
                 return
@@ -187,7 +189,7 @@ export function Action({ route }) {
             setTimeout(() => {
                 setLost(false)
                 setType("heart")
-                shield === true ? [] : setRegistration({ ...registration, "_lifes": registration._lifes - 1 })
+                shield === true ? [] : setLifes(lifes - 1)
             }, 2000);
         }
 
@@ -199,26 +201,38 @@ export function Action({ route }) {
         switch (e.id_operation) {
             case 1:
                 return (
-                    <BasicAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e, false)} />
+                    <BasicAct _lifes={actual === true ? lifes : -1} task={e} press={(e) => onPressing(e, false)} />
                 )
             case 2:
                 return (
-                    <IntermediaryAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e) => onPressing(e, false)} />
+                    <IntermediaryAct _lifes={actual === true ? lifes : -1} task={e} press={(e) => onPressing(e, false)} />
                 )
             case 3:
                 return (
-                    <AdvancedAct _lifes={actual === true ? registration._lifes : -1} task={e} press={(e, shield) => onPressing(e, shield)} />
+                    <AdvancedAct _lifes={actual === true ? lifes : -1} task={e} press={(e, shield) => onPressing(e, shield)} />
                 )
         }
         if (!e.id_operation) {
             return (
                 <View key={i} style={{ flex: 1, flexDirection: 'column', padding: 15 }}>
                     <Details data={e} />
-                    <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => onPressing(1)} mode='contained'>Avançar</Button>
+                    <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => setPhase(phase + 1)} mode='contained'>Avançar</Button>
                 </View>
             )
         }
     }) : []
+
+    function qtdCount() {
+        let temp = 0
+
+        stageContent.map((e, i) => {
+            if (e.id_operation) {
+                temp += 1
+            }
+        })
+
+        return temp
+    }
 
     return (
         <View style={styles.container}>
@@ -226,12 +240,13 @@ export function Action({ route }) {
                 {listContent.length > 0 && phase < stageContent.length ? listContent[phase] : <></>}
 
                 {phase >= stageContent.length && stageContent.length > 0 && (
-                    <View>
-                        <Text style={styles.title}>ESTÁGIO CONCLUÍDO</Text>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            {/* <ProgressBar /> */}
-                            <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => navigation.navigate("Stages", { course: course, registration: registration })} mode='contained'>Estágios</Button>
-                            <Button style={{ height: "auto", width: "90%", alignSelf: 'center', marginTop: 20 }} onPress={() => navigation.navigate("Tabs", { changed: true })} mode='contained'>Home</Button>
+                    <View style={{ flex: 1, width: '100%' }}>
+                        <View style={styles.final}>
+                            <FinalStatistics qtdTask={stageContent.length > 0 ? qtdCount() : 0} _lifes={lifes} _points={points} />
+                        </View>
+                        <View style={styles.btnContainer}>
+                            <Button style={styles.button} onPress={() => navigation.navigate("Stages", { course: course, registration: registration })} mode='contained'>Estágios</Button>
+                            <Button style={styles.button} onPress={() => navigation.navigate("Tabs", { changed: true })} mode='contained'>Home</Button>
                         </View>
                     </View>
                 )}

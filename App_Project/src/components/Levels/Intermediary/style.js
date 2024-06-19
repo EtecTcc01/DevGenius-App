@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         borderColor: "#06c244",
         borderRadius: 10,
-        borderWidth: 0.2,
+        borderWidth: 0.5,
         marginTop: 6,
         padding: 10
     },
@@ -61,11 +61,9 @@ export const styles = StyleSheet.create({
         backgroundColor: "#465C46",
     },
     content_text: {
-        flex: 1,
         padding: 20,
-        minWidth: "100%",
         justifyContent: "center",
-        alignItems: "center"
+        flexDirection: "column"
     },
     contentScroll: {
         flex: 1,

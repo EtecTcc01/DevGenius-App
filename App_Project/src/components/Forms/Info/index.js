@@ -16,7 +16,7 @@ export function Info({ data, handlerOnPress }) {
     //STATE P/ARMAZENAR DADOS DO USUÁRIO
     const [info, setInfo] = React.useState({
         userDate: "",
-        profileImage: "", 
+        profileImage: "",
         userSex: "",
         userId: data._id || "",
     })
@@ -92,41 +92,43 @@ export function Info({ data, handlerOnPress }) {
     };
 
     return (
-        <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
-            <Text style={styles.title} variant="titleLarge">Informações</Text>
+        <>
+            <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container}>
+                <Text style={styles.title} variant="titleLarge">Informações</Text>
 
-            <DropdownComponent handlerChoice={(e) => setInfo({ ...info, "userSex": e })} />
+                <DropdownComponent handlerChoice={(e) => setInfo({ ...info, "userSex": e })} />
 
-            <HelperText type="error" visible={hasErrors("userSex", "view")}>
-                <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, escolha um genêro!</Text>
-            </HelperText>
+                <HelperText type="error" visible={hasErrors("userSex", "view")}>
+                    <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, escolha um genêro!</Text>
+                </HelperText>
 
-            <TextInput
-                label="Data de Nascimento:"
-                style={styles.input}
-                value={info.userDate || ''}
-                textColor='white'
-                onChangeText={event => handlerOnChangeUser({ _name: "userDate", _value: event })}
-                render={props =>
-                    <MaskInput
-                        {...props}
-                        mask={Masks.DATE_YYYYMMDD}
-                    />
-                }
-            />
+                <TextInput
+                    label="Data de Nascimento:"
+                    style={styles.input}
+                    value={info.userDate || ''}
+                    textColor='white'
+                    onChangeText={event => handlerOnChangeUser({ _name: "userDate", _value: event })}
+                    render={props =>
+                        <MaskInput
+                            {...props}
+                            mask={Masks.DATE_YYYYMMDD}
+                        />
+                    }
+                />
 
-            <HelperText type="error" visible={hasErrors("userDate", "view")}>
-                <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, defina uma data exata!</Text>
-            </HelperText>
+                <HelperText type="error" visible={hasErrors("userDate", "view")}>
+                    <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, defina uma data exata!</Text>
+                </HelperText>
 
-            <Button
-                style={styles.button}
-                mode="contained"
-                onPress={() => handlerRegisterInfo()}
-                labelStyle={styles.label}
-            >
-                Adicione
-            </Button>
-        </ScrollView>
+                <Button
+                    style={styles.button}
+                    mode="contained"
+                    onPress={() => handlerRegisterInfo()}
+                    labelStyle={styles.label}
+                >
+                    Adicione
+                </Button>
+            </ScrollView>
+        </>
     );
 }

@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: '#000', //verde claro
         paddingTop: 40,
+        paddingHorizontal: 5,
         justifyContent: 'center',
         // alignItems: "center"
     },
@@ -29,5 +30,23 @@ export const styles = StyleSheet.create({
         width: 'auto',
         justifyContent: "center",
         alignItems: "center"
+    },
+    final: {
+        flex: 1,
+        width: '100%'
+    },
+    btnContainer: {
+        flex: 0.2,
+        padding: 10,
+        width: '100%',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        flexDirection: "row",
+    },
+    button: {
+        height: "auto",
+        width: "45%",
+        alignSelf: 'center',
+        marginTop: 20
     }
 });

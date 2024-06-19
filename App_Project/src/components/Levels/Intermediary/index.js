@@ -234,7 +234,7 @@ export function IntermediaryAct({ task, press, _lifes }) {
                         </View>
 
                         <ScrollView horizontal={true} style={styles.contentHScroll} contentContainerStyle={styles.content_text}>
-                            <Text style={styles.titleA}>{taskT.replaceAll("‼", "__‼__")}</Text>
+                            <Text numberOfLines={5} style={styles.titleA}>{taskT.replaceAll("‼", "__‼__")}</Text>
                         </ScrollView>
 
                     </View>

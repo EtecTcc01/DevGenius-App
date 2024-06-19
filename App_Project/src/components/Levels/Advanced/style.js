@@ -17,10 +17,8 @@ export const styles = StyleSheet.create({
         width: "100%"
     },
     content_text: {
-        flex: 1,
         padding: 20,
         minWidth: "100%",
-        justifyContent: "center",
         alignItems: "center"
     },
     btn: {

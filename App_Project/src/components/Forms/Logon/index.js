@@ -67,6 +67,7 @@ export function Logon({ handlerOnPress }) {
     };
 
     return (
+        <>
         <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
             <Text style={styles.title} variant="titleLarge">Login</Text>
             <TextInput
@@ -127,5 +128,6 @@ export function Logon({ handlerOnPress }) {
                 Cadastre-se
             </Button>
         </ScrollView>
+        </>
     );
 }
