@@ -1,7 +1,7 @@
 //IMPORT DOS COMPONENTES/ELEMENTOS USADOS
 import * as React from 'react';
 
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -17,6 +17,7 @@ import { Stages } from '../pages/Stages';
 import { Options } from '../pages/Options';
 import { GroupCourses } from '../pages/GroupCourses';
 import { Details } from '../pages/Details';
+import { Ranking } from '../pages/Ranking';
 
 //TRANSFERENCIA DE FUNÇÕES P/CONSTANTE
 const Stack = createStackNavigator();
@@ -177,6 +178,25 @@ function TabsRoutes({ route }) {
                             size={size}
                             color={focused ? '#06c244' : color}
                             name={'library-books'}
+                        />
+                    ),
+                }}
+            />
+
+            <Tab.Screen
+                name="Ranking"
+                component={Ranking}
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: "black"
+                    },
+                    tabBarShowLabel: false,
+                    tabBarIcon: ({ focused, size, color }) => (
+                        <FontAwesome6
+                            size={size}
+                            color={focused ? '#06c244' : color}
+                            name={'ranking-star'}
                         />
                     ),
                 }}

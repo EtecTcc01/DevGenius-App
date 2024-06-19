@@ -9,7 +9,7 @@ import * as Progress from 'react-native-progress';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
 
 
-export function FinalStatistics({ _lifes, _points, qtdTask, state }) {
+export function FinalStatistics({ _lifes, _points, qtdTask, state, finish }) {
     const navigation = useNavigation()
 
     const [nProgress, setNProgress] = React.useState(0)

@@ -8,7 +8,7 @@ import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 export function ListStages({ stages, filter, handlerOnPress }) {
     const navigation = useNavigation()
 
-    const ListStages = !stages ? [] : stages.map((element, i) => {
+    const listStages = !stages ? [] : stages.map((element, i) => {
         return (
             <Animatable.View style={styles.card} key={i} delay={100} animation="zoomIn" duration={350 * i + 1}>
                 {i <= filter.actual + 1 && (
@@ -27,7 +27,7 @@ export function ListStages({ stages, filter, handlerOnPress }) {
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             <List.Section style={{ width: '100%', alignSelf: "center" }}>
-                {ListStages ? ListStages : <></>}
+                {listStages ? listStages : <></>}
             </List.Section>
         </ScrollView>
     );

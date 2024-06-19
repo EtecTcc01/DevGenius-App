@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 import { Button } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 
 //IMPORT DAS FUNCTIONS USADAS PARA REQUISIÇÃO DE DADOS
-import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate } from '../../functions/helper.services';
+import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate, pointsUpdate } from '../../functions/helper.services';
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -23,21 +23,25 @@ export function Action({ route }) {
 
     const [course, setCourse] = React.useState({})
     const [registration, setRegistration] = React.useState({})
+    const [stageContent, setStageContent] = React.useState([]) //STATE P/ARMAZENAR TEORIAS/TASKS DO ESTAGIO
+    const [stage, setStage] = React.useState([]) //STATE P/ARMAZENAR ESTAGIOS DO CURSO
+
     const [first, setFirst] = React.useState(true)
     const [actual, setActual] = React.useState(true)
+
     const [transition, setTransition] = React.useState(false)
     const [lost, setLost] = React.useState(false)
     const [type, setType] = React.useState("heart")
-    const [lifes, setLifes] = React.useState(0)
 
-    const [stageContent, setStageContent] = React.useState([]) //STATE P/ARMAZENAR TEORIAS/TASKS DO ESTAGIO
-    const [stage, setStage] = React.useState([]) //STATE P/ARMAZENAR ESTAGIOS DO CURSO
-    const [phase, setPhase] = React.useState(0) //STATE P/ARMAZENAR "FASES" DO ESTAGIO ATUAL
+    const [lifes, setLifes] = React.useState(0)
     const [points, setPoints] = React.useState(0) //STATE P/ARMAZENAR PONTOS (CORRETOS)
+    const [phase, setPhase] = React.useState(0) //STATE P/ARMAZENAR "FASES" DO ESTAGIO ATUAL
+
 
     React.useEffect(() => {
         const data = route.params
         setRegistration(data.registration[0])
+        console.log({ reg: data.registration[0] })
         setCourse(data.course)
 
         if (data.stage) {
@@ -63,6 +67,7 @@ export function Action({ route }) {
                     setStage(stages)
                     getTeoryData(stages[data.registration[0].level_stage]._id)
                     setLifes(data.registration[0]._lifes)
+                    setPoints(data.registration[0]._points)
                 })
         }
     }, [route.params])
@@ -86,6 +91,51 @@ export function Action({ route }) {
 
         }
     }, [lifes])
+
+    React.useEffect(() => {
+        try {
+            if (phase >= stageContent.length && stageContent.length > 0 && actual === true) {
+                const lvl = registration.level_stage + 1
+                
+                const progress = {
+                    stageLvl: lvl,
+                    // userLevel, totalExp, userId
+                    registrationId: registration.id_registration
+                }
+
+                // progressUpdate(progress)
+                //     .then((data) => {
+                //         if (!data) {
+                //             console.log("Erro ao atualizar os dados")
+                //             return
+                //         }
+                //         setRegistration(data[0])
+                //     })
+
+                return
+            }
+
+            if (registration._points >= 0 && first === false && actual === true) {
+                const progress = {
+                    points: points,
+                    registrationId: registration.id_registration
+                }
+
+                console.log({ progress })
+
+                pointsUpdate(progress)
+                    .then((data) => {
+                        if (!data) {
+                            console.log("Erro ao atualizar os dados")
+                            return
+                        }
+
+                        setRegistration(data[0])
+                    })
+
+            }
+        } catch { [] }
+    }, [points])
 
     //FUNÇÃO P/ATUALIZAR O LEVEL DE ESTAGIO DO USUÁRIO NO CURSO
     React.useEffect(() => {

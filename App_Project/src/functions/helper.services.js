@@ -193,6 +193,23 @@ const phaseUpdate = async (progress) => {
         return registration
     }
 }
+const pointsUpdate = async (progress) => {
+    let validation = false
+    let registration = []
+
+    await api.put("/registration/points", progress)
+        .then((res) => {
+            registration = res.data.registration
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    if (validation == true) {
+        return registration
+    }
+}
 
 const getRegistrationByGroup = async (userId, groupId) => {
     const dataIds = [userId, groupId]
@@ -214,6 +231,24 @@ const getRegistrationByGroup = async (userId, groupId) => {
     }
 }
 
+const getAllUserRanks = async () => {
+    let validation = false
+    let users = []
+
+    await api.get(`/user/rank`)
+        .then((res) => {
+            users = res.data.user
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+            return
+        })
+
+    if (validation == true) {
+        return users
+    }
+}
+
 export {
     getCourseByGroup,
     getAllTeoryByGroupOrdened,
@@ -225,5 +260,7 @@ export {
     getAllTeoryByGroup,
     getRegistrationByGroup,
     lifesUpdate,
-    phaseUpdate
+    phaseUpdate,
+    pointsUpdate,
+    getAllUserRanks
 }
