@@ -48,7 +48,7 @@ export function Stages({ route }) {
                             registration.level_stage >= course.qtd_stages - 1 ?
                                 <Text style={styles.title}>Máximo de estágios atingidos. Peço que espere por mais atualizações</Text>
                                 :
-                                <Text style={styles.title}>Continue avançando nos estágios para desbloquea mais estágios...</Text>
+                                <Text style={styles.title}>Continue progredindo nos estágios para desbloquear novos níveis.</Text>
                         }
                     </View>
                 )}
