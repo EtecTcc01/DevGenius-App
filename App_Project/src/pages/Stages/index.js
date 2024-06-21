@@ -4,6 +4,7 @@ import { styles } from './style';
 import { ListStages } from '../../components/Lists/ListStages';
 import { getStagesByCourse } from '../../functions/helper.services';
 import { useNavigation } from '@react-navigation/native';
+import { getChangedState } from '../../functions/async.services';
 
 export function Stages({ route }) {
     const navigation = useNavigation()
@@ -11,6 +12,27 @@ export function Stages({ route }) {
     const [stages, setStages] = React.useState([])
     const [course, setCourse] = React.useState({})
     const [registration, setRegistration] = React.useState({})
+
+    const [changed, setChanged] = React.useState() //STATE P/ARMAZENAR STATE DE MUDANÇA
+    const [timer, setTimer] = React.useState(0) //STATE P/ARMAZENAR N. DO TIMER
+
+    // FUNÇÃO TEMPORIZADORA P/COLETA E ATUALIZAÇÃO DE DADOS
+    React.useEffect(() => {
+        getChangedState()
+            .then((res) => {
+                if (res !== changed) {
+                    setChanged(res)
+                }
+            })
+
+        setTimeout(() => {
+            if (timer >= 10) {
+                setTimer(0)
+            } else {
+                setTimer(timer + 1)
+            }
+        }, 1500);
+    }, [timer])
 
     React.useEffect(() => {
         const data = route.params
@@ -32,7 +54,7 @@ export function Stages({ route }) {
                     console.log(data)
                 })
         }
-    }, [course])
+    }, [course, changed])
 
     function handlerTransfer(element, index) {
         navigation.navigate("Action", { course, registration: [registration], stage: {...element, "index": index} })
@@ -48,7 +70,7 @@ export function Stages({ route }) {
                             registration.level_stage >= course.qtd_stages - 1 ?
                                 <Text style={styles.title}>Máximo de estágios atingidos. Peço que espere por mais atualizações</Text>
                                 :
-                                <Text style={styles.title}>Continue progredindo nos estágios para desbloquear novos níveis.</Text>
+                                <Text style={styles.title}>Continue avançando nos estágios para desbloquea mais estágios...</Text>
                         }
                     </View>
                 )}

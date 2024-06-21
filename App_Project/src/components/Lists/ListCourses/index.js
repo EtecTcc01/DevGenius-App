@@ -10,11 +10,12 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
   const navigation = useNavigation()
 
   const [levels, setLevels] = React.useState([])
+  const [phase, setPhase] = React.useState([])
 
   React.useEffect(() => {
-    let cc = []; let reg = []
+    let reg = []; let subcount = 0;
     let data = []; let ccount = 0
-    let subcount = 0
+    let _phases = []; let cc = [];
 
     try {
       courses.forEach(e => {
@@ -28,15 +29,17 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
       while (ccount < cc.length) {
         if (reg[subcount] === cc[ccount]) {
           data.push(registrations[subcount].level_stage)
+          _phases.push(registrations[subcount]._phase)
           ccount++; subcount++
         } else {
           data.push(0)
+          _phases.push(0)
           ccount++;
         }
       }
     } catch { [] }
 
-    console.log(data, cc)
+    setPhase(_phases)
     setLevels(data)
   }, [registrations])
 
@@ -54,7 +57,7 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
           <Button style={levels[index] >= element.qtd_stages ? [styles.button, { backgroundColor: 'gray' }] : [styles.button, { backgroundColor: '#284703' }]}
             disabled={levels[index] >= element.qtd_stages ? true : false}
             labelStyle={[styles.label, { color: "#cfe3d4" }]} onPress={(() => handlerOnPress(element, "Action"))
-            }>{levels[index] > 0 ? "Continuar" : "Iniciar"}</Button>
+            }>{levels[index] > 0 || phase[index] > 0 ? "Continuar" : "Iniciar"}</Button>
         </View>
       </Animatable.View>
     )

@@ -5,7 +5,7 @@ import api from '../../../api';
 
 import { ListGroups } from '../../components/Lists/ListGroups';
 
-import { getDataUser } from '../../functions/async.services';
+import { getChangedState, getDataUser } from '../../functions/async.services';
 import { getAllUserGroups } from '../../functions/helper.services';
 
 import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
@@ -23,10 +23,30 @@ export function Groups() {
     const [groups, setGroups] = React.useState([]);
     const [selected, setSelected] = React.useState("");
 
+    const [changedT, setChangedT] = React.useState() //STATE P/ARMAZENAR STATE DE MUDANÇA
+    const [timer, setTimer] = React.useState(0) //STATE P/ARMAZENAR N. DO TIMER
+
+    // FUNÇÃO TEMPORIZADORA P/COLETA E ATUALIZAÇÃO DE DADOS
+    React.useEffect(() => {
+        getChangedState()
+            .then((res) => {
+                if (res !== changedT) {
+                    setChangedT(res)
+                }
+            })
+
+        setTimeout(() => {
+            if (timer >= 10) {
+                setTimer(0)
+            } else {
+                setTimer(timer + 1)
+            }
+        }, 1500);
+    }, [timer])
+
     const showToasts = (op, message) => {
         Toast[op](message, "top")
     }
-
 
     //FUNÇÃO SEPARADA P/ADICIONAR UM USUÁRIO AO GRUPO
     const handlerUserGroupRegister = async () => {
@@ -84,7 +104,7 @@ export function Groups() {
                         console.log(data)
                     })
             })
-    }, [changed])
+    }, [changed, changedT])
 
     function handlerTransfer(element) {
         navigation.navigate("GroupCourses", { group: element })

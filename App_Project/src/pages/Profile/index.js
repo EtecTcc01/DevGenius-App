@@ -8,12 +8,33 @@ import * as Progress from 'react-native-progress';
 import { Icon, MD3Colors } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 import * as ImagePicker from 'expo-image-picker'; //IMPORT DO IMAGE PICKER DO EXPO
 import { useNavigation } from '@react-navigation/native'; //IMPORT P/TRANSFERENCIA DE TELA
-import { getDataUser } from '../../functions/async.services';
+import { getChangedState, getDataUser } from '../../functions/async.services';
 
 export function Profile() {
     const navigation = useNavigation()
 
     const [storedData, setStoredData] = React.useState({});
+
+    const [changed, setChanged] = React.useState() //STATE P/ARMAZENAR STATE DE MUDANÇA
+    const [timer, setTimer] = React.useState(0) //STATE P/ARMAZENAR N. DO TIMER
+
+    // FUNÇÃO TEMPORIZADORA P/COLETA E ATUALIZAÇÃO DE DADOS
+    React.useEffect(() => {
+        getChangedState()
+            .then((res) => {
+                if (res !== changed) {
+                    setChanged(res)
+                }
+            })
+
+        setTimeout(() => {
+            if (timer >= 10) {
+                setTimer(0)
+            } else {
+                setTimer(timer + 1)
+            }
+        }, 1500);
+    }, [timer])
 
     //ARMAZENANDO DADOS DO USUÁRIO APÓS RECEBE-LOS PELA ASYNC
     React.useEffect(() => {
@@ -27,7 +48,7 @@ export function Profile() {
                 console.log(data)
                 setStoredData(data)
             })
-    }, []);
+    }, [changed]);
 
     // SOLICITANDO PERMISSÃO P/TER ACESSO À GALERIA DO USUÁRIO
     React.useEffect(() => {
@@ -41,7 +62,7 @@ export function Profile() {
                 );
             }
         })();
-    }, []);
+    }, [changed]);
 
     //PEGANDO IMAGEM DA GALERIA
     const pickImageFromGallery = async () => {
@@ -56,8 +77,6 @@ export function Profile() {
             setStoredData({ ...storedData, profileImage: result.uri });
         }
     };
-
-    console.log({st: storedData})
 
     return (
         <View style={styles.container}>
@@ -90,7 +109,7 @@ export function Profile() {
                 </View>
 
                 <View style={styles.progressInfo}>
-                    {storedData ? <Progress.Bar progress={storedData.total_exp ? storedData.total_exp : 0} width={null} /> : <></>}
+                    {storedData ? <Progress.Bar progress={storedData.total_exp ? storedData.total_exp / 10 : 0} width={null} /> : <></>}
                     <Text style={styles.infoTitle}>EXP {storedData.total_exp}/10 - LEVEL {storedData._level}</Text>
                 </View>
 

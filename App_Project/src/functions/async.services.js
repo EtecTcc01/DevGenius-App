@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // FUNÇÃO DO ASYNC STORAGE P/ARMAZENAR OS DADOS DO USUÁRIO
 async function storeUserData({ user }) {
-    console.log(user)
     let validation = false
 
     try {
@@ -11,6 +10,23 @@ async function storeUserData({ user }) {
         validation = true
     } catch (error) {
         console.log(`Erro ao salvar dados do usuário. ${error}`)
+    }
+
+    if (validation == true) {
+        return validation
+    }
+};
+
+// FUNÇÃO DO ASYNC STORAGE P/ARMAZENAR STATE DE ALTERAÇÃO
+async function storeChangedState(state) {
+    let validation = false
+    let stored = { state: state }
+
+    try {
+        await AsyncStorage.setItem('changed', JSON.stringify(stored)); //CRIANDO UMA KEY PARA, DEPOIS, BUSCAR OS DADOS NOAVEMENTE
+        validation = true
+    } catch (error) {
+        console.log(`Erro ao salvar state atual. ${error}`)
     }
 
     if (validation == true) {
@@ -36,7 +52,27 @@ async function getDataUser() {
     }
 };
 
+// FUNÇÃO P/BUSCAR DADOS STATE DE ALTERAÇÃO
+async function getChangedState() {
+    let validation = false
+    let actual = {}
+
+    await AsyncStorage.getItem('changed')
+        .then((state) => {
+            state != null ? actual = JSON.parse(state) : null;
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao buscar state de alteração. ${error}`)
+        })
+
+    if (validation == true) {
+        return actual.state
+    }
+};
+
 export {
     storeUserData,
-    getDataUser
+    getDataUser,
+    storeChangedState,
+    getChangedState,
 }

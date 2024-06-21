@@ -42,7 +42,7 @@ export function FinalStatistics({ _lifes, _points, qtdTask, state, finish }) {
                 <Progress.Circle size={200} formatText={() => `${(nProgress * 100).toFixed(1)}%`} showsText={state === true ? true : false} progress={nProgress} color='#06c244' />
                 <View style={styles.totals}>
                     <MaterialCommunityIcons name="cards-diamond-outline" size={64} color="#06c244" />
-                    {state === true && _lifes > 0 ? <>
+                    {_points > 0 ? <>
                         <Text style={styles.title}>Total Exp: {_points || 0}/{qtdTask || 0}</Text>
                     </> : <>
                         <Text style={styles.title}>No points</Text>

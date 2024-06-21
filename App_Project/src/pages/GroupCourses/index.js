@@ -5,7 +5,7 @@ import { ScrollView, Text, View } from 'react-native';
 // import { Modal, Portal, PaperProvider, Button, Card } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 import { ListCourses } from '../../components/Lists/ListCourses';
 import { getCourseByGroup, getRegistrationByGroup, getRegistrationForStages } from '../../functions/helper.services';
-import { getDataUser } from '../../functions/async.services';
+import { getChangedState, getDataUser } from '../../functions/async.services';
 import { useNavigation } from '@react-navigation/native';
 
 export function GroupCourses({ route }) {
@@ -16,6 +16,27 @@ export function GroupCourses({ route }) {
 
     const [registration, setRegistration] = React.useState([])
 
+    const [changed, setChanged] = React.useState() //STATE P/ARMAZENAR STATE DE MUDANÇA
+    const [timer, setTimer] = React.useState(0) //STATE P/ARMAZENAR N. DO TIMER
+
+    // FUNÇÃO TEMPORIZADORA P/COLETA E ATUALIZAÇÃO DE DADOS
+    React.useEffect(() => {
+        getChangedState()
+            .then((res) => {
+                if (res !== changed) {
+                    setChanged(res)
+                }
+            })
+
+        setTimeout(() => {
+            if (timer >= 10) {
+                setTimer(0)
+            } else {
+                setTimer(timer + 1)
+            }
+        }, 1500);
+    }, [timer])
+
     //FUNÇÃO P/BUSCAR OS CURSOS DO 1° GRUPO (PUBLICO) 
     React.useEffect(() => {
         if (route.params.group) {
@@ -25,7 +46,7 @@ export function GroupCourses({ route }) {
                     console.log(data)
                 })
         }
-    }, [route.params.group])
+    }, [route.params.group, changed])
 
     React.useEffect(() => {
         if (route.params.group) {
@@ -39,7 +60,7 @@ export function GroupCourses({ route }) {
                     getRegistrations(data.id_user, route.params.group.group_id)
                 })
         }
-    }, [route.params.group])
+    }, [route.params.group, changed])
 
     function getRegistrations(userId, groupId) {
         getRegistrationByGroup(userId, groupId)

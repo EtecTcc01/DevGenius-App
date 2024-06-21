@@ -56,10 +56,17 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: 'row'
     },
-    txt: {
-        fontSize: RFValue(32),
+    txt_noP: {
+        fontSize: RFValue(28),
         color: '#06c244', // verde "médio"
         fontFamily: "sans-serif-condensed",
+        margin: 10,
+        fontWeight: 'bold'
+    },
+    txt_points: {
+        fontSize: RFValue(44),
+        color: '#06c244', // verde "médio"
+        fontFamily: "sans-serif",
         margin: 10,
         fontWeight: 'bold'
     }

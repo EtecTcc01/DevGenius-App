@@ -5,10 +5,32 @@ import { styles } from './style';
 import { ListRanks } from '../../components/Lists/ListRank';
 import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 import { getAllUserRanks } from '../../functions/helper.services';
+import { getChangedState } from '../../functions/async.services';
 
-export function Ranking({ route }) {
+export function Ranking() {
 
     const [rank, setRank] = React.useState([])
+
+    const [changed, setChanged] = React.useState() //STATE P/ARMAZENAR STATE DE MUDANÇA
+    const [timer, setTimer] = React.useState(0) //STATE P/ARMAZENAR N. DO TIMER
+
+    // FUNÇÃO TEMPORIZADORA P/COLETA E ATUALIZAÇÃO DE DADOS
+    React.useEffect(() => {
+        getChangedState()
+            .then((res) => {
+                if (res !== changed) {
+                    setChanged(res)
+                }
+            })
+
+        setTimeout(() => {
+            if (timer >= 10) {
+                setTimer(0)
+            } else {
+                setTimer(timer + 1)
+            }
+        }, 1500);
+    }, [timer])
 
     React.useEffect(() => {
         getAllUserRanks()
@@ -20,7 +42,7 @@ export function Ranking({ route }) {
                 setRank(data)
                 console.log(data)
             })
-    }, [route.params])
+    }, [changed])
 
     return (
         <View style={styles.container}>

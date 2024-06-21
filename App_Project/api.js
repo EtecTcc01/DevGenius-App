@@ -9,17 +9,18 @@ import axios from 'axios';
 
 // Para funcionar no mobile, tem que estar na mesma rede, ao inves do localhost
 // Para usar sua maquina como receptaculo, pegue seu ip (ipconfig no cmd) e esteja na mesma rede
+// VERIFIQUE O IP QUE ESTÁ NO METRO DO EXPO (SEM UTILIZAR NPX EXPO START --TUNNEL)
 
-// const api = axios.create({
-//   baseURL: 'http://192.168.10.111:3333/devgenius'
-// });
+const api = axios.create({
+  baseURL: 'http://172.16.1.109:3000/devgenius'
+});
 
 //Utilizando o codigo abaixo, há como usar o app com o banco e back-end na nuvem
 //Caso tenham curiosidade, eu usei o railway pro banco e render pro back-end
 
-const api = axios.create({
-  baseURL: 'https://tcc-render-hospeder.onrender.com/devgenius'
-});
+// const api = axios.create({
+//   baseURL: 'https://tcc-render-hospeder.onrender.com/devgenius'
+// });
 
 //UTILIZANDO NGROK PRA ACESSAR O BACK-END LOCAL (PODE MUDAR O HTTP)
 // const api = axios.create({

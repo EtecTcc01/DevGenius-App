@@ -158,6 +158,21 @@ const progressUpdate = async (progress) => {
     }
 }
 
+const levelUpdate = async (progress) => {
+    let validation = false
+
+    await api.put("/info/level", progress)
+        .then((res) => {
+            console.log("Info atualizado com sucesso.")
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    return validation
+}
+
 const lifesUpdate = async (progress) => {
     let validation = false
     let registration = []
@@ -262,5 +277,6 @@ export {
     lifesUpdate,
     phaseUpdate,
     pointsUpdate,
-    getAllUserRanks
+    getAllUserRanks,
+    levelUpdate
 }

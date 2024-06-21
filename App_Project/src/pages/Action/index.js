@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 import { Button } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 
 //IMPORT DAS FUNCTIONS USADAS PARA REQUISIÇÃO DE DADOS
-import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate, pointsUpdate } from '../../functions/helper.services';
+import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate, pointsUpdate, levelUpdate } from '../../functions/helper.services';
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -17,6 +17,7 @@ import { IntermediaryAct } from '../../components/Levels/Intermediary';
 import { AdvancedAct } from '../../components/Levels/Advanced';
 import { Details } from '../Details';
 import { FinalStatistics } from '../../components/FinalStatistics';
+import { getChangedState, getDataUser, storeChangedState, storeUserData } from '../../functions/async.services';
 
 export function Action({ route }) {
     const navigation = useNavigation()
@@ -37,6 +38,12 @@ export function Action({ route }) {
     const [points, setPoints] = React.useState(0) //STATE P/ARMAZENAR PONTOS (CORRETOS)
     const [phase, setPhase] = React.useState(0) //STATE P/ARMAZENAR "FASES" DO ESTAGIO ATUAL
 
+    function atualization() {
+        getChangedState()
+            .then((res) => {
+                storeChangedState(res + 1)
+            })
+    }
 
     React.useEffect(() => {
         const data = route.params
@@ -86,56 +93,12 @@ export function Action({ route }) {
                         return
                     }
 
+                    atualization()
                     setRegistration(data[0])
                 })
 
         }
     }, [lifes])
-
-    React.useEffect(() => {
-        try {
-            if (phase >= stageContent.length && stageContent.length > 0 && actual === true) {
-                const lvl = registration.level_stage + 1
-                
-                const progress = {
-                    stageLvl: lvl,
-                    // userLevel, totalExp, userId
-                    registrationId: registration.id_registration
-                }
-
-                // progressUpdate(progress)
-                //     .then((data) => {
-                //         if (!data) {
-                //             console.log("Erro ao atualizar os dados")
-                //             return
-                //         }
-                //         setRegistration(data[0])
-                //     })
-
-                return
-            }
-
-            if (registration._points >= 0 && first === false && actual === true) {
-                const progress = {
-                    points: points,
-                    registrationId: registration.id_registration
-                }
-
-                console.log({ progress })
-
-                pointsUpdate(progress)
-                    .then((data) => {
-                        if (!data) {
-                            console.log("Erro ao atualizar os dados")
-                            return
-                        }
-
-                        setRegistration(data[0])
-                    })
-
-            }
-        } catch { [] }
-    }, [points])
 
     //FUNÇÃO P/ATUALIZAR O LEVEL DE ESTAGIO DO USUÁRIO NO CURSO
     React.useEffect(() => {
@@ -153,6 +116,7 @@ export function Action({ route }) {
                             console.log("Erro ao atualizar os dados")
                             return
                         }
+                        atualization()
                         setRegistration(data[0])
                     })
 
@@ -171,6 +135,7 @@ export function Action({ route }) {
                             console.log("Erro ao atualizar os dados")
                             return
                         }
+                        atualization()
                         setRegistration(data[0])
                     })
             }
@@ -178,6 +143,79 @@ export function Action({ route }) {
             []
         }
     }, [phase])
+
+    React.useEffect(() => {
+        try {
+            if (phase >= stageContent.length && stageContent.length > 0 && actual === true) {
+                getDataUser()
+                    .then((data) => {
+                        if (!data) {
+                            console.log("Erro ao puxar dados do usuário")
+                            return
+                        }
+
+                        let user = data
+
+                        let progress = {
+                            userLevel: user._level,
+                            totalExp: user.total_exp + points,
+                            userId: user.id_user
+                        }
+
+
+                        if (progress.totalExp >= 10) {
+                            while (progress.totalExp >= 10) {
+                                progress.totalExp -= 10
+                                progress.userLevel += 1
+                            }
+                        }
+
+                        user._level = progress.userLevel
+                        user.total_exp = progress.totalExp
+
+                        levelUpdate(progress)
+                            .then((result) => {
+                                if (result === false) {
+                                    console.log("Erro ao atualizar info do usuário.")
+                                    return
+                                }
+                                atualization()
+
+                                storeUserData({ user: user })
+                                    .then((res) => {
+                                        if (!res) {
+                                            console.log("Erro ao armazenar os dados do usuário")
+                                            return
+                                        }
+                                        console.log("Dado atualizados com sucesso.")
+                                    })
+                            })
+
+                    })
+                return
+            }
+
+            if (registration._points >= 0 && first === false && actual === true) {
+                const progress = {
+                    points: points,
+                    registrationId: registration.id_registration
+                }
+
+
+                pointsUpdate(progress)
+                    .then((data) => {
+                        if (!data) {
+                            console.log("Erro ao atualizar os dados")
+                            return
+                        }
+
+                        atualization()
+                        setRegistration(data[0])
+                    })
+
+            }
+        } catch { [] }
+    }, [points])
 
     //FUNÇÃO P/TEORIAS POR ESTAGIO
     const getTeoryData = (stageId) => {
@@ -205,7 +243,6 @@ export function Action({ route }) {
         setStage({})
         setPhase(0)
         setPoints(0)
-        // setChanged(false)
     }
 
     //FUNÇÃO P/TASKS POR ESTAGIO
@@ -223,7 +260,6 @@ export function Action({ route }) {
                 }
 
                 setStageContent(stageC)
-                // console.log({ stc: stageC })
             })
     }
 
@@ -231,8 +267,8 @@ export function Action({ route }) {
         shield === true ? setType("shield") : []
 
         if (state === 1) {
-            setPoints(points + 1)
             setPhase(phase + 1)
+            lifes > 0 && actual === true ? setPoints(points + 1) : []
             setTransition(true)
         } else if (state === 3) {
             setLost(true)
@@ -300,7 +336,7 @@ export function Action({ route }) {
         <View style={styles.container}>
             <View style={styles.content}>
                 {listContent.length > 0 && transition === false && phase < stageContent.length ?
-                    <Animatable.View animation="fadeIn" duration={1000} delay={500}>
+                    <Animatable.View style={{ width: '100%', flex: 1 }} animation="fadeIn" duration={1000} delay={500}>
                         {listContent[phase]}
                     </Animatable.View>
                     : <></>}
@@ -325,7 +361,7 @@ export function Action({ route }) {
                                 size={160}
                                 color='#06c244'
                             />
-                            <Text style={styles.txt}> {actual === true && lifes > 0 ? "-1" : "No Lifes"}</Text>
+                            <Text style={actual === true && lifes > 0 ? styles.txt_points : styles.txt_noP}> {actual === true && lifes > 0 ? "-1" : "No Lifes"}</Text>
                         </> : <>
                             <Feather
                                 name="shield-off"
@@ -344,7 +380,7 @@ export function Action({ route }) {
                             size={160}
                             color="#06c244"
                         />
-                        <Text style={styles.txt}> {actual === true && lifes > 0 ? "+1" : "No Points"} </Text>
+                        <Text style={actual === true && lifes > 0 ? styles.txt_points : styles.txt_noP}> {actual === true && lifes > 0 ? "+1" : "No Points"} </Text>
                     </Animatable.View>
                 )}
             </View>
