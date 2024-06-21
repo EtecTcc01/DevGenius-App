@@ -12,7 +12,7 @@ import axios from 'axios';
 // VERIFIQUE O IP QUE ESTÁ NO METRO DO EXPO (SEM UTILIZAR NPX EXPO START --TUNNEL)
 
 const api = axios.create({
-  baseURL: 'http://172.16.1.109:3000/devgenius'
+  baseURL: 'http://192.168.10.111:3000/devgenius'
 });
 
 //Utilizando o codigo abaixo, há como usar o app com o banco e back-end na nuvem

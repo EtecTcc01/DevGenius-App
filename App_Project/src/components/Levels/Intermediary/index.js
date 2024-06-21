@@ -10,7 +10,7 @@ import { getAnswerByTask } from "../../../functions/task.services";
 import { ListAlts } from "../../Lists/ListAlts";
 import { TopBarUtils } from "../TopBarUtils";
 
-export function IntermediaryAct({ task, press, _lifes }) {
+export function IntermediaryAct({ task, press, _lifes, _points }) {
 
     const [expanded, setExpanded] = React.useState(false) //STATE P/GERENCIAR EXPANSÃO DA VIEW
 
@@ -225,7 +225,7 @@ export function IntermediaryAct({ task, press, _lifes }) {
                     <View style={styles.task_content}>
 
                         <View style={styles.content_utils}>
-                            <TopBarUtils onlyLifes={false} idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={false} lifes={_lifes} />
+                            <TopBarUtils points={_points} onlyLifes={false} idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={false} lifes={_lifes} />
                         </View>
 
                         <ScrollView horizontal={true} style={styles.contentHScroll} contentContainerStyle={styles.content_text}>

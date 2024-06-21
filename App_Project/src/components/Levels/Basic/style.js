@@ -10,20 +10,26 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 3,
         backgroundColor: 'black',
-        // backgroundColor: '#203E2E', // Verde escuro
         paddingHorizontal: 20
     },
     alt_content: {
-        flex: 1,
+        flex: 0.9,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+        borderWidth: 0.5,
+        borderColor: '#06c244',
+        borderRadius: 10
     },
     text_content: {
-        flex: 0.5,
+        flex: 0.4,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+        borderWidth: 0.5,
+        borderColor: '#06c244',
+        borderRadius: 10,
+        padding: 5
     },
     content_utils: {
         flex: 0.1,
@@ -38,9 +44,7 @@ export const styles = StyleSheet.create({
         borderColor: '#06c244',
         borderWidth: 1,
         borderRadius: 18,
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
+        flexDirection: 'row',
         backgroundColor: '#fff', // Cor de fundo dos botões
     },
     title: {
@@ -49,4 +53,8 @@ export const styles = StyleSheet.create({
         color: '#06c244',
         textAlign: 'center',
     },
+    space: {
+        width: '100%',
+        flex: 0.3
+    }
 });

@@ -8,7 +8,7 @@ import { getAnswerByTask } from "../../../functions/task.services";
 import { ListAlts } from "../../Lists/ListAlts";
 import { TopBarUtils } from "../TopBarUtils";
 
-export function AdvancedAct({ task, press, _lifes }) {
+export function AdvancedAct({ task, press, _lifes, _points }) {
 
     const [expanded, setExpanded] = React.useState(false)
 
@@ -315,7 +315,7 @@ export function AdvancedAct({ task, press, _lifes }) {
                         <View style={styles.task_content}>
 
                             <View style={styles.content_utils}>
-                                <TopBarUtils onlyLifes={false} idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={first} lifes={_lifes} />
+                                <TopBarUtils points={_points} onlyLifes={false} idTip={idTip} pressTip={nRandom} pressReload={reloadT} first={first} lifes={_lifes} />
                             </View>
 
                             <ScrollView horizontal={true} style={styles.contentHScroll} contentContainerStyle={styles.content_text}>

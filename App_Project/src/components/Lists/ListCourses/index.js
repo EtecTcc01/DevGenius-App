@@ -13,31 +13,25 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
   const [phase, setPhase] = React.useState([])
 
   React.useEffect(() => {
-    let reg = []; let subcount = 0;
-    let data = []; let ccount = 0
-    let _phases = []; let cc = [];
+    let data = []; let _phases = [];
 
-    try {
-      courses.forEach(e => {
-        cc.push(e.id_course)
-      })
+    courses.forEach((element) => {
+      let validation = false
 
-      registrations.forEach(e => {
-        reg.push(e.id_course)
-      })
-
-      while (ccount < cc.length) {
-        if (reg[subcount] === cc[ccount]) {
-          data.push(registrations[subcount].level_stage)
-          _phases.push(registrations[subcount]._phase)
-          ccount++; subcount++
-        } else {
-          data.push(0)
-          _phases.push(0)
-          ccount++;
+      for (let i = 0; i < registrations.length; i++) {
+        if (element.id_course === registrations[i].id_course) {
+          validation = true
+          data.push(registrations[i].level_stage)
+          _phases.push(registrations[i]._phase) 
+          break
         }
       }
-    } catch { [] }
+
+      if (validation === false) {
+        data.push(0)
+        _phases.push(0)
+      }
+    });
 
     setPhase(_phases)
     setLevels(data)

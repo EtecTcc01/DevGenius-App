@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 
 export const styles = StyleSheet.create({
     container: {
@@ -17,13 +18,15 @@ export const styles = StyleSheet.create({
     },
     space: {
         width: "30%",
-        height: "auto"
+        height: "auto",
+        justifyContent: 'center',
     },
     contentImg: {
-        width: '50%',
+        flex: 1,
         height: 'auto',
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center',
     },
     btn: {
         margin: 3,
@@ -32,5 +35,13 @@ export const styles = StyleSheet.create({
         width: 24,
         height: 24,
         margin: 3
+    },
+    txt: {
+        color: "#06c244",
+        textAlign: 'center',
+        alignSelf: 'center',
+        fontFamily: "sans-serif-condensed",
+        fontSize: RFValue(16),
+        fontWeight: 'bold'
     }
 });

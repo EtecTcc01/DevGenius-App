@@ -6,10 +6,14 @@ import { random } from '../randomizer'; //IMPORT DA FUNÇÃO QUE IRÁ RANDOMIZAR
 import { getAnswerByTask } from '../../../functions/task.services'; //IMPORT DA FUNÇÃO P/BUSCAR AS ALTERNATIVAS
 import { TopBarUtils } from '../TopBarUtils';
 
-export function BasicAct({ task, press, _lifes }) {
+import { Ionicons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕES
+
+export function BasicAct({ task, press, _lifes, _points }) {
 
     const [answer, setAnswer] = React.useState({}) //STATE P/ARMAZENAR DADOS DA RESPOSTA
     const [alt, setAlt] = React.useState([]) //STATE P/ARMAZENAR ALTERNATIVAS
+    const [altRemoved, setAltRemoved] = React.useState("") //STATE P/ARMAZENAR ALTERNATIVAS
 
     //FUNÇÃO USADA PARA BUSCAR PELAS RESPOSTAS
     React.useEffect(() => {
@@ -63,11 +67,34 @@ export function BasicAct({ task, press, _lifes }) {
         }
     }
 
+    function remove(index) {
+        if (!altRemoved.includes(index)) {
+            let temp = `${altRemoved}${index}`
+            setAltRemoved(temp)
+        } else {
+            let temp = altRemoved.replaceAll(`${index}`, "")
+            setAltRemoved(temp)
+        }
+    }
+
     //FUNÇÃO P/CRIAR MULTIPLOS ELEMENTOS PARA EXIBIÇÃO DAS ALTERNATIVAS
     const listAlts = alt.length > 0 ? alt.map((e, index) => (
-        <TouchableOpacity key={index} style={styles.button} onPress={() => { altCompare(e) }}>
-            <Text style={styles.title}>{e}</Text>
-        </TouchableOpacity>
+        <Animatable.View animation="bounceInUp" duration={750 * index + 1} key={index} style={altRemoved.includes(`${index}`) ? [styles.button, { backgroundColor: 'gray', borderColor: 'gray' }] : styles.button}>
+            <TouchableOpacity style={{ width: '90%' }} onPress={() => { altCompare(e) }} disabled={altRemoved.includes(`${index}`) ? true : false}>
+                <Text style={styles.title}>{e}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ width: 24 }} onPress={() => remove(index)}>
+                {altRemoved.includes(`${index}`) ? <Ionicons
+                    name="eye"
+                    size={24}
+                    color="black"
+                /> : <Ionicons
+                    name="eye-off"
+                    size={24}
+                    color="gray"
+                />}
+            </TouchableOpacity>
+        </Animatable.View>
     )) : []
 
     return (
@@ -75,12 +102,14 @@ export function BasicAct({ task, press, _lifes }) {
             {listAlts.length > 0 && task && (
                 <View style={styles.container}>
                     <View style={styles.content_utils}>
-                        <TopBarUtils idTip="none" onlyLifes={true} pressTip="none" pressReload="none" first={false} lifes={_lifes} />
+                        <TopBarUtils points={_points} idTip="none" onlyLifes={true} pressTip="none" pressReload="none" first={false} lifes={_lifes} />
                     </View>
 
                     <View style={styles.text_content}>
                         <Text style={styles.title}>{task._text}</Text>
                     </View>
+
+                    <View style={styles.space} />
 
                     <View style={styles.alt_content}>
                         {listAlts}

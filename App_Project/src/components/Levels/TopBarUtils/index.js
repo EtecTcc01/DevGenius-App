@@ -1,11 +1,11 @@
 import * as React from "react";
 import { styles } from "./style";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import * as Animatable from 'react-native-animatable'
 
 import { Ionicons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons'; //IMPORT DE ICONS DO EXPO
 
-export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLifes, type }) {
+export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLifes, points }) {
 
     const [lifePoints, setLifePoints] = React.useState([])
 
@@ -27,7 +27,7 @@ export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLi
 
     return (
         <View style={styles.container}>
-            <View style={onlyLifes === false ? styles.contentImg : [styles.contentImg, { flex: 1, width: "100%", justifyContent: "center" }]}>
+            <View style={styles.contentImg}>
                 {lifePoints.length > 0 ? lifePoints.map((e) => {
                     return (
                         <Animatable.View key={e} animation={first === true ? "" : "pulse"} duration={800} iterationCount="infinite">
@@ -43,10 +43,23 @@ export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLi
                 }) : <></>}
             </View>
 
+            {onlyLifes === true && (
+                <View style={lifes >= 0 ? [styles.space, { justifyContent: 'center', alignItems: 'flex-end' }] : { position: "absolute" }}>
+                    <Animatable.View animation="fadeIn" delay={500} style={{ flexDirection: 'row' }}>
+                        <Text style={styles.txt}>+{points || 0}</Text>
+                        <MaterialCommunityIcons name="cards-diamond" size={24} color="#06c244" />
+                    </Animatable.View>
+                </View>
+            )}
 
             {onlyLifes === false && (
                 <>
-                    <View style={styles.space} />
+                    <View style={lifes >= 0 ? [styles.space, { justifyContent: 'center', alignItems: 'flex-start' }] : { position: 'absolute' }}>
+                        <Animatable.View animation="fadeIn" delay={500} style={{ flexDirection: 'row' }}>
+                            <Text style={styles.txt}>+{points || 0}</Text>
+                            <MaterialCommunityIcons name="cards-diamond" size={24} color="#06c244" />
+                        </Animatable.View>
+                    </View>
                     <View style={styles.contentBtn}>
                         {idTip !== "none" ? <TouchableOpacity style={styles.btn}
                             disabled={idTip.length > 0 ? true : false}

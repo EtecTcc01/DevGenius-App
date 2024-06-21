@@ -10,9 +10,9 @@ export function ListAlts({ alt, selects, tips, remaining, pressing, expanded, ex
             <Animatable.View animation="bounceIn" key={index} delay={100} duration={200 * index}>
                 <TouchableOpacity
                     disabled={selects.includes(index) || tips.includes(index) || remaining.includes(index) ? true : false}
-                    style={selects.includes(index) || tips.includes(index) || remaining.includes(index) ? [styles.button, { borderColor: "#aaaaaa" }] : styles.button}
+                    style={selects.includes(index) || tips.includes(index) || remaining.includes(index) ? [styles.button, { backgroundColor: "#aaaaaa", borderColor: "#aaaaaa" }] : styles.button}
                     onPress={() => pressing(e, index)}>
-                    <Text style={styles.title}>{e}</Text>
+                    <Text style={selects.includes(index) || tips.includes(index) || remaining.includes(index) ? [styles.title, {color: 'black'}]: styles.title}>{e}</Text>
                 </TouchableOpacity>
             </Animatable.View>
         );

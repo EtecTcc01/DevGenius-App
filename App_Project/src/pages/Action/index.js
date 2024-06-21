@@ -9,7 +9,7 @@ import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate, pointsUpda
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
+import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕES
 
 // IMPORT DOS COMPONENTE USADOS
 import { BasicAct } from '../../components/Levels/Basic';
@@ -32,6 +32,7 @@ export function Action({ route }) {
 
     const [transition, setTransition] = React.useState(false)
     const [lost, setLost] = React.useState(false)
+    const [finish, setFinish] = React.useState(false)
     const [type, setType] = React.useState("heart")
 
     const [lifes, setLifes] = React.useState(0)
@@ -60,6 +61,8 @@ export function Action({ route }) {
                 setActual(false)
             } else {
                 setPhase(data.registration[0]._phase)
+                setLifes(data.registration[0]._lifes)
+                setPoints(data.registration[0]._points)
             }
 
         } else {
@@ -104,9 +107,9 @@ export function Action({ route }) {
     React.useEffect(() => {
         try {
             if (phase >= stageContent.length && stageContent.length > 0 && actual === true) {
-                const lvl = registration.level_stage + 1
+
                 const progress = {
-                    stageLvl: lvl,
+                    stageLvl: registration.level_stage + 1,
                     registrationId: registration.id_registration
                 }
 
@@ -118,6 +121,7 @@ export function Action({ route }) {
                         }
                         atualization()
                         setRegistration(data[0])
+                        setFinish(true)
                     })
 
                 return
@@ -192,6 +196,7 @@ export function Action({ route }) {
                             })
 
                     })
+
                 return
             }
 
@@ -215,7 +220,7 @@ export function Action({ route }) {
 
             }
         } catch { [] }
-    }, [points])
+    }, [points, finish])
 
     //FUNÇÃO P/TEORIAS POR ESTAGIO
     const getTeoryData = (stageId) => {
@@ -299,15 +304,15 @@ export function Action({ route }) {
         switch (e.id_operation) {
             case 1:
                 return (
-                    <BasicAct _lifes={actual === true ? lifes : -1} task={e} press={(e) => onPressing(e, false)} />
+                    <BasicAct _points={points} _lifes={actual === true ? lifes : -1} task={e} press={(e) => onPressing(e, false)} />
                 )
             case 2:
                 return (
-                    <IntermediaryAct _lifes={actual === true ? lifes : -1} task={e} press={(e) => onPressing(e, false)} />
+                    <IntermediaryAct _points={points} _lifes={actual === true ? lifes : -1} task={e} press={(e) => onPressing(e, false)} />
                 )
             case 3:
                 return (
-                    <AdvancedAct _lifes={actual === true ? lifes : -1} task={e} press={(e, shield) => onPressing(e, shield)} />
+                    <AdvancedAct _points={points} _lifes={actual === true ? lifes : -1} task={e} press={(e, shield) => onPressing(e, shield)} />
                 )
         }
         if (!e.id_operation) {
@@ -368,7 +373,7 @@ export function Action({ route }) {
                                 size={160}
                                 color='#06c244'
                             />
-                            <Text style={styles.txt}> {actual === true && lifes > 0 ? "Shield Break" : "No Shield"}</Text>
+                            <Text style={styles.txt_noP}> {actual === true && lifes > 0 ? "Shield Break" : "No Shield"}</Text>
                         </>}
                     </Animatable.View>
                 )}

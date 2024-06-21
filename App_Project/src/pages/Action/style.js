@@ -57,14 +57,14 @@ export const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     txt_noP: {
-        fontSize: RFValue(28),
+        fontSize: RFValue(24),
         color: '#06c244', // verde "médio"
         fontFamily: "sans-serif-condensed",
         margin: 10,
         fontWeight: 'bold'
     },
     txt_points: {
-        fontSize: RFValue(44),
+        fontSize: RFValue(48),
         color: '#06c244', // verde "médio"
         fontFamily: "sans-serif",
         margin: 10,
