@@ -81,7 +81,7 @@ export function BasicAct({ task, press, _lifes, _points }) {
     const listAlts = alt.length > 0 ? alt.map((e, index) => (
         <Animatable.View animation="bounceInUp" duration={750 * index + 1} key={index} style={altRemoved.includes(`${index}`) ? [styles.button, { backgroundColor: 'gray', borderColor: 'gray' }] : styles.button}>
             <TouchableOpacity style={{ width: '90%' }} onPress={() => { altCompare(e) }} disabled={altRemoved.includes(`${index}`) ? true : false}>
-                <Text style={styles.title}>{e}</Text>
+                <Text style={altRemoved.includes(`${index}`) ? [styles.title, {color: 'black'}] : styles.title}>{e}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ width: 24 }} onPress={() => remove(index)}>
                 {altRemoved.includes(`${index}`) ? <Ionicons

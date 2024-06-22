@@ -54,7 +54,7 @@ export function TopBarUtils({ idTip, pressTip, pressReload, first, lifes, onlyLi
 
             {onlyLifes === false && (
                 <>
-                    <View style={lifes >= 0 ? [styles.space, { justifyContent: 'center', alignItems: 'flex-start' }] : { position: 'absolute' }}>
+                    <View style={lifes > 0 ? [styles.space, { justifyContent: 'center', alignItems: 'flex-start' }] : { position: 'absolute' }}>
                         <Animatable.View animation="fadeIn" delay={500} style={{ flexDirection: 'row' }}>
                             <Text style={styles.txt}>+{points || 0}</Text>
                             <MaterialCommunityIcons name="cards-diamond" size={24} color="#06c244" />

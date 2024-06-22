@@ -90,7 +90,6 @@ const getStagesByCourse = async (courseId) => {
     await api.get(`stage/by/course/${courseId}`)
         .then((res) => {
             stages = res.data.stage
-            console.log(res.data.stage)
             validation = true
         }).catch((error) => {
             console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
@@ -264,6 +263,65 @@ const getAllUserRanks = async () => {
     }
 }
 
+const getAllUserAchievements = async (userId) => {
+    let validation = 0
+    let achievement = []
+
+    try {
+        let test = await api.get(`/achievement/by/user/${userId}`)
+        console.log({test: test.data})
+
+        if (test.data.achievement) {
+            achievement = test.data.achievement
+            validation = 1
+        } else {
+            validation = 2
+        }
+    } catch (error) {
+        console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+        return
+    }
+
+    // api.get(`/achievement/by/user/${userId}`)
+    //     .then((res) => {
+    //         if (res.data.achievement) {
+    //             achievement = res.data.achievement
+    //             validation = 1
+    //         } else {
+    //             validation = 2
+    //         }
+    //     }).catch((error) => {
+    //         console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+    //         return
+    //     })
+
+    if (validation === 1) {
+        return { achievement, validation }
+    }
+
+    return { validation, achievement }
+}
+
+const userAchievementRegister = async (userId, achievementId) => {
+    let validation = false
+
+    let reward = {
+        userId: userId,
+        achievementId: achievementId
+    }
+
+    await api.post("/achievement/user/register", reward)
+        .then((res) => {
+            console.log(res.data.message)
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    return validation
+}
+
 export {
     getCourseByGroup,
     getAllTeoryByGroupOrdened,
@@ -278,5 +336,7 @@ export {
     phaseUpdate,
     pointsUpdate,
     getAllUserRanks,
-    levelUpdate
+    levelUpdate,
+    getAllUserAchievements,
+    userAchievementRegister
 }

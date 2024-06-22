@@ -40,7 +40,7 @@ export function Logon({ handlerOnPress }) {
                             console.log("Erro ao registrar informações do usuário.")
                             return
                         }
-                        
+
                         await handlerOnPress("success", "Usuário Logado.")
                         setTimeout(() => {
                             navigation.navigate('Tabs') //USANDO DA TRANSFERENCIA DE TELA E NAVEGANDO P/A FUNÇÃO DE ROTA TabsRoutes
@@ -62,72 +62,72 @@ export function Logon({ handlerOnPress }) {
         if (user[name]) {
             return !user[name].includes('@');
         }
-        
+
         return operation === "verify" ? true : false
     };
 
     return (
-        <>
-        <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
-            <Text style={styles.title} variant="titleLarge">Login</Text>
-            <TextInput
-                style={styles.input}
-                label="E-mail:"
-                id='userEmail'
-                key='userEmail'
-                placeholderTextColor="white"
-                textColor='white'
-                value={user.userEmail}
-                onChangeText={event => handlerOnChangeUser({ _name: "userEmail", _value: event })}
-            />
+        <View style={{ width: '100%', height: 500 }}>
+            <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
+                <Text style={styles.title} variant="titleLarge">Login</Text>
+                <TextInput
+                    style={styles.input}
+                    label="E-mail:"
+                    id='userEmail'
+                    key='userEmail'
+                    placeholderTextColor="white"
+                    textColor='white'
+                    value={user.userEmail}
+                    onChangeText={event => handlerOnChangeUser({ _name: "userEmail", _value: event })}
+                />
 
-            <HelperText type="error" visible={hasErrors("userEmail", "view")}>
-                <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Email inválido!</Text>
-            </HelperText>
+                <HelperText type="error" visible={hasErrors("userEmail", "view")}>
+                    <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Email inválido!</Text>
+                </HelperText>
 
-            <TextInput
-                style={styles.input}
-                label="Senha:"
-                id='userPassword'
-                key='userPassword'
-                placeholderTextColor="white"
-                textColor='white'
-                value={user.userPassword}
-                onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
-                secureTextEntry={vSecurity}
-                right={<TextInput.Icon onPress={() => setVSecurity(!vSecurity)} icon="eye" />}
-            />
+                <TextInput
+                    style={styles.input}
+                    label="Senha:"
+                    id='userPassword'
+                    key='userPassword'
+                    placeholderTextColor="white"
+                    textColor='white'
+                    value={user.userPassword}
+                    onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
+                    secureTextEntry={vSecurity}
+                    right={<TextInput.Icon onPress={() => setVSecurity(!vSecurity)} icon="eye" />}
+                />
 
-            <Button
-                style={[styles.button, { backgroundColor: 'transparent', marginTop: 0 }]}
-                mode="text"
-                key="forgotPass"
-                labelStyle={[styles.label, { color: 'white', fontWeight: 'light' }]}
-                onPress={() => handleForgotPass()}
-            >
-                Esqueceu a senha?
-            </Button>
+                <Button
+                    style={[styles.button, { backgroundColor: 'transparent', marginTop: 0 }]}
+                    mode="text"
+                    key="forgotPass"
+                    labelStyle={[styles.label, { color: 'white', fontWeight: 'light' }]}
+                    onPress={() => handleForgotPass()}
+                >
+                    Esqueceu a senha?
+                </Button>
 
-            <Button
-                style={styles.button}
-                mode="contained"
-                labelStyle={styles.label}
-                key="handlerLogin"
-                onPress={() => handlerLogin()}
-            >
-                Entrar
-            </Button>
+                <Button
+                    style={styles.button}
+                    mode="contained"
+                    labelStyle={styles.label}
+                    key="handlerLogin"
+                    onPress={() => handlerLogin()}
+                >
+                    Entrar
+                </Button>
 
-            <Button
-                style={[styles.button, { marginTop: 60 }]}
-                mode="contained"
-                key="handlerSignIn"
-                labelStyle={styles.label}
-                onPress={() => navigation.navigate("Begin", { operation: "Register" })}
-            >
-                Cadastre-se
-            </Button>
-        </ScrollView>
-        </>
+                <Button
+                    style={[styles.button, { marginTop: 60 }]}
+                    mode="contained"
+                    key="handlerSignIn"
+                    labelStyle={styles.label}
+                    onPress={() => navigation.navigate("Begin", { operation: "Register" })}
+                >
+                    Cadastre-se
+                </Button>
+            </ScrollView>
+        </View>
     );
 }

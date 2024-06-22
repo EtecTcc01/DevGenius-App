@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
         paddingTop: 40,
         paddingHorizontal: 5,
         justifyContent: 'center',
-        // alignItems: "center"
     },
     title: {
         fontSize: RFValue(20),
@@ -20,8 +19,7 @@ export const styles = StyleSheet.create({
         alignSelf: "center",
         width: "100%",
         flexDirection: 'row',
-        justifyContent: "center"
-
+        justifyContent: "center",
     },
     broken: {
         position: 'absolute',

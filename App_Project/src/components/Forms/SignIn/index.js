@@ -103,7 +103,7 @@ export function SignIn({ handlerOnPress }) {
     };
 
     return (
-        <>
+        <View style={{ width: '100%', height: 600, paddingVertical: 20 }}>
             {/* <View style={styles.img_demo}>
                 <Image style={styles.img} source={require("../../../../assets/img/logo.png")} />
             </View> */}
@@ -178,6 +178,6 @@ export function SignIn({ handlerOnPress }) {
                     Cadastre-se
                 </Button>
             </ScrollView>
-        </>
+        </View>
     );
 }

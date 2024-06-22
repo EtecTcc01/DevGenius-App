@@ -25,12 +25,16 @@ export const styles = StyleSheet.create({
     button: {
         marginTop: 20,
         width: '80%',
+        height: 50,
+        borderRadius: 20,
         color: 'white',
         backgroundColor: '#000',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     label: { 
         color: '#06c244', 
         fontWeight: 'bold', 
-        fontSize: RFValue(11)
+        fontSize: RFValue(13)
     },
 });

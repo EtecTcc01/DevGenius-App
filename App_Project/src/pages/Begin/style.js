@@ -10,10 +10,10 @@ export const styles = StyleSheet.create({
         paddingVertical: 5
     },
     content: {
-        flex: 1,
+        // flex: 1,
+        height: 'auto',
         backgroundColor: '#299E39',
         width: "100%",
-        height: "100%",
         alignItems: 'center',
         justifyContent: 'center',
         padding: 30,

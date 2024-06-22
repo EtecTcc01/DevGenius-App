@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styles } from './style';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 
 import { Button, HelperText, Text, TextInput } from 'react-native-paper'; //IMPORT DO PAPER
 import MaskInput, { Masks } from 'react-native-mask-input';
@@ -92,7 +92,7 @@ export function Info({ data, handlerOnPress }) {
     };
 
     return (
-        <>
+        <View style={{ width: '100%', height: 370 }}>
             <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container}>
                 <Text style={styles.title} variant="titleLarge">Informações</Text>
 
@@ -120,15 +120,13 @@ export function Info({ data, handlerOnPress }) {
                     <Text style={[styles.label, { color: 'red', fontWeight: 'normal', alignSelf: "flex-start" }]}>Por favor, defina uma data exata!</Text>
                 </HelperText>
 
-                <Button
+                <TouchableOpacity
                     style={styles.button}
-                    mode="contained"
                     onPress={() => handlerRegisterInfo()}
-                    labelStyle={styles.label}
                 >
-                    Adicione
-                </Button>
+                    <Text style={styles.label}>Adicionar</Text>
+                </TouchableOpacity>
             </ScrollView>
-        </>
+        </View>
     );
 }

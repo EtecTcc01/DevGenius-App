@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 import { Button } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
 
 //IMPORT DAS FUNCTIONS USADAS PARA REQUISIÇÃO DE DADOS
-import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate, pointsUpdate, levelUpdate } from '../../functions/helper.services';
+import { getStagesByCourse, progressUpdate, lifesUpdate, phaseUpdate, pointsUpdate, levelUpdate, getAllUserAchievements } from '../../functions/helper.services';
 import { getTaskByStage, getTeoryByStage } from '../../functions/task.services';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -18,6 +18,8 @@ import { AdvancedAct } from '../../components/Levels/Advanced';
 import { Details } from '../Details';
 import { FinalStatistics } from '../../components/FinalStatistics';
 import { getChangedState, getDataUser, storeChangedState, storeUserData } from '../../functions/async.services';
+import { Achievement } from '../../components/Achievement';
+import { achievementValidation } from '../../components/Achievement/validation';
 
 export function Action({ route }) {
     const navigation = useNavigation()
@@ -29,10 +31,12 @@ export function Action({ route }) {
 
     const [first, setFirst] = React.useState(true)
     const [actual, setActual] = React.useState(true)
+    const [timer, setTimer] = React.useState(0)
 
     const [transition, setTransition] = React.useState(false)
     const [lost, setLost] = React.useState(false)
     const [finish, setFinish] = React.useState(false)
+    const [achivementV, setAchivementV] = React.useState(false)
     const [type, setType] = React.useState("heart")
 
     const [lifes, setLifes] = React.useState(0)
@@ -47,9 +51,49 @@ export function Action({ route }) {
     }
 
     React.useEffect(() => {
+        let user = registration.id_user
+        let validation = false
+        console.log(lifes)
+
+        if (user !== undefined && user > 0 && lifes === 0) {
+            getAllUserAchievements(registration.id_user)
+                .then(async (data) => {
+                    if (data.validation === 0) {
+                        console.log("Erro ao recolher dados das conquistas do usuário.")
+                        return
+                    } else if (data.validation === 2) {
+                        console.log("Usuário sem conquistas, no momento.")
+                        validation = true
+                    } else {
+                        validation = true
+                    }
+
+                    if (validation === true) {
+                        let test = {
+                            key: "game_over",
+                            item: lifes
+                        }
+
+                        try {
+                            let res = await achievementValidation(test, data.achievement, user)
+                            if (res === true) {
+                                setAchivementV(true)
+
+                                setTimeout(() => {
+                                    setAchivementV(false)
+                                }, 5000);
+                            }
+                        } catch { [] }
+                    }
+
+                })
+        }
+
+    }, [lifes])
+
+    React.useEffect(() => {
         const data = route.params
         setRegistration(data.registration[0])
-        console.log({ reg: data.registration[0] })
         setCourse(data.course)
 
         if (data.stage) {
@@ -281,7 +325,7 @@ export function Action({ route }) {
                 setLost(false)
                 if (actual === true) {
                     setType("heart")
-                    shield === true ? [] : setLifes(lifes - 1)
+                    shield === true || lifes <= 0 ? [] : setLifes(lifes - 1)
                 }
             }, 2000);
         } else if (state === 4) {
@@ -341,9 +385,14 @@ export function Action({ route }) {
         <View style={styles.container}>
             <View style={styles.content}>
                 {listContent.length > 0 && transition === false && phase < stageContent.length ?
-                    <Animatable.View style={{ width: '100%', flex: 1 }} animation="fadeIn" duration={1000} delay={500}>
-                        {listContent[phase]}
-                    </Animatable.View>
+                    <>
+                        <Animatable.View style={{ width: '100%', flex: 1 }} animation="fadeIn" duration={1000} delay={500}>
+                            {listContent[phase]}
+                        </Animatable.View>
+                        <View style={{ position: 'absolute', width: '100%', height: '100%', top: '35%' }}>
+                            <Achievement visible={achivementV} />
+                        </View>
+                    </>
                     : <></>}
 
                 {phase >= stageContent.length && stageContent.length > 0 && transition === false && (
