@@ -10,9 +10,6 @@ const getAllUserGroups = async ({ userId }) => {
         .then((res) => {
             groups = res.data.group
             validation = true
-            // if (res.data.group !== undefined) {
-            //     setGroup(true)
-            // }
         }).catch((error) => {
             console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
             return
@@ -263,13 +260,32 @@ const getAllUserRanks = async () => {
     }
 }
 
-const getAllUserAchievements = async (userId) => {
+const getAchievement = async (achievementId) => {
+    let validation = false
+    let achievement = {}
+
+    try {
+        let test = await api.get(`/achievement/unique/${achievementId}`)
+        achievement = test.data.achievement[0]
+        validation = true
+    } catch (error) {
+        console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+        return
+    }
+
+    if (validation === true) {
+        return achievement
+    }
+}
+
+const getAllUserAchievements = async (userId, type) => {
     let validation = 0
     let achievement = []
 
     try {
-        let test = await api.get(`/achievement/by/user/${userId}`)
-        console.log({test: test.data})
+        let route = type === 'ordened' ? `/achievement/by/user/ordened/${userId}` : `/achievement/by/user/${userId}`
+        let test = await api.get(route)
+        console.log({ test: test.data })
 
         if (test.data.achievement) {
             achievement = test.data.achievement
@@ -281,19 +297,6 @@ const getAllUserAchievements = async (userId) => {
         console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
         return
     }
-
-    // api.get(`/achievement/by/user/${userId}`)
-    //     .then((res) => {
-    //         if (res.data.achievement) {
-    //             achievement = res.data.achievement
-    //             validation = 1
-    //         } else {
-    //             validation = 2
-    //         }
-    //     }).catch((error) => {
-    //         console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
-    //         return
-    //     })
 
     if (validation === 1) {
         return { achievement, validation }
@@ -338,5 +341,6 @@ export {
     getAllUserRanks,
     levelUpdate,
     getAllUserAchievements,
-    userAchievementRegister
+    userAchievementRegister,
+    getAchievement
 }

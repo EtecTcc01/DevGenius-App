@@ -53,7 +53,6 @@ export function Action({ route }) {
     React.useEffect(() => {
         let user = registration.id_user
         let validation = false
-        console.log(lifes)
 
         if (user !== undefined && user > 0 && lifes === 0) {
             getAllUserAchievements(registration.id_user)
@@ -82,6 +81,8 @@ export function Action({ route }) {
                                 setTimeout(() => {
                                     setAchivementV(false)
                                 }, 5000);
+                                
+                                atualization()
                             }
                         } catch { [] }
                     }

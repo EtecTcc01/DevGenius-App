@@ -13,7 +13,7 @@ export function Achievement({ visible }) {
     return (
         <>
             {visible === true && (
-                <Animatable.View animation="bounceInLeft" duration={2000} style={styles.container}>
+                <Animatable.View animation="bounceInLeft" duration={1000} style={styles.container}>
                     <FontAwesome5 style={{ marginRight: 10 }}
                         name="award"
                         size={48}
