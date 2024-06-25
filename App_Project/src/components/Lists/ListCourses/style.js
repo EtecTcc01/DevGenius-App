@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         height: 250,
         margin: 5,
         marginBottom: 20,
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         backgroundColor:'#88b257', //Verde claro,
         paddingHorizontal: 10,

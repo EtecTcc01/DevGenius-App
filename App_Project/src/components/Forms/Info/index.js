@@ -45,8 +45,6 @@ export function Info({ data, handlerOnPress }) {
             return
         }
 
-        console.log(data)
-
         //REGISTRANDO INFORMAÇÕES DE USUÁRIO
         userUpdateInfo({ info: info })
             .then(async (data) => {
@@ -72,7 +70,6 @@ export function Info({ data, handlerOnPress }) {
 
     function hasErrors(name, operation) {
         if (info[name]) {
-            console.log(info[name])
             if (name === "userSex") {
                 if (info[name] === "M" || info[name] === "F" || info[name] === "O") {
                     return false

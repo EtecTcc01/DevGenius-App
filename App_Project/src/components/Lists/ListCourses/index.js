@@ -22,7 +22,7 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
         if (element.id_course === registrations[i].id_course) {
           validation = true
           data.push(registrations[i].level_stage)
-          _phases.push(registrations[i]._phase) 
+          _phases.push(registrations[i]._phase)
           break
         }
       }
@@ -40,9 +40,11 @@ export function ListCourses({ courses, handlerOnPress, registrations }) {
   const listCourses = !courses ? [] : courses.map((element, index) => {
     return (
       <Animatable.View style={styles.card} key={index} delay={100} animation="zoomIn" duration={350}>
-        <Text style={styles.title}>{element._course}</Text>
-        <Text style={styles.subTitle}>{element.course_desc}</Text>
-        <Image style={styles.cover} source={{ uri: element.course_icon }} />
+        <View style={{width: "100%"}}>
+          <Text style={styles.title}>{element._course}</Text>
+          <Text style={styles.subTitle}>{element.course_desc}</Text>
+        </View>
+        <Image style={styles.cover} source={{ uri: element.course_icon !== "none" ? element.course_icon : "https://img.icons8.com/?size=100&id=fDPVp33kVIzE&format=png&color=000000" }} />
 
         <View style={styles.action}>
           <Button style={[styles.button, { borderWidth: 1, borderColor: "black" }]} labelStyle={styles.label} onPress={(() => {

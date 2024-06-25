@@ -95,7 +95,7 @@ export function Logon({ handlerOnPress }) {
                     value={user.userPassword}
                     onChangeText={event => handlerOnChangeUser({ _name: "userPassword", _value: event })}
                     secureTextEntry={vSecurity}
-                    right={<TextInput.Icon onPress={() => setVSecurity(!vSecurity)} icon="eye" />}
+                    // right={<TextInput.Icon onPress={() => setVSecurity(!vSecurity)} icon="eye" />}
                 />
 
                 <Button
