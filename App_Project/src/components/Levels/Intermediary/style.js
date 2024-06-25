@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     task_content: {
         flex: 1,
         borderColor: "#06c244",
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderRadius: 20,
         padding: 20,
         width: "100%",
@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         borderColor: "#06c244",
         borderRadius: 10,
-        borderWidth: 0.5,
+        borderWidth: 1,
         marginTop: 6,
         padding: 10
     },

@@ -15,9 +15,10 @@ import { Begin } from '../pages/Begin'
 import { Action } from '../pages/Action'
 import { Stages } from '../pages/Stages';
 import { Options } from '../pages/Options';
-import { GroupCourses } from '../pages/GroupCourses';
+import { GroupCourses } from '../pages/Groups/Courses';
 import { Details } from '../pages/Details';
 import { Ranking } from '../pages/Ranking';
+import { Achievements } from '../pages/Achievements';
 
 //TRANSFERENCIA DE FUNÇÕES P/CONSTANTE
 const Stack = createStackNavigator();
@@ -75,6 +76,22 @@ export function StackRoutes() {
             <Stack.Screen
                 name="GroupCourses"
                 component={GroupCourses}
+                options={{
+                    headerShown: true
+                }}
+            />
+
+            <Stack.Screen
+                name="GroupTeorys"
+                component={Notes}
+                options={{
+                    headerShown: true
+                }}
+            />
+
+            <Stack.Screen
+                name="Achievements"
+                component={Achievements}
                 options={{
                     headerShown: true
                 }}

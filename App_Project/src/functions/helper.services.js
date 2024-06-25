@@ -305,6 +305,25 @@ const getAllUserAchievements = async (userId, type) => {
     return { validation, achievement }
 }
 
+const getAllAchievementsByUser = async (userId) => {
+    let validation = 0
+    let achievement = []
+
+    try {
+        let test = await api.get(`/achievement/all/by/user/${userId}`)
+        if (test.data.message) {
+            validation = 1
+        } else {
+            achievement = test.data.achievement
+            validation = 2
+        }
+    } catch (error) {
+        console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`)
+    }
+
+    return { achievement, validation }
+}
+
 const userAchievementRegister = async (userId, achievementId) => {
     let validation = false
 
@@ -314,6 +333,26 @@ const userAchievementRegister = async (userId, achievementId) => {
     }
 
     await api.post("/achievement/user/register", reward)
+        .then((res) => {
+            console.log(res.data.message)
+            validation = true
+        }).catch((error) => {
+            console.log(`Erro ao estabelecer conexão com o banco de dados. ${error}`);
+            return
+        })
+
+    return validation
+}
+
+const userGroupSoftDel = async (groupId, userId) => {
+    let validation = false
+
+    let data = {
+        groupId: groupId,
+        userId: userId
+    }
+
+    await api.put("/group/userGroup/softDel", data)
         .then((res) => {
             console.log(res.data.message)
             validation = true
@@ -342,5 +381,7 @@ export {
     levelUpdate,
     getAllUserAchievements,
     userAchievementRegister,
-    getAchievement
+    getAchievement,
+    getAllAchievementsByUser,
+    userGroupSoftDel
 }

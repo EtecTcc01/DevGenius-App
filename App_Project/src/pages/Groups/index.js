@@ -4,9 +4,9 @@ import { ScrollView, Image, View, Text, Modal, TouchableOpacity } from 'react-na
 import api from '../../../api';
 
 import { ListGroups } from '../../components/Lists/ListGroups';
-
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { getChangedState, getDataUser } from '../../functions/async.services';
-import { getAllUserGroups } from '../../functions/helper.services';
+import { getAllUserGroups, userGroupSoftDel } from '../../functions/helper.services';
 
 import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 import { Button, IconButton, MD3Colors, TextInput } from 'react-native-paper';
@@ -18,10 +18,12 @@ export function Groups() {
 
     const [visible, setVisible] = React.useState(false)
     const [changed, setChanged] = React.useState(false)
+    const [operation, setOperation] = React.useState("add")
 
     const [user, setUser] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [selected, setSelected] = React.useState("");
+    const [choice, setChoice] = React.useState(0);
 
     const [changedT, setChangedT] = React.useState() //STATE P/ARMAZENAR STATE DE MUDANÇA
     const [timer, setTimer] = React.useState(0) //STATE P/ARMAZENAR N. DO TIMER
@@ -69,9 +71,10 @@ export function Groups() {
 
             showToasts("success", "Grupo adicionado.")
             setTimeout(() => {
-                visibleSwitch()
+                visibleSwitch("close")
                 setChanged(!changed)
-            }, 3200);
+                setSelected("")
+            }, 2000);
 
         } catch (error) {
             if (`${error}`.includes('401')) {
@@ -106,12 +109,42 @@ export function Groups() {
             })
     }, [changed, changedT])
 
-    function handlerTransfer(element) {
-        navigation.navigate("GroupCourses", { group: element })
+    function handlerTransfer(element, op) {
+        if (op !== "modal") {
+            navigation.navigate(op === "stages" ? "GroupCourses" : "GroupTeorys", { group: element })
+        } else {
+            setOperation("del")
+            setChoice(element.group_id)
+            setVisible(!visible)
+        }
     }
 
-    const visibleSwitch = () => {
-        setVisible(!visible)
+    const visibleSwitch = (op) => {
+        if (op === "add") {
+            setOperation("add")
+            setVisible(!visible)
+        } else if (op === "close") {
+            setVisible(!visible)
+        }
+    }
+
+    function handlerSoftDel() {
+        if (choice !== 0) {
+            userGroupSoftDel(choice, user.id_user)
+                .then((res) => {
+                    if (res === false) {
+                        console.log("Erro ao deletar o usuário do grupo.")
+                        return
+                    }
+
+                    showToasts("success", "Grupo Removido.")
+                    setTimeout(() => {
+                        visibleSwitch("close")
+                        setChanged(!changed)
+                    }, 2000);
+
+                })
+        }
     }
 
     return (
@@ -126,14 +159,14 @@ export function Groups() {
                 animationType="slide"
                 transparent={true}
                 visible={visible}
-                onRequestClose={() => visibleSwitch()}
+                onRequestClose={() => visibleSwitch("close")}
             >
                 <View style={styles.centeredView}>
-                    <View style={styles.modalContent}>
-                        <TouchableOpacity style={styles.closeBtn} onPress={() => visibleSwitch()}>
-                            <Text style={styles.title}>X</Text>
+                    {operation === 'add' ? <View style={styles.modalContent}>
+                        <TouchableOpacity style={styles.closeBtn} onPress={() => visibleSwitch("close")}>
+                            <SimpleLineIcons name="close" size={28} color='#06c244' />
                         </TouchableOpacity>
-                        <Text style={styles.title}>Adicionar Grupo</Text>
+                        <Text style={styles.title}>ADICIONAR GRUPO</Text>
                         <TextInput
                             style={styles.input}
                             label="Código do Grupo..."
@@ -145,10 +178,22 @@ export function Groups() {
                         />
 
                         <TouchableOpacity style={styles.button} onPress={() => handlerUserGroupRegister()}>
-                            <Text style={styles.subtitle}>Entrar</Text>
+                            <Text style={styles.subtitle}>ENTRAR</Text>
                         </TouchableOpacity>
 
-                    </View>
+                    </View> : <View style={styles.modalContent}>
+                        <TouchableOpacity style={styles.closeBtn} onPress={() => visibleSwitch("close")}>
+                            <SimpleLineIcons name="close" size={28} color='#06c244' />
+                        </TouchableOpacity>
+
+                        <Text style={[styles.title, { color: 'red' }]}>ALERTA!!</Text>
+
+                        <Text style={[styles.title, { textAlign: 'center' }]}>Você está prestes a sair do grupo... Tem certeza de sua escolha?</Text>
+
+                        <TouchableOpacity style={styles.button} onPress={() => handlerSoftDel()}>
+                            <Text style={styles.subtitle}>SAIR</Text>
+                        </TouchableOpacity>
+                    </View>}
                 </View>
             </Modal>
 
@@ -157,7 +202,7 @@ export function Groups() {
             </Animatable.View>
 
             <View style={styles.content}>
-                {groups ? <ListGroups groups={groups} handlerOnPress={(e) => handlerTransfer(e)} /> : <></>}
+                {groups ? <ListGroups groups={groups} handlerOnPress={(e, op) => handlerTransfer(e, op)} /> : <></>}
             </View>
 
             <View style={{ position: "absolute", alignSelf: "flex-end", height: '100%', justifyContent: "flex-end", padding: 15 }}>
@@ -167,7 +212,7 @@ export function Groups() {
                     iconColor={MD3Colors.primary20}
                     delayHoverOut={1000}
                     size={40}
-                    onPress={() => visibleSwitch()}
+                    onPress={() => visibleSwitch("add")}
                 />
                 {/* <Ionicons name="add-circle-outline" size={50} color="white" /> */}
             </View>

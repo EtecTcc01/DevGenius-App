@@ -122,13 +122,13 @@ export function Profile() {
                                     source="camera"
                                     color={'white'}
                                     border={'white'}
-                                    size={64}
+                                    size={48}
                                 />
                             </View>
                         )}
                     </View>
                 </TouchableOpacity>
-                <Text style={styles.title}>{storedData.user_name}</Text>
+                <Text style={styles.title}>{storedData.user_name} | lvl.{storedData._level}</Text>
             </View>
 
             <View style={{ flex: 0.1, minHeight: 30, width: '100%', justifyContent: 'center', marginBottom: 15 }}>
@@ -137,9 +137,9 @@ export function Profile() {
             </View>
 
             <View style={styles.info}>
-                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
                     <Text style={styles.infoTitle}>CONQUISTA RECENTE</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Achievements", { user: storedData.id_user })}>
                         <Text style={styles.infoSubTitle}>Ver todas</Text>
                     </TouchableOpacity>
                 </View>

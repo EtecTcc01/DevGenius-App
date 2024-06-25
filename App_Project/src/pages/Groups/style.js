@@ -7,12 +7,12 @@ export const styles = StyleSheet.create({
         backgroundColor: '#000',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         paddingVertical: 5
     },
     centeredView: {
         flex: 1,
-        padding: 20,
+        paddingHorizontal: 20,
         width: "100%",
         maxWidth: 600,
         backgroundColor: "transparent",
@@ -30,8 +30,8 @@ export const styles = StyleSheet.create({
     modalContent: {
         width: "100%",
         height: '30%',
-        minHeight: 270,
-        padding: 20,
+        minHeight: 200,
+        padding: 15,
         backgroundColor: "black",
         borderWidth: 2.5,
         borderRadius: 10,
@@ -73,6 +73,6 @@ export const styles = StyleSheet.create({
         maxWidth: 210,
     },
     closeBtn: {
-        alignSelf: "flex-end"
+        alignSelf: "flex-end",
     },
 });

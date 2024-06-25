@@ -59,8 +59,8 @@ export const styles = StyleSheet.create({
         borderRadius: 70,
     },
     placeholderImage: {
-        width: 120,
-        height: 120,
+        width: 110,
+        height: 110,
         borderRadius: 70,
         backgroundColor: '#ddd',
         justifyContent: 'center',

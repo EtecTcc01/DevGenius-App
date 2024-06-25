@@ -3,9 +3,9 @@ import { styles } from './style';
 import { ScrollView, Text, View } from 'react-native';
 
 // import { Modal, Portal, PaperProvider, Button, Card } from 'react-native-paper'; //IMPORT DE ELEMENTOS DO PAPER
-import { ListCourses } from '../../components/Lists/ListCourses';
-import { getCourseByGroup, getRegistrationByGroup, getRegistrationForStages } from '../../functions/helper.services';
-import { getChangedState, getDataUser } from '../../functions/async.services';
+import { ListCourses } from '../../../components/Lists/ListCourses';
+import { getCourseByGroup, getRegistrationByGroup, getRegistrationForStages } from '../../../functions/helper.services';
+import { getChangedState, getDataUser } from '../../../functions/async.services';
 import { useNavigation } from '@react-navigation/native';
 
 export function GroupCourses({ route }) {
@@ -98,7 +98,7 @@ export function GroupCourses({ route }) {
     return (
         <ScrollView style={{ flex: 1, width: "100%" }} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
             {
-                course.length > 0 && (
+                course && (
                     <>
                         <View style={styles.content}>
                             <ListCourses registrations={registration} courses={course} handlerOnPress={(e, op) => handlerTransfer(e, op)} />

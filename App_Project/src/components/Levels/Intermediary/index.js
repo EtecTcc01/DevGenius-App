@@ -211,9 +211,9 @@ export function IntermediaryAct({ task, press, _lifes, _points }) {
     const altRemoved = choice.length > 0 ? choice.map((e, index) => {
         try {
             return (
-                <TouchableOpacity style={styles.button} key={index} onPress={() => replaceTxt(e)}>
+                <View style={styles.button} key={index}>
                     <Text style={styles.title}>{e}</Text>
-                </TouchableOpacity>
+                </View>
             );
         } catch { [] }
     }) : []

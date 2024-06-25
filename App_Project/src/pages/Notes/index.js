@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable'; //IMPORT P/ANIMAÇÕESS
 import { getChangedState } from '../../functions/async.services';
 
-export function Notes() {
+export function Notes({ route }) {
     const navigation = useNavigation()
 
     const [courses, setCourses] = React.useState([]);
@@ -36,8 +36,12 @@ export function Notes() {
 
     //DISPARO DA FUNÇÃO DE FORMA AUTOMATICA E UNICA
     React.useEffect(() => {
+        let group = 1
+        if (route.params) {
+            group = route.params.group.group_id
+        }
         //FUNÇÃO P/BUSCAR CURSOS QUE CONTÉM TEORIAS
-        getAllTeoryByGroupOrdened(1)
+        getAllTeoryByGroupOrdened(group)
             .then((data) => {
                 if (!data) {
                     console.log("Erro ao buscar dados dos cursos.")
@@ -49,7 +53,11 @@ export function Notes() {
     }, [changed]);
 
     React.useEffect(() => {
-        getAllTeoryByGroup(1)
+        let group = 1
+        if (route.params) {
+            group = route.params.group.group_id
+        }
+        getAllTeoryByGroup(group)
             .then((data) => {
                 if (!data) {
                     console.log("Erro ao buscar dados das teorias do curso.")
@@ -66,9 +74,11 @@ export function Notes() {
 
     return (
         <View style={styles.container}>
-            <Animatable.View animation="fadeIn" duration={1000} style={styles.img_demo}>
-                <Image style={styles.img} source={require("../../../assets/img/book-stack.png")} />
-            </Animatable.View>
+            {!route.params && (
+                <Animatable.View animation="fadeIn" duration={1000} style={styles.img_demo}>
+                    <Image style={styles.img} source={require("../../../assets/img/book-stack.png")} />
+                </Animatable.View>
+            )}
 
             <View style={styles.content}>
                 <ListNotes handlerOnPress={(e) => handlerTransfer(e)} notes={teory} courses={courses} />
